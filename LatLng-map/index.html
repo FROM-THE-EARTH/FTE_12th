@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>F.T.E LatLng-Map</title>
+    <style>
+        .wrapper{
+            position: relative;
+        }
+        #icon{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+    </style>
+    <script>
+        //必要な定数の定義
+        const BAUD_RATE = 19200;
+        const STATUS = Object.freeze({//Object.freezeは書き換え不可にする
+            TOP_LAT: 38.26101,
+            TOP_LNG: 140.84879,
+            BOTTOM_LAT: 38.25923,
+            BOTTOM_LNG: 140.85268,
+            IMG_WIDTH: 1100,
+            IMG_HEIGHT: 800
+        });
+
+        //グローバル変数を定義
+        let port;
+        let x_px = 0;
+        let y_px = 0;
+        let data = {//シリアルから何を受信するか
+            lat: 38.26000,
+            lng: 140.85000
+        }
+        let lastdata;
+
+        //シリアルから値を取得する関数:サブメイン関数
+        async function onConnectButtonClick() { console.log("start_onConect"); 
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({baudRate: BAUD_RATE});
+
+                while (port.readable) {
+                    const reader = port.readable.getReader();
+
+                    try {
+                        while (true) { //無限ループで inputValue に入った文字列を addSerial関数 でテキストエリアに追記
+                            const { value, done } = await reader.read();
+                            if (done) {
+                                addSerial("Canceled\n");
+                                break;
+                            }
+                            const inputValue = new TextDecoder().decode(value);//valueはArrayBuffer型なので文字列にデコードする
+                            addSerial(inputValue);
+                            console.log(inputValue);
+                        }
+                    } catch (error) {
+                        addSerial("Error: Read" + error + "\n");
+                    } finally {
+                        reader.releaseLock();
+                    }
+                }
+
+            } catch (error) {
+                addSerial("Error: Open" + error + "\n");
+            }
+        }
+
+        //メッセージをテキストボックス(ログ)に追加していく関数
+        function addSerial(msg) { console.log("start_addSerial");
+            var textarea = document.getElementById('outputArea');
+            textarea.value += msg;
+            textarea.scrollTop = textarea.scrollHeight;
+        }
+
+        //シリアルを送る関数：非同期
+        async function sendSerial() { console.log("start_sendSerial");
+            var text = document.getElementById('sendInput').value;
+            document.getElementById('sendInput').value = "";
+
+            const encoder = new TextEncoder();
+            const writer = port.writable.getWriter();
+            await writer.write(encoder.encode(text + "\n"));
+            writer.releaseLock();
+        }
+
+        //----------------------------------------------------------------------------------//
+
+        //テキストボックスの値を行毎に配列に格納する関数
+        function splitByLine() { console.log("start_splitByLine");
+            var text  = document.getElementById('outputArea').value.replace(/\r\n|\r/g, "\n");
+            var lines = text.split('\n');
+            var outArray = new Array();
+            for ( var i = 0; i < lines.length; i++ ) {
+                // 空行は無視する
+                if (lines[i] == '') {
+                    continue;
+                }
+               outArray.push(lines[i]);
+           }
+           return outArray;
+        }
+
+        //文字列をカンマ区切りでdataに格納する関数
+        function dataUpdate(strings) { console.log("start_dataUpdate");
+            let dataArray = strings.split(",");
+            data.lat = dataArray[0] -0;//-0はdata.latが数値であることの確認
+            data.lng = dataArray[1] -0;
+            console.log(`${data.lat},${data.lng}`);
+        }
+
+        //座標変換(lat, lng)->(x_px, y_px)する関数
+        function transCoordinateX(lng_x) { console.log("start_transCoordinateX");
+            return (lng_x-STATUS.TOP_LNG)*STATUS.IMG_WIDTH/(STATUS.BOTTOM_LNG-STATUS.TOP_LNG);
+        }
+        function transCoordinateY(lat_y) { console.log("start_transCoordinateY");
+            return STATUS.IMG_HEIGHT-(lat_y-STATUS.BOTTOM_LAT)*STATUS.IMG_HEIGHT/(STATUS.TOP_LAT-STATUS.BOTTOM_LAT);
+        }
+
+        //map上にiconを設置する関数:メイン関数
+        function mapUpdate() { console.log("start_mapUpdate");
+            lastdata = splitByLine().slice(-1)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
+            dataUpdate(lastdata);
+            x = transCoordinateX(data.lng);
+            y = transCoordinateY(data.lat);
+            document.getElementById('icon').style.left = `${x-25}px`;
+            document.getElementById('icon').style.top = `${y-25}px`;
+            console.log(`${x},${y}`);
+        }
+        function mapUpdateTest() { console.log(`start_mapUpdateTest,${x_px+11},${y_px+8}`);
+            x_px = x_px + 11;
+            y_px = y_px + 8;
+            document.getElementById('icon').style.left = `${x_px-25}px`;
+            document.getElementById('icon').style.top = `${y_px-25}px`;
+        }
+
+
+        //window.onloadはページが読み込まれたら実行される
+        window.onload = function(){
+            timer1 = setInterval('mapUpdate()',2000);//100s毎にmapUpdate()を実行
+        }
+    </script>
+</head>
+
+<body>
+    <h1>F.T.E LatLng-Map</h1>
+	<h2>by Web Serial API console</h2>
+    <button onclick="onConnectButtonClick()">Connect</button>
+    <script>
+        document.write(`Baudrate: ${BAUD_RATE}`);
+    </script>
+    <br />
+
+    <input type="text" id="sendInput" />
+    <input type="button" value="Send" onclick="sendSerial();" />
+    <br />
+    <textarea cols="80" rows="6" id="outputArea" readonly></textarea>
+
+    <div class="wrapper">
+        <img id="map" src="kawauchi.png" alt="googlemap" width="1100px" height="800px">
+        <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
+    </div>
+</body>
+
+</html>
