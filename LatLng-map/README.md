@@ -21,3 +21,5 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 * URLは[https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html](https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html)にあります。
 * "Connect"ボタンを押し、適当なUSBポートを選択するとシリアルポートからのデータを取得し始めます。
 * 終了する場合は、USBをポートから抜くか、ページをリロードして下さい。
+## デモンストレーション
+* Arduinoにこのリポジトリ内にあるdemo.inoを書き込んで、シリアル接続すると、動きを確認できます。
