@@ -15,6 +15,6 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 ```
 この部分をコメントの通りに変更します。
 ## 使い方
-* URLは`[https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html](https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html)`にあります。
+* URLは[https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html](https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html)にあります。
 * "Connect"ボタンを押し、適当なUSBポートを選択するとシリアルポートからのデータを取得し始めます。
 * 終了する場合は、USBをポートから抜くか、ページをリロードして下さい。
