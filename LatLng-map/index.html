@@ -114,8 +114,8 @@
         //文字列をカンマ区切りでdataに格納する関数
         function dataUpdate(strings) { console.log("start_dataUpdate");
             let dataArray = strings.split(",");
-            data.lat = dataArray[0] -0;//-0はdata.latが数値であることの確認
-            data.lng = dataArray[1] -0;
+            data.lat = dataArray[3] -0;//-0はdata.latが数値であることの確認
+            data.lng = dataArray[4] -0;
             console.log(`${data.lat},${data.lng}`);
         }
 
