@@ -88,9 +88,9 @@ int main(){
                 }
                 break;
             case 1:
-                if(millis()>15||maxaltitude-altitude>10){
-                    PWM1.pulsewidth_us(1200);
-                    PWM2.pulsewidth_us(1200);
+                if(millis()>15000||maxaltitude-altitude>10){
+                    PWM1.pulsewidth_us(2000);
+                    PWM2.pulsewidth_us(2000);
                     sequence=2;
                     pc.printf("para_open!");
                     pc.printf("%f,%f,%f,%f",ax,ay,az,altitude);
@@ -99,7 +99,7 @@ int main(){
                 }
                 break;
             case 2:
-                if(millis()>60){
+                if(millis()>60000){
                     sequence=3;
                     pc.printf("end!");
                     pc.printf("%f,%f,%f,%f",ax,ay,az,altitude);
