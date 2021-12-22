@@ -115,9 +115,11 @@ int main(){
         gps.GetData();
         
         if(gps.readable == true){
+
             gps_get = true;
             latitude=gps.latitude;
             longtitude=gps.longtitude;
+
         }else{
             gps_get = false;
         }
@@ -195,21 +197,29 @@ void getmpu(float &ax,float &ay,float &az,float &gx,float &gy,float &gz,float &m
     mz=mag[2];
 }
 void getbmp(int &pressure,float &temp,float &altitude,float &l){//気圧センサ用関数
+
     if (bmp180.init() != 0) {
             bool intialize = true;
         } else {
             bool initialize = false;
         }
+
     bmp180.startTemperature();
+
     wait_ms(5);
+
     if(bmp180.getTemperature(&temp) != 0) {
         bool get_temp = true;
     }
+
     bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
+
     wait_ms(10);
+
     if(bmp180.getPressure(&pressure) != 0) {
         bool get_pre = true;
     }
+    
     float t_press = float(pressure)/100;
     l = (1012.25 / t_press );
     float i = temp + 273.15;
