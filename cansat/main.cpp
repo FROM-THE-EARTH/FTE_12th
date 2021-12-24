@@ -116,6 +116,7 @@ int main(){
                         para_Separation=true;
                         stage = 3;
                     }break;
+                    
          }
        
     }
