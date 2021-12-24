@@ -17,65 +17,76 @@ I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(mpu_SDA, mpu_SCL);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn digitalIn(PF_1);
-PwmOut PWM1(PB_0);
-//PwmOut PWM2(PB_1);
-//SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
-IM920 im920(PA_2, PA_3, PF_0, PA_8);
+IM920 im920(PA_2, PA_3, PA_5, PA_6);
 GPS gps(PA_9, PA_10);
-
-//for cansat
-//DigitalOut Triger1(PB_1);
-//InterruptIn USSEcho1(PA_12);
-
-//DigitalOut Triger2(PA_0);
-//InterruptIn USSEcho2(PA_1);
-
-PwmOut FIN1(PF_1);
-PwmOut RIN1(PA_11);
-
-//PwmOut motor2fin(PA_7);
-//PwmOut motor2rin(PA_6);
+DigitalIn pra_recognition(PA_0);
+DigitalOut triger1(PF_1);
+DigitalIn echo1 (PA_7);
+DigitalOut triger2(PA_11);
+DigitalIN echo2(PA_1);
+PwmOut Servo(PA_12);
+PwmOut FIN1(PB_0);
+PwmOut RIN1(PB_1);
+PwmOut FIN2(PF_0);
+PwmOut RIN2(PA_8);
 
 Serial pc(USBTX, USBRX);
 
-bool flightpin();
-void getmpu(float &ax,float &ay,float &az,float &gx,float &gy,float &gz,float &mx,float &my,float &mz);//9軸センサ用関数
-void getbmp(int &pressure,float &temp,float &altitude,float &l);//気圧センサ用関数
+void getMpu();//9軸センサ用関数
+void getBmp();//気圧センサ用関数
 void imSend(char *send);//無線用関数
 void sendDatas(float latitude, float longtitude, float altitude, float time);//無線用関数
 void getGPS();//GPS用関数
+float Echo1(void);
+float Echo2(void);
 double calcudistance(double x1,double y1,double x2,double y2);//距離計算用関数
 double calcuangle(double x1,double y1,double x2,double y2);//角度計算用関数
 double calcupulse(double rotate_angle_1);//モーター用の周波数計算関数（未完成）
 char sendData[256];
 
+Timer get_time;
+
 int main(){
-    int sequence=0;
-    int maxaltitude=0;
-    int pressure;
+    int stage=0;
+  
     bool flightPinAttached=false;
     bool launched=false;
-    float ax,ay,az,gx,gy,gz,mx,my,mz;
-    float altitude,temp,l;
     bool takeoff = false;//離床検知
     bool fall = false;//落下開始検知
     bool touchdown = false;//着陸検知
     bool para_Separation=false;//パラシュート分離検知
+    bool neat = false;
     bool goal = false;//ゴール検知
+
     double latitude,longtitude;//緯度・経度
     double distance,angle;//距離・角度
     
-    PWM1.period_us(20000);
-    PWM1.pulsewidth_us(500);
+    float acc[3] = {};//ここに加速度がx,y,zの順で格納される
+    float gyro[3] = {};
+    float mag[3] = {};
+    float accArrayX[SAMPLES];
+    float accArrayY[SAMPLES];
+    float accArrayZ[SAMPLES];
+
+    int pressure;
+    float temp;
+    float altitude;
+    float altArray[SAMPLES];
+    float maxAltitude;
+    float minAltitude;
+
+
+
+    pra_recognition.mode(Pullup);
+    
+    Servo.period_us(20000);
+    Servo.pulsewidth_us(500);
     
     //パラシュート分離まで
-    while(para_Separation!=true){
+    while(stage!=3){
         
-        getbmp(pressure,temp,altitude,l);
-        
-        float max_altitude,min_altitude;
-        
+        getBmp();
+          
         if(max_altitude < altitude){
             max_altitude = altitude;
         }
@@ -84,34 +95,40 @@ int main(){
             min_altitude = altitude;
         }
         
-        if(altitude - min_altitude > 5){
-            takeoff = true;
-        }
-        
-        if(takeoff = true && (maxaltitude - altitude > 5)){
-            fall = true;
-        }
-        
-        if(fall = true && (altitude - min_altitude < 3)){
-            millisStart();
-        }
-        
-        if(millis() > 20){
-            PWM1.pulsewidth_us(1200);
-            wait(20);
-            para_Separation=true;
-        }
+        switch(stage){
+            case 0:if(altitude - min_altitude > 5){//5m上昇で飛翔検知
+                         takeoff = true;
+                         pc.printf("takeoff!")
+                         stage  = 0;
+                    
+                   }break;
+            case 1:if(altitude - min_altitude > 5){//5m効果で降下検知
+                         fall = true;
+                         pc.printf("falling!")
+                         stage = 1;
+                    }break;
+            case 2:if(fall = true && altitude - min_altitude < 3){//地上から3m以内でパラ分離のフェーズへ以降
+                         wait(20);//待機
+                         Servo.pulsewidth_us(500);
+                         stage = 2;
+                    }break;
+            case 3:if(pra_recognition){//パラシュート分離用のピンが抜けたことを確認
+                        para_Separation=true;
+                        stage = 3;
+                    }break;
+         }
+       
     }
     
     //一定の距離に近づくまで
-    while(distance > 5){
+    while(!near){
         
         bool gps_get  = false;
         float max_mx,min_mx,max_my,min_my;
         
         wait(10);
         
-        getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
+        getMpu();
         gps.GetData();
         
         if(gps.readable == true){
@@ -124,43 +141,70 @@ int main(){
             gps_get = false;
         }
         
-        //キャリブレーション
-        if(gps_get != false){
+        //キャリブレーションおよび走行アルゴリズム
+        if(!gps_get){//GPS取得可能ならば
             
-            distance = calcudistance(longtitude,latitude,39.8261,21.4225);
-            angle = calcuangle(longtitude,latitude,39.8261,21.4225);
+            distance = calcudistance(longtitude,latitude,39.8261,21.4225);//目的地への距離
+            angle = calcuangle(longtitude,latitude,39.8261,21.4225);//目的地までの角度
             
-            if(max_mx < mx){
-                mx = max_mx;
+            pc.printf("start calibration!");
+
+            for(int i=1;i<200;i++){//キャリブレーションを２００回行う
+
+                if(max_mx < mag[0]){
+                   mag[0] = max_mx;
+                }
+                if(min_mx > mag[0]){
+                   mag[0] = min_mx;
+                }
+                if(max_my < mag[1]){
+                   mag[1] = max_my;
+                }
+                if(min_my > mag[1]){
+                   mag[1] = min_my;
+                }
             }
-            if(min_mx > mx){
-                mx = min_mx;
-            }
-            if(max_my < my){
-                my = max_my;
-            }
-            if(min_my > my){
-                my = min_my;
-            }
+
+            pc.printf("end calibration!");
+            
             
             float centerX = (max_mx + min_mx)/2;
             float centerY = (max_my + min_my)/2;
             
-            float north_angle = atan((my - centerY)/(mx - centerX));
+            float north_angle = atan(2*((my - centerY)/(mx - centerX)));//現在の北からの角度
             
-            float rotate_angle = angle - north_angle;
+            float rotate_angle = angle - north_angle;//回転すべき角度
             
-            int pulse = calcupulse(rotate_angle);
+            int pulse = calcupulse(rotate_angle);//出力すべき周波数
                   
-            FIN1.pulsewidth_us(5000);
+            FIN1.pulsewidth_us(pulse);
             RIN1.pulsewidth_us(0);
+
+            FIN2.pulsewidth_us(pulse);
+            RIN2.pulsewidth_us(0);
             
             wait(20);
             
+            //走行
             for(int i=1;i<=200;i++){
                 FIN1.pulsewidth_us(20000);
                 RIN1.pulsewidth_us(0);
+
+                FIN2.pulsewidth_us(20000);
+                RIN2.pulsewidth_us(0);
+            }
+
+            for(int i=0;i<200;i++){
+                //GPSから距離を測定して十分近いかどうかを判断
+                //ローパスフィルタをかける必要あり
+                if(distance < 10){
+                    near = true;
+                }else{
+                    near = false;
+                }
             }  
+
+
             
         }
     }
@@ -168,6 +212,18 @@ int main(){
     
     //超音波センサによるゴール認識
     while(goal!=false){
+
+        
+        trigger1 = 0;
+        trigger2 = 0;
+
+        if(Echo1() > Echo2()){
+            //ここのアルゴリズム未定
+        }else{
+
+        }
+
+        //車体回転しながら距離計測
     
     }
         
@@ -175,56 +231,62 @@ int main(){
 }            
     
             
-
-void getmpu(float &ax,float &ay,float &az,float &gx,float &gy,float &gz,float &mx,float &my,float &mz){//9軸センサ用関数
-    float acc[3]={};
-    float gyro[3]={};
-    float mag[3]={};
-    pc.baud(115200);
+void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
-    mpu.getAcc(acc);
+    mpu.getAcc(acc);//加速度をacc[]に格納
     mpu.getGyro(gyro);
     mpu.getMag(mag);
-    ax=acc[0];
-    ay=acc[1];
-    az=acc[2];
-    gx=gyro[0];
-    gy=gyro[1];
-    gz=gyro[2];
-    mx=mag[0];
-    my=mag[1];
-    mz=mag[2];
-}
-void getbmp(int &pressure,float &temp,float &altitude,float &l){//気圧センサ用関数
 
-    if (bmp180.init() != 0) {
-            bool intialize = true;
-        } else {
-            bool initialize = false;
+    for(int i=(SAMPLES-1); i>=0; i--){
+        if(i!=0){
+            accArrayX[i] = accArrayX[i-1];
+            accArrayY[i] = accArrayY[i-1];
+            accArrayZ[i] = accArrayZ[i-1];
+        }else{
+            accArrayX[0] = acc[0];
+            accArrayY[0] = acc[1];
+            accArrayZ[0] = acc[2];
         }
-
-    bmp180.startTemperature();
-
-    wait_ms(5);
-
-    if(bmp180.getTemperature(&temp) != 0) {
-        bool get_temp = true;
     }
-
-    bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
-
-    wait_ms(10);
-
-    if(bmp180.getPressure(&pressure) != 0) {
-        bool get_pre = true;
-    }
-    
-    float t_press = float(pressure)/100;
-    l = (1012.25 / t_press );
-    float i = temp + 273.15;
-    altitude = (pow(double(l), double(1 / 5.257)) - 1) * i / 0.0065;
 }
+
+void getBmp(){
+    if (bmp180.init() != 0) {
+        bool bmp_ini = false;
+        } else {
+            bool bmp_ini = true;;
+        }
+    bmp180.startTemperature();
+    wait_ms(5);    
+    if(bmp180.getTemperature(&temp) != 0) {
+        bool get_temp = false;
+    }
+    bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
+    wait_ms(10);   
+    
+    if(bmp180.getPressure(&pressure) != 0) {
+        bool get_pre = false;
+    }
+    float t_press = float(pressure)/100;
+    float ratio = (1012.25 / t_press );  
+    float absoluteTemp = temp + 273.15;
+    altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;bmp180.startTemperature();
+    
+
+    for(int i=(SAMPLES-1); i>=0; i--){
+        if(i!=0){
+            altArray[i] = altArray[i-1];
+        }else{
+            altArray[0] = altitude;
+        }
+    }
+
+    if(maxAltitude < calcMedian(altArray, SAMPLES)){
+        maxAltitude = calcMedian(altArray, SAMPLES);
+    }
+}
+
 void imSend(char *send){//無線で送信する関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位 im -> gps, high -> low
     im920.send(send,strlen(send)+1);
@@ -264,4 +326,50 @@ double calcuangle(double x1,double y1,double x2,double y2){//角度計算用関�
 double calcupulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
     float pulse;
     return pulse;
+}
+
+float Echo1(void)
+{
+    float distance1;
+    
+    trigger1.write(1);
+    wait_us(10);
+    trigger1.write(0);
+
+    while(echo1.read() == 0){
+        get_time.reset();
+        get_time.start();
+    }
+    while(echo1.read() == 1){
+        get_time.stop();
+    }
+
+    distance1 = get_time.read_us();
+    distance1 = distance1 * 0.03432f / 2.0f;
+    
+    return distance1;
+    
+}
+
+float Echo2(void)
+{
+    float distance2;
+    
+    trigger2.write(1);
+    wait_us(10);
+    trigger2.write(0);
+    
+    while(echo2.read() == 0){
+        get_time.reset();
+        get_time.start();
+    }
+    while(echo2.read() == 1){
+        get_time.stop();
+    }
+
+    distance2 = get_time.read_us();
+    distance2 = distance2 * 0.03432f / 2.0f;
+    
+    return distance2;
+    
 }
