@@ -1,3 +1,14 @@
+/**
+ * @file izu3022.cpp
+ * @author Hiroto ABE
+ * @brief code for IZU
+ * @version 1.0
+ * @date 2021-12-24
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "mbed.h"
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
@@ -31,20 +42,24 @@ int interval();
 int deadTime;
 bool launched = false;
 int phase = 0;
+float calcMedian(float *array, int n);
+#define SAMPLES 10 //medianの標本数
 
 //MPU9250
 void getMpu();
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
-#define SAMPLES 10 //medianの標本数
+float accArrayX[SAMPLES];
+float accArrayY[SAMPLES];
+float accArrayZ[SAMPLES];
 
 //BMP180
 void getBmp();
-void altitudeMedian();
 int pressure;
 float temp;
 float altitude;
+float altArray[SAMPLES];
 float maxAltitude;
 
 //GPS
@@ -77,7 +92,7 @@ int main(){
                 }
                 break;
             case 1:
-                if(interval()>15000||maxAltitude-altitude>10){//打ち上がってから15秒後、もしくは10m落下すれば
+                if(interval()>15000 || (maxAltitude-calcMedian(altArray, SAMPLES))>10){//打ち上がってから15秒後、もしくは10m落下すれば
                     pwm1.pulsewidth_us(1800);
                     pwm2.pulsewidth_us(1800);
                     imSend("Para Open!");
@@ -151,12 +166,41 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
+float calcMedian(float *array, int n){
+    for(int i=0; i<n; i++) {
+        for(int j = i+1; j<n; j++){
+            if(array[i]>array[j]){
+                float changer = array[j];
+                array[j] = array[i];
+                array[i] = changer;
+            }
+        }
+    }
+    if(n%2 == 0){
+        return array[n/2];
+    } else {
+        return((float)array[n/2] + array[n/2+1])/2;
+    }
+}
+
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
     mpu.getAcc(acc);//加速度をacc[]に格納
     mpu.getGyro(gyro);
     mpu.getMag(mag);
+
+    for(int i=(SAMPLES-1); i>=0; i--){
+        if(i!=0){
+            accArrayX[i] = accArrayX[i-1];
+            accArrayY[i] = accArrayY[i-1];
+            accArrayZ[i] = accArrayZ[i-1];
+        }else{
+            accArrayX[0] = acc[0];
+            accArrayY[0] = acc[1];
+            accArrayZ[0] = acc[2];
+        }
+    }
 }
 
 void getBmp(){//tempと気圧を取得する関数
@@ -173,17 +217,21 @@ void getBmp(){//tempと気圧を取得する関数
 
     //変換式
     float t_press = float(pressure)/100;
-    float l = (1012.25 / t_press );
-    float i = temp + 273.15;
-    altitude = (pow(double(l), double(1 / 5.257)) - 1) * i / 0.0065;
+    float ratio = (1012.25 / t_press );
+    float absoluteTemp = temp + 273.15;
+    altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
 
-    if(maxAltitude<altitude){
-        maxAltitude = altitude;
+    for(int i=(SAMPLES-1); i>=0; i--){
+        if(i!=0){
+            altArray[i] = altArray[i-1];
+        }else{
+            altArray[0] = altitude;
+        }
     }
-}
 
-void altitudeMedian(){
-
+    if(maxAltitude < calcMedian(altArray, SAMPLES)){
+        maxAltitude = calcMedian(altArray, SAMPLES);
+    }
 }
 
 void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
