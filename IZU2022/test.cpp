@@ -32,19 +32,23 @@ int deadTime;
 bool launched = false;
 int phase = 0;
 float calcMedian(float *array, int n);
+#define SAMPLES 10 //medianの標本数
 
 //MPU9250
 void getMpu();
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
-#define SAMPLES 10 //medianの標本数
+float accArrayX[SAMPLES];
+float accArrayY[SAMPLES];
+float accArrayZ[SAMPLES];
 
 //BMP180
 void getBmp();
 int pressure;
 float temp;
 float altitude;
+float altArray[SAMPLES];
 float maxAltitude;
 
 //GPS
@@ -175,10 +179,6 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro);
     mpu.getMag(mag);
 
-    float accArrayX[SAMPLES];
-    float accArrayY[SAMPLES];
-    float accArrayZ[SAMPLES];
-    
     for(int i=(SAMPLES-1); i>=0; i--){
         if(i!=0){
             accArrayX[i] = accArrayX[i-1];
@@ -209,8 +209,7 @@ void getBmp(){//tempと気圧を取得する関数
     float ratio = (1012.25 / t_press );
     float absoluteTemp = temp + 273.15;
     altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
-
-    float altArray[SAMPLES];
+    
     for(int i=(SAMPLES-1); i>=0; i--){
         if(i!=0){
             altArray[i] = altArray[i-1];
