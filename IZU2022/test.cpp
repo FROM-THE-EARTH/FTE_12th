@@ -1,3 +1,14 @@
+/**
+ * @file izu3022.cpp
+ * @author Hiroto ABE
+ * @brief code for IZU
+ * @version 1.0
+ * @date 2021-12-24
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "mbed.h"
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
@@ -209,7 +220,7 @@ void getBmp(){//tempと気圧を取得する関数
     float ratio = (1012.25 / t_press );
     float absoluteTemp = temp + 273.15;
     altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
-    
+
     for(int i=(SAMPLES-1); i>=0; i--){
         if(i!=0){
             altArray[i] = altArray[i-1];
