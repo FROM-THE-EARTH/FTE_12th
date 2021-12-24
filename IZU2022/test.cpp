@@ -81,6 +81,7 @@ int main(){
     while(phase!=3){
         getDatas();
         sdWrite();
+        sendDatas();
         switch (phase){
             case 0:
                 if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上の加速度があれば
