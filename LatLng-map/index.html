@@ -39,8 +39,13 @@
         let x_px = 0;
         let y_px = 0;
         let data = {//シリアルから何を受信するか
+            time: 0,
+            phase: 0,
             lat: 38.26000,
-            lng: 140.85000
+            lng: 140.85000,
+            altitude: 0,
+            maxAltitude: 0,
+            deadTime: 0
         }
         let lastdata;
 
@@ -114,8 +119,13 @@
         //文字列をカンマ区切りでdataに格納する関数
         function dataUpdate(strings) { console.log("start_dataUpdate");
             let dataArray = strings.split(",");
-            data.lat = dataArray[3] -0;//-0はdata.latが数値であることの確認
+            data.time = dataArray[1] -0;//-0はdata.latが数値であることの確認
+            data.phase = dataArray[2] -0;
+            data.lat = dataArray[3] -0;
             data.lng = dataArray[4] -0;
+            data.altitude = dataArray[5] -0;
+            data.maxAltitude = dataArray[6] -0;
+            data.deadTime = dataArray[7] -0;
             console.log(`${data.lat},${data.lng}`);
         }
 
@@ -165,11 +175,18 @@
     <input type="button" value="Send" onclick="sendSerial();" />
     <br />
     <textarea cols="80" rows="6" id="outputArea" readonly></textarea>
-
+    <script>
+        document.write(`time: ${data.time},`);
+        document.write(`phase: ${data.phase},`);
+        document.write(`altitude: ${data.altitude},`);
+        document.write(`maxAltitude: ${data.maxAltitude},`);
+        document.write(`deadTime: ${data.deadTime}`);
+    </script>
     <div class="wrapper">
         <img id="map" src="kawauchi.png" alt="googlemap" width="1100px" height="800px">
         <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
     </div>
+
 </body>
 
 </html>
