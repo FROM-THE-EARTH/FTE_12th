@@ -162,7 +162,7 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
-/*float calcMedian(float *array, int n){
+float calcMedian(float *array, int n){
     for(int i=0; i<n; i++) {
         for(int j = i+1; j<n; j++){
             if(array[i]>array[j]){
@@ -177,7 +177,7 @@ int interval(){//timeStart()からの時間を返す関数
     } else {
         return((float)array[n/2] + array[n/2+1])/2;
     }
-}*/
+}
 
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
@@ -186,16 +186,16 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro);
     mpu.getMag(mag);
 
-    for(int i=(SAMPLES-1); i>=0; i--){
-        if(i!=0){
-            accArrayX[i] = accArrayX[i-1];
-            accArrayY[i] = accArrayY[i-1];
-            accArrayZ[i] = accArrayZ[i-1];
-        }else{
-            accArrayX[0] = acc[0];
-            accArrayY[0] = acc[1];
-            accArrayZ[0] = acc[2];
-        }
+    for(int i=0; i<= 10; i++){
+        
+        accArrayX[i] = accArrayX[i-1];
+        accArrayY[i] = accArrayY[i-1];
+        accArrayZ[i] = accArrayZ[i-1];
+    
+        accArrayX[0] = acc[0];
+        accArrayY[0] = acc[1];
+        accArrayZ[0] = acc[2];
+        
     }
 }
 
@@ -220,17 +220,16 @@ void getBmp(){//tempと気圧を取得する関数
     float absoluteTemp = temp + 273.15;
     altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
 
-    for(int i=(SAMPLES-1); i>=0; i--){
-        if(i!=0){
-            altArray[i] = altArray[i-1];
-        }else{
-            altArray[0] = altitude;
-        }
+    for(int i=0; i<=10; i++){
+        altArray[i] = altArray[i-1];
+        altArray[0] = altitude;
+        
     }
 
     if(maxAltitude < altitude){
         maxAltitude = altitude;
     }
+}
 
     /*if(maxAltitude < calcMedian(altArray, SAMPLa){
         maxAltitude = calcMedian(altArray, SAMPLES);
