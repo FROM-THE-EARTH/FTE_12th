@@ -148,7 +148,9 @@ void getDatas(){//各種センサーのデータを統括する関数
     timer[0] = millis();
     getMpu();
     getBmp();
-    getGps();
+    if(gps.readable){
+        getGps();
+    }
     timer[1] = millis();
     deadTime = timer[1]-timer[0];
 }
