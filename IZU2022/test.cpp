@@ -262,6 +262,6 @@ void imSend(char *send){//無線で送信する関数
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"data%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%d", dataNumber, millis(), phase, gps.latitude, gps.longtitude, calcMedian(altArray, SAMPLES), maxAltitude, deadTime);
+    sprintf(sendData,"data%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%d", dataNumber, millis(), phase, gps.latitude, gps.longtitude, altitude, maxAltitude, deadTime);
     imSend(sendData);
 }
