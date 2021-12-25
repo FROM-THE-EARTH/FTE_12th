@@ -26,7 +26,7 @@ I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(mpu_SDA, mpu_SCL);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn digitalIn(PA_8);
+DigitalIn digitalIn(PB_5);
 PwmOut pwm1(PB_0);
 PwmOut pwm2(PB_1);
 //SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
@@ -254,8 +254,9 @@ void imSend(char *send){//無線で送信する関数
     pc.printf(send);
     pc.printf("\r\n");
     sscanf(send, "%x", &hex);
-    sprintf(send, "TXDA %d", hex);
-    im920.sendCommand(send);
+    sprintf(hexchar, "TXDA %d", hex);
+    wait_ms(20);
+    im920.sendCommand(hexchar);
 
 }
 
