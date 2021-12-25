@@ -53,10 +53,11 @@ int main(){
     
     if(!flightPinAttached){//フライトピンが刺さっているならば
         digitalIn.mode(PullUp);
-        pc.printf("waiting...\n");
+        imSend("waiting...");
         while(1){
             getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
             getbmp(pressure,temp,altitude,l);
+            getGPS();
             pc.printf("%f,%f,%f,%f\n",ax,ay,az,altitude);
             
             if(digitalIn || (ax*ax+ay*ay+az*az)>=2.0*2.0){
@@ -74,6 +75,7 @@ int main(){
     while(sequence!=3){
         getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
         getbmp(pressure,temp,altitude,l);
+        getGPS();
         //getgps(longtitude,latitude);
         if(maxaltitude<altitude){
             maxaltitude=altitude;
@@ -169,7 +171,7 @@ void sendDatas(float latitude, float longtitude, float altitude, float time){//�
         imSend(sendData);
 }
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
-    NVIC_SetPriority(UART1_IRQn,1); //割り込み優先順位 im -> gps, high -> low
+    //NVIC_SetPriority(UART1_IRQn,1); //割り込み優先順位 im -> gps, high -> low
     gps.GetData();
     if(gps.readable == true){
        sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);

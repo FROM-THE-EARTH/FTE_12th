@@ -140,8 +140,7 @@ void setUp(){
     if(digitalIn){//この段階でピンが抜けていれば
         imSend("Error! Pin is out.");
     }
-
-    pc.printf("Setup Complete.");
+    
     imSend("Setup Complete.");
 }
 
@@ -243,6 +242,7 @@ void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
     if(gps.readable == false){
         imSend("Error! GPS cannot read data.");
     }
+
 }
 
 void sdWrite(){
