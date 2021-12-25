@@ -122,10 +122,6 @@ void setUp(){
     pc.baud(115200);
     millisStart();
 
-    if(bmp180.init() != 0){
-        imSend("Error! BMP180 has some problems.");
-    }
-
     //サーボモータの初期位置
     pwm1.period_us(20000);
     pwm1.pulsewidth_us(500);
@@ -205,6 +201,9 @@ void getMpu(){//9軸センサーの値を取得する関数
 }
 
 void getBmp(){//tempと気圧を取得する関数
+    if(bmp180.init() != 0){
+        imSend("Error! BMP180 has some problems.");
+    }
     bmp180.startTemperature();
     wait_ms(5);
     if(bmp180.getTemperature(&temp) != 0) {
