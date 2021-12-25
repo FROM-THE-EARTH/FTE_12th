@@ -44,6 +44,7 @@ int main(){
     while(1){
         char b[256] = "abcde";
         imSend(b);
+        imSend("fghij");
         //gps.GetDefault(); //元のデータ
         //pc.printf("%c",gps.datadefault);  //書き込み
     }
