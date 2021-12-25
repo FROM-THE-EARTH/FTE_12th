@@ -42,7 +42,7 @@ int main(){
     //pc.baud(115200); //mbedのボーレート（必要に応じて)
     gps.attach(getGPS);//割り込み処理設定(関数名)
     while(1){
-        int b[256] = "abcde";
+        char b[256] = "abcde";
         imSend(b);
         //gps.GetDefault(); //元のデータ
         //pc.printf("%c",gps.datadefault);  //書き込み
