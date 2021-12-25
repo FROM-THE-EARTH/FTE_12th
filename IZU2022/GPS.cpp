@@ -28,6 +28,7 @@ void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     gps.GetData();
     if(gps.readable == true){
        sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
+       imSend("katokato");
     }
 }
 
