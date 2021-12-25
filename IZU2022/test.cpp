@@ -140,7 +140,7 @@ void setUp(){
     if(digitalIn){//この段階でピンが抜けていれば
         imSend("Error! Pin is out.");
     }
-    
+
     imSend("Setup Complete.");
 }
 
@@ -249,7 +249,11 @@ void sdWrite(){
 }
 
 void imSend(char *send){//無線で送信する関数
-    im920.send(send,strlen(send)+1);
+    char hexchar[256];
+    int hex;
+    sscanf(send, "%x", &hex);
+    sprintf(send, "TXDA %d", hex);
+    im920.sendCommand(hexchar);
     pc.printf(send);
     pc.printf("\r\n");
 }
