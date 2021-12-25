@@ -93,7 +93,7 @@ int main(){
                 }
                 break;
             case 1:
-                if(interval()>15000 || (maxAltitude-calcMedian(altArray, SAMPLES))>10){//打ち上がってから15秒後、もしくは10m落下すれば
+                if(interval()>15000 || (maxAltitude-altitude)>10){//打ち上がってから15秒後、もしくは10m落下すれば
                     pwm1.pulsewidth_us(1800);
                     pwm2.pulsewidth_us(1800);
                     imSend("Para Open!");
@@ -167,7 +167,7 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
-float calcMedian(float *array, int n){
+/*float calcMedian(float *array, int n){
     for(int i=0; i<n; i++) {
         for(int j = i+1; j<n; j++){
             if(array[i]>array[j]){
@@ -182,7 +182,7 @@ float calcMedian(float *array, int n){
     } else {
         return((float)array[n/2] + array[n/2+1])/2;
     }
-}
+}*/
 
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
@@ -230,10 +230,14 @@ void getBmp(){//tempと気圧を取得する関数
         }
     }
 
-    if(maxAltitude < calcMedian(altArray, SAMPLES)){
+    if(maxAltitude < altitude){
+        maxAltitude = altitude;
+    }
+
+    /*if(maxAltitude < calcMedian(altArray, SAMPLa){
         maxAltitude = calcMedian(altArray, SAMPLES);
     }
-}
+}*/
 
 void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
     gps.GetData();
