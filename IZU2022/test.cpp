@@ -251,11 +251,12 @@ void sdWrite(){
 void imSend(char *send){//無線で送信する関数
     char hexchar[256];
     int hex;
-    sscanf(send, "%x", &hex);
-    sprintf(send, "TXDA %d", hex);
-    im920.sendCommand(hexchar);
     pc.printf(send);
     pc.printf("\r\n");
+    sscanf(send, "%x", &hex);
+    sprintf(send, "TXDA %d", hex);
+    im920.sendCommand(send);
+
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
