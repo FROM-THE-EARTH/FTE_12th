@@ -67,7 +67,7 @@
                             }
                             const inputValue = new TextDecoder().decode(value);//valueはArrayBuffer型なので文字列にデコードする
                             addSerial(inputValue);
-                            console.log(inputValue);
+                            //console.log(inputValue);
                         }
                     } catch (error) {
                         addSerial("Error: Read" + error + "\n");
@@ -113,19 +113,21 @@
                 }
                outArray.push(lines[i]);
            }
+           console.log(lines[-1]);
            return outArray;
         }
 
         //文字列をカンマ区切りでdataに格納する関数
         function dataUpdate(strings) { console.log("start_dataUpdate");
             let dataArray = strings.split(",");
-            data.time = dataArray[1] -0;//-0はdata.latが数値であることの確認
-            data.phase = dataArray[2] -0;
-            data.lat = dataArray[3] -0;
-            data.lng = dataArray[4] -0;
-            data.altitude = dataArray[5] -0;
-            data.maxAltitude = dataArray[6] -0;
-            data.deadTime = dataArray[7] -0;
+            //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
+            data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
+            data.phase = dataArray[5] -0;
+            data.lat = dataArray[6] -0;
+            data.lng = dataArray[7] -0;
+            data.altitude = dataArray[8] -0;
+            data.maxAltitude = dataArray[9] -0;
+            data.deadTime = dataArray[10] -0;
             console.log(`${data.lat},${data.lng}`);
         }
 
