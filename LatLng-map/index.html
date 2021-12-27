@@ -121,7 +121,7 @@
             console.log(strings);
             let dataArray = strings.split(",");
             if(dataArray[3]=="massage"){
-                return 0;
+                return false;
             }else{
                 //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
                 data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
@@ -132,7 +132,7 @@
                 data.maxAltitude = dataArray[9] -0;
                 data.deadTime = dataArray[10] -0;
                 console.log(`${data.lat},${data.lng}`);
-                return 1;
+                return true;
             }
         }
 
@@ -146,12 +146,14 @@
 
         //map上にiconを設置する関数:メイン関数
         function mapUpdate() { console.log("start_mapUpdate");
-            var boolean = 0;
+            var boolean = false;
             var targetLine = -1;
             while(!boolean){//最後の行からメッセージをのぞいて、データの最後の行を見つける
                 lastdata = splitByLine().slice(targetLine)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
                 boolen = dataUpdate(lastdata);
                 targetLine--;
+                console.log(lastdata)
+                console.log(dataUpdate(lastdata));
                 console.log(targetLine);
             }
             x = transCoordinateX(data.lng);
