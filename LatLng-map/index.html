@@ -120,15 +120,20 @@
         function dataUpdate(strings) { console.log("start_dataUpdate");
             console.log(strings);
             let dataArray = strings.split(",");
-            //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
-            data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
-            data.phase = dataArray[5] -0;
-            data.lat = dataArray[6] -0;
-            data.lng = dataArray[7] -0;
-            data.altitude = dataArray[8] -0;
-            data.maxAltitude = dataArray[9] -0;
-            data.deadTime = dataArray[10] -0;
-            console.log(`${data.lat},${data.lng}`);
+            if(dataArray[3]=="massage"){
+                return 0;
+            }else{
+                //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
+                data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
+                data.phase = dataArray[5] -0;
+                data.lat = dataArray[6] -0;
+                data.lng = dataArray[7] -0;
+                data.altitude = dataArray[8] -0;
+                data.maxAltitude = dataArray[9] -0;
+                data.deadTime = dataArray[10] -0;
+                console.log(`${data.lat},${data.lng}`);
+                return 1;
+            }
         }
 
         //座標変換(lat, lng)->(x_px, y_px)する関数
@@ -141,8 +146,14 @@
 
         //map上にiconを設置する関数:メイン関数
         function mapUpdate() { console.log("start_mapUpdate");
-            lastdata = splitByLine().slice(-1)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
-            dataUpdate(lastdata);
+            var boolean = 0;
+            var targetLine = -1;
+            while(!boolean){
+                lastdata = splitByLine().slice(targetLine)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
+                boolen = dataUpdate(lastdata);
+                targetLine--;
+                console.log(targetLine);
+            }
             x = transCoordinateX(data.lng);
             y = transCoordinateY(data.lat);
             document.getElementById('icon').style.left = `${x-25}px`;
