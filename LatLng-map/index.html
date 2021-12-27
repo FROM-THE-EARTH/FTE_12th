@@ -150,10 +150,10 @@
             var targetLine = -1;
             while(!boolean){//最後の行からメッセージをのぞいて、データの最後の行を見つける
                 lastdata = splitByLine().slice(targetLine)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
-                boolen = dataUpdate(lastdata);
+                if(dataUpdate(lastdata)){
+                    boolean = true;
+                }
                 targetLine--;
-                console.log(lastdata)
-                console.log(dataUpdate(lastdata));
                 console.log(boolean);
                 console.log(targetLine);
             }
@@ -178,7 +178,7 @@
 </head>
 
 <body>
-    <h1>F.T.E LatLng-Map</h1>
+    <h1>F.T.E LatLng-Map1</h1>
 	<h2>by Web Serial API console</h2>
     <button onclick="onConnectButtonClick()">Connect</button>
     <script>
