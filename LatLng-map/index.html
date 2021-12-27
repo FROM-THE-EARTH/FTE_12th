@@ -148,12 +148,11 @@
             document.getElementById('icon').style.left = `${x-25}px`;
             document.getElementById('icon').style.top = `${y-25}px`;
             console.log(`${x},${y}`);
-        }
-        function mapUpdateTest() { console.log(`start_mapUpdateTest,${x_px+11},${y_px+8}`);
-            x_px = x_px + 11;
-            y_px = y_px + 8;
-            document.getElementById('icon').style.left = `${x_px-25}px`;
-            document.getElementById('icon').style.top = `${y_px-25}px`;
+            document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
+            document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
+            document.getElementById('data3').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
+            document.getElementById('data4').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
+            document.getElementById('data5').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;
         }
 
 
@@ -177,13 +176,11 @@
     <input type="button" value="Send" onclick="sendSerial();" />
     <br />
     <textarea cols="80" rows="6" id="outputArea" readonly></textarea>
-    <script>
-        document.write(`time: ${data.time},`);
-        document.write(`phase: ${data.phase},`);
-        document.write(`altitude: ${data.altitude},`);
-        document.write(`maxAltitude: ${data.maxAltitude},`);
-        document.write(`deadTime: ${data.deadTime}`);
-    </script>
+    <div class="data1"><p>Time: 0</p></div>
+    <div class="data2"><p>Phase: 0</p></div>
+    <div class="data3"><p>Altitude: 0</p></div>
+    <div class="data4"><p>MaxAltitude: 0</p></div>
+    <div class="data5"><p>DeadTime: 0</p></div>
     <div class="wrapper">
         <img id="map" src="kato.png" alt="googlemap" width="1000px" height="550px">
         <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
