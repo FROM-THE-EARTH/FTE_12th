@@ -120,7 +120,7 @@
         function dataUpdate(strings) { console.log("start_dataUpdate");
             console.log(strings);
             let dataArray = strings.split(",");
-            if(dataArray[3]=="massage"){
+            if(dataArray[3]=="message"){
                 return false;
             }else{
                 //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
@@ -153,9 +153,9 @@
                 if(dataUpdate(lastdata)){
                     boolean = true;
                 }
-                targetLine--;
                 console.log(boolean);
                 console.log(targetLine);
+                targetLine--;
             }
             x = transCoordinateX(data.lng);
             y = transCoordinateY(data.lat);
@@ -178,7 +178,7 @@
 </head>
 
 <body>
-    <h1>F.T.E LatLng-Map1</h1>
+    <h1>F.T.E LatLng-Map2</h1>
 	<h2>by Web Serial API console</h2>
     <button onclick="onConnectButtonClick()">Connect</button>
     <script>
