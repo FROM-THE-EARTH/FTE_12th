@@ -116,7 +116,7 @@
            return outArray;
         }
 
-        //文字列をカンマ区切りでdataに格納する関数
+        //文字列をカンマ区切りでdataに格納する関数(データなら1,メッセージなら0を返す)
         function dataUpdate(strings) { console.log("start_dataUpdate");
             console.log(strings);
             let dataArray = strings.split(",");
@@ -148,7 +148,7 @@
         function mapUpdate() { console.log("start_mapUpdate");
             var boolean = 0;
             var targetLine = -1;
-            while(!boolean){
+            while(!boolean){//最後の行からメッセージをのぞいて、データの最後の行を見つける
                 lastdata = splitByLine().slice(targetLine)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
                 boolen = dataUpdate(lastdata);
                 targetLine--;
