@@ -39,6 +39,7 @@
         let x_px = 0;
         let y_px = 0;
         let data = {//シリアルから何を受信するか
+            message: "",
             time: 0,
             phase: 0,
             lat: 38.26000,
@@ -121,6 +122,7 @@
             console.log(strings);
             let dataArray = strings.split(",");
             if(dataArray[3]=="message"){
+                data.message = dataArray[4];
                 return false;
             }else{
                 //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
@@ -162,6 +164,7 @@
             document.getElementById('icon').style.left = `${x-25}px`;
             document.getElementById('icon').style.top = `${y-25}px`;
             console.log(`${x},${y}`);
+            document.getElementById('data0').innerHTML = `<p>Message: ${data.message}</p>`;
             document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
             document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
             document.getElementById('data3').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
@@ -178,7 +181,7 @@
 </head>
 
 <body>
-    <h1>F.T.E LatLng-Map2</h1>
+    <h1>F.T.E LatLng-Map</h1>
 	<h2>by Web Serial API console</h2>
     <button onclick="onConnectButtonClick()">Connect</button>
     <script>
@@ -190,6 +193,7 @@
     <input type="button" value="Send" onclick="sendSerial();" />
     <br />
     <textarea cols="80" rows="6" id="outputArea" readonly></textarea>
+    <div id="data0"><p>Message: </p></div>
     <div id="data1"><p>Time: 0</p></div>
     <div id="data2"><p>Phase: 0</p></div>
     <div id="data3"><p>Altitude: 0</p></div>
