@@ -113,12 +113,12 @@
                 }
                outArray.push(lines[i]);
            }
-           console.log(lines[lines.length-1]);
            return outArray;
         }
 
         //文字列をカンマ区切りでdataに格納する関数
         function dataUpdate(strings) { console.log("start_dataUpdate");
+            console.log(strings);
             let dataArray = strings.split(",");
             //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
             data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
