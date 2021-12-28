@@ -15,7 +15,7 @@ I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(mpu_SDA, mpu_SCL);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn digitalIn(PA_8);
+DigitalIn flightPin(PA_8);
 PwmOut PWM1(PB_0);
 PwmOut PWM2(PB_1);
 //SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
@@ -52,14 +52,14 @@ int main(){
     //f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
     
     if(!flightPinAttached){//フライトピンが刺さっているならば
-        digitalIn.mode(PullUp);
+        flightPin.mode(PullUp);
         pc.printf("waiting...\n");
         while(1){
             getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
             getbmp(pressure,temp,altitude,l);
             pc.printf("%f,%f,%f,%f\n",ax,ay,az,altitude);
             
-            if(digitalIn || (ax*ax+ay*ay+az*az)>=2.0*2.0){
+            if(flightPin || (ax*ax+ay*ay+az*az)>=2.0*2.0){
                 flightPinAttached=true;
                 launched = true;
                 pc.printf("launched\n");
