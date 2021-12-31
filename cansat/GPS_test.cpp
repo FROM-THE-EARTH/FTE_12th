@@ -1,3 +1,10 @@
+/*
+このコードが成功した場合、gps start collecting dataがTeratermに表示されたあと、
+3分の待機時間の後に目的地への北からの角度が表示されるはずです
+*/
+
+
+
 #include "mbed.h"
 #include "GPS.h"
 
@@ -5,6 +12,7 @@
 
 #define goal_longtitude //ここに目的地の緯度をを記入してください
 #define goal_latitude //ここに目的地の経度を記入して下さい
+#define samples 30
 
 Serial.pc(USBTX,USBRX);
 pc.baud(115200);
@@ -55,17 +63,17 @@ int main(){
         例えば、前後のデータの誤差が一定値よりも低い状況が所定回数繰り返されたならば、安定化したと判断するなど
         */
 
-        for(int i=0;i<30;i++){//GPSのデータを30回取得
+        for(int i=0;i<samples;i++){//GPSのデータを30回取得
             array_longtitude[i]=longtitude;
             array_latitude[i]=latitude;
         }
 
-        for(int i=0;i<30;i++){//30回のデータから、緯度、経度の平均値を求める
+        for(int i=0;i<samples;i++){//30回のデータから、緯度、経度の平均値を求める
             sum_longtitude += array_longtitude[i];//
-            average_longtitude = sum_longtitude/30;//経度の平均値
+            average_longtitude = sum_longtitude/samples;//経度の平均値
 
             sum_latitude += array_latitude[i];//
-            average_latitude = sum_latitude/30;//緯度の平均値
+            average_latitude = sum_latitude/samples;//緯度の平均値
         }
 
         distance = calcudistance(average_longtitude,average_latitude);//現在地と目的地との距離を計算
@@ -91,6 +99,10 @@ double calcudistance(double x1,double y1){//距離計算用関数
 }
 double calcuangle(double x1,double y1){//角度計算用関数
     double angle;
-    angle = 90 - atan(2*(sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
-    return angle;
+    angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
+    if(angle<0){
+        return angle + 360;
+    }else{
+        return angle;
+    }
 }
