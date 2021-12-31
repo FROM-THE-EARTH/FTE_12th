@@ -1,14 +1,14 @@
-### cansat用のコード置き場
+## cansat用のコード置き場
 カンサット用の実験的コードです
-## GPS_test.cpp
+### GPS_test.cpp
 GPSのデータから正しく距離と角度を求めるプログラムを開発中です
-## MOTOR_test.cpp
+### MOTOR_test.cpp
 デューティー比からモーターを制御するためのプログラムです。角度を引数としたディーティー比の出力を行うための関数を開発中です。
-## CALIBLATION_test.cpp
+### CALIBLATION_test.cpp
 地磁気情報から現在の北からの角度を求めるためのプログラムを開発中です
-## ECHO_test.cpp
+### ECHO_test.cpp
 超音波センサを使用してゴールを認識するプログラムを作成中です
-## PARA_SRPARATION_test.cpp
+### PARA_SRPARATION_test.cpp
 飛翔検知からパラシュートの分離を行うためのプログラムを作成中です
-## main.cpp
+### main.cpp
 最終的な実装コードです。まだまだ未完成です。
