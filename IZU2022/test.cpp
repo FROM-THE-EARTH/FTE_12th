@@ -89,9 +89,9 @@ int main(){
             case 0:
                 if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上の加速度があれば
                     launched = true;
-                    imSend("Launched!!");
+                    imSend("Launched!!",1);
                     phase++;
-                    imSend("Phase1 Start");
+                    imSend("Phase1 Start",1);
                     timerStart();
                 }
                 break;
@@ -99,14 +99,14 @@ int main(){
                 if(interval()>15000 || (maxAltitude-altitude)>10){//打ち上がってから15秒後、もしくは10m落下すれば
                     pwm1.pulsewidth_us(1800);
                     pwm2.pulsewidth_us(1800);
-                    imSend("Para Open!");
+                    imSend("Para Open!",1);
                     phase++;
-                    imSend("Phase2 Start");
+                    imSend("Phase2 Start",1);
                 }
                 break;
             case 2:
                 if(interval()>60000){//打ち上がってから60秒経てば
-                    imSend("End!");
+                    imSend("End!",1);
                     phase++;
                 }
                 break;
@@ -142,13 +142,13 @@ void setUp(){
     //f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
 
     digitalIn.mode(PullUp);//フライトピンに電圧をかける
-    imSend("Waiting...");
+    imSend("Waiting...",1);
     wait_ms(1000);
     if(digitalIn){//この段階でピンが抜けていれば
-        imSend("Error! Pin is out.");
+        imSend("Error! Pin is out.",1);
     }
 
-    imSend("Setup Complete.");
+    imSend("Setup Complete.",1);
 }
 
 void getDatas(){//各種センサーのデータを統括する関数
@@ -209,19 +209,19 @@ void getMpu(){//9軸センサーの値を取得する関数
 void getBmp(){//tempと気圧を取得する関数
     bool bmpErrorFlag = false;
     if(bmp180.init() != 0){
-        imSend("Error! BMP180 has some problems.");
+        imSend("Error! BMP180 has some problems.",1);
         bmpErrorFlag = true;
     }
     bmp180.startTemperature();
     wait_ms(5);
     if(bmp180.getTemperature(&temp) != 0) {
-        imSend("Error! BMP180 cannot read temp.");
+        imSend("Error! BMP180 cannot read temp.",1);
         bmpErrorFlag = true;
     }
     bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
     wait_ms(10);
     if(bmp180.getPressure(&pressure) != 0) {
-        imSend("Error! BMP180 cannot read pressure.");
+        imSend("Error! BMP180 cannot read pressure.",1);
         bmpErrorFlag = true;
     }
 
@@ -261,7 +261,7 @@ void sdWrite(){
 
 }
 
-void imSend(char *send){//無線で送信する関数
+void imSend(char *send int num){//無線で送信する関数:data->num=0,message->num=1
     /*IM用:未完成
     char hexchar[256];
     int hex;
@@ -274,12 +274,16 @@ void imSend(char *send){//無線で送信する関数
     */
 
     /*Serial用*/
+    if(num==1){
+        sprintf(send,"s,message,%s",send);
+    }
+    pc.printf("00,D33D,C9:");
     pc.printf(send);
     pc.printf("\r\n");
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"data%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, millis(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
-    imSend(sendData);
+    sprintf(sendData,"s,data%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, millis(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
+    imSend(sendData,0);
 }
