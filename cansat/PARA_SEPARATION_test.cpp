@@ -39,6 +39,7 @@ bool para_Separation=false;//パラシュート分離検知
 
 int main(){
 
+    while(stage!=3){
     Servo.period_us(20000);
     Servo.pulsewidth_us(500);
 
@@ -78,7 +79,7 @@ int main(){
                 }break;
                     
          }
-
+    }
 }
 
 void getMpu(){//9軸センサーの値を取得する関数
