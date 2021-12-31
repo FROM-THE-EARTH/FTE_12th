@@ -1,2 +1,2 @@
 # カンサット用コード置き場
-## test_for_GPS
+## test_for_GPSDATA
