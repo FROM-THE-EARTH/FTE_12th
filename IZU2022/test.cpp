@@ -114,6 +114,10 @@ int main(){
                 break;
         }
     }
+    while(1){
+        getDatas();
+        sendDatas();
+    }
     //sd.unmount();
     //f_close(&fp);
 }
@@ -189,7 +193,7 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro);
     mpu.getMag(mag);
 
-/*    for(int i=0; i<= 10; i++){
+    /*for(int i=0; i<= 10; i++){
         
         accArrayX[i] = accArrayX[i-1];
         accArrayY[i] = accArrayY[i-1];
@@ -203,41 +207,46 @@ void getMpu(){//9軸センサーの値を取得する関数
 }
 
 void getBmp(){//tempと気圧を取得する関数
+    bool bmpErrorFlag = false;
     if(bmp180.init() != 0){
         imSend("Error! BMP180 has some problems.");
+        bmpErrorFlag = true;
     }
     bmp180.startTemperature();
     wait_ms(5);
     if(bmp180.getTemperature(&temp) != 0) {
         imSend("Error! BMP180 cannot read temp.");
+        bmpErrorFlag = true;
     }
     bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
     wait_ms(10);
     if(bmp180.getPressure(&pressure) != 0) {
         imSend("Error! BMP180 cannot read pressure.");
+        bmpErrorFlag = true;
     }
 
-    //変換式
-    double t_press = float(pressure)/100;
-    double ratio = (1012.25 / t_press );
-    double absoluteTemp = temp + 273.15;
-    altitude = (pow(ratio, double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
+    if(!bmpErrorFlag){//BMPにエラーがなければ、
+        //変換式
+        double t_press = float(pressure)/100;
+        double ratio = (1012.25 / t_press );
+        altitude = (pow(ratio, double(1 / 5.257)) - 1) * double(temp+273.15) / 0.0065;
 
-    /*for(int i=0; i<=10; i++){
-        altArray[i] = altArray[i-1];
-        altArray[0] = altitude;
-        
-    }*/
+        if(maxAltitude < altitude){
+            maxAltitude = altitude;
+        }
+        /*for(int i=0; i<=10; i++){
+            altArray[i] = altArray[i-1];
+            altArray[0] = altitude;
 
-    if(maxAltitude < altitude){
-        maxAltitude = altitude;
+        }
+        if(maxAltitude < calcMedian(altArray, SAMPLES){
+            maxAltitude = calcMedian(altArray, SAMPLES);
+        }*/
+    }else{//BMPにエラーがあれば、
+        altitude = -1;
+        maxAltitude = -1;
     }
 }
-
-    /*if(maxAltitude < calcMedian(altArray, SAMPLa){
-        maxAltitude = calcMedian(altArray, SAMPLES);
-    }
-}*/
 
 void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
     gps.GetData();
@@ -263,6 +272,7 @@ void imSend(char *send){//無線で送信する関数
     wait_ms(20);
     im920.sendCommand(hexchar);
     */
+
     /*Serial用*/
     pc.printf(send);
     pc.printf("\r\n");
