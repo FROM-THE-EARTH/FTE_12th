@@ -7,8 +7,10 @@
 
 #include "mbed.h"
 #include "GPS.h"
+#include "math.h"
 
 #define r 6378.137//地球の径
+#define pi 3.14159265359　//円周率の定義
 
 #define goal_longtitude //ここに目的地の緯度をを記入してください
 #define goal_latitude //ここに目的地の経度を記入して下さい
