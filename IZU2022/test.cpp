@@ -71,7 +71,7 @@ double longtitude;
 void sdWrite();
 
 //IM920
-void imSend(char *send);
+void imSend(char *send,int num);
 void sendDatas();
 char sendData[256]; //送るデータのchar型配列(im920はchar型でしか送れない。)
 int dataNumber = 0;
@@ -261,7 +261,7 @@ void sdWrite(){
 
 }
 
-void imSend(char *send int num){//無線で送信する関数:data->num=0,message->num=1
+void imSend(char *send, int num){//無線で送信する関数:data->num=0,message->num=1
     /*IM用:未完成
     char hexchar[256];
     int hex;
