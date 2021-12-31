@@ -275,11 +275,16 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
 
     /*Serial用*/
     if(num==1){
-        sprintf(send,"s,message,%s",send);
+        char sendChar[256];
+        sprintf(sendChar,"s,message,%s",send);
+        pc.printf("00,D33D,C9:");
+        pc.printf(sendChar);
+        pc.printf("\r\n");
+    }else if(num==0){
+        pc.printf("00,D33D,C9:");
+        pc.printf(send);
+        pc.printf("\r\n");
     }
-    pc.printf("00,D33D,C9:");
-    pc.printf(send);
-    pc.printf("\r\n");
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
