@@ -127,6 +127,9 @@ int main(){
 
 void setUp(){
     pc.baud(115200);
+    imSend("Program Start!",1);
+    wait_ms(1000);
+    imSend("Millis Start!",1);
     millisStart();
 
     //サーボモータの初期位置
@@ -143,7 +146,12 @@ void setUp(){
 
     digitalIn.mode(PullUp);//フライトピンに電圧をかける
     imSend("Waiting...",1);
-    wait_ms(1000);
+    /*while(1){
+        wait_ms(10);
+        if(latitude!=0){
+            break;
+            }
+        }*/
     if(digitalIn){//この段階でピンが抜けていれば
         imSend("Error! Pin is out.",1);
     }
