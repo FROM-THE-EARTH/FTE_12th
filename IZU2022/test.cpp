@@ -56,6 +56,7 @@ float mag[3] = {};
 
 //BMP180
 void getBmp();
+bool bmpErrorFlag = false;
 int pressure;
 float temp;
 float altitude;
@@ -64,6 +65,7 @@ float maxAltitude;
 
 //GPS
 void getGps();
+bool gpsErrorFlag = false;
 double latitude;
 double longtitude;
 
@@ -146,12 +148,15 @@ void setUp(){
 
     digitalIn.mode(PullUp);//フライトピンに電圧をかける
     imSend("Waiting...",1);
-    /*while(1){
-        wait_ms(10);
+    while(1){
         if(latitude!=0){
             break;
             }
-        }*/
+        if(millis()>10000){
+            gpsErrorFlag = true;
+            break;
+            }
+        }
     if(digitalIn){//この段階でピンが抜けていれば
         imSend("Error! Pin is out.",1);
     }
@@ -215,21 +220,20 @@ void getMpu(){//9軸センサーの値を取得する関数
 }
 
 void getBmp(){//tempと気圧を取得する関数
-    bool bmpErrorFlag = false;
     if(bmp180.init() != 0){
-        imSend("Error! BMP180 has some problems.",1);
+        //imSend("Error! BMP180 has some problems.",1);
         bmpErrorFlag = true;
     }
     bmp180.startTemperature();
     wait_ms(5);
     if(bmp180.getTemperature(&temp) != 0) {
-        imSend("Error! BMP180 cannot read temp.",1);
+        //imSend("Error! BMP180 cannot read temp.",1);
         bmpErrorFlag = true;
     }
     bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
     wait_ms(10);
     if(bmp180.getPressure(&pressure) != 0) {
-        imSend("Error! BMP180 cannot read pressure.",1);
+        //imSend("Error! BMP180 cannot read pressure.",1);
         bmpErrorFlag = true;
     }
 
@@ -297,6 +301,6 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"s,data%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, millis(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
+    sprintf(sendData,"s,data%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
     imSend(sendData,0);
 }
