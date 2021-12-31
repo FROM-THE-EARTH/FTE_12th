@@ -42,28 +42,30 @@ int interval();
 int deadTime;
 bool launched = false;
 int phase = 0;
-float calcMedian(float *array, int n);
-#define SAMPLES 10 //medianの標本数
+//float calcMedian(float *array, int n);
+//#define SAMPLES 10 //medianの標本数
 
 //MPU9250
 void getMpu();
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
-float accArrayX[SAMPLES];
-float accArrayY[SAMPLES];
-float accArrayZ[SAMPLES];
+//float accArrayX[SAMPLES];
+//float accArrayY[SAMPLES];
+//float accArrayZ[SAMPLES];
 
 //BMP180
 void getBmp();
 int pressure;
 float temp;
 float altitude;
-float altArray[SAMPLES];
+//float altArray[SAMPLES];
 float maxAltitude;
 
 //GPS
 void getGps();
+double latitude;
+double longtitude;
 
 //SD
 void sdWrite();
@@ -78,8 +80,9 @@ int dataNumber = 0;
 
 int main(){
     setUp();
+    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得
     while(phase!=3){
-        getDatas();
+        getDatas();//GPS以外のデータを取得
         sdWrite();
         sendDatas();
         switch (phase){
@@ -148,9 +151,6 @@ void getDatas(){//各種センサーのデータを統括する関数
     timer[0] = millis();
     getMpu();
     getBmp();
-    if(gps.readable){
-        getGps();
-    }
     timer[1] = millis();
     deadTime = timer[1]-timer[0];
 }
@@ -164,6 +164,7 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
+/*
 float calcMedian(float *array, int n){
     for(int i=0; i<n; i++) {
         for(int j = i+1; j<n; j++){
@@ -179,7 +180,7 @@ float calcMedian(float *array, int n){
     } else {
         return((float)array[n/2] + array[n/2+1])/2;
     }
-}
+}*/
 
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
@@ -188,7 +189,7 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro);
     mpu.getMag(mag);
 
-    for(int i=0; i<= 10; i++){
+/*    for(int i=0; i<= 10; i++){
         
         accArrayX[i] = accArrayX[i-1];
         accArrayY[i] = accArrayY[i-1];
@@ -198,7 +199,7 @@ void getMpu(){//9軸センサーの値を取得する関数
         accArrayY[0] = acc[1];
         accArrayZ[0] = acc[2];
         
-    }
+    }*/
 }
 
 void getBmp(){//tempと気圧を取得する関数
@@ -217,16 +218,16 @@ void getBmp(){//tempと気圧を取得する関数
     }
 
     //変換式
-    float t_press = float(pressure)/100;
-    float ratio = (1012.25 / t_press );
-    float absoluteTemp = temp + 273.15;
-    altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
+    double t_press = float(pressure)/100;
+    double ratio = (1012.25 / t_press );
+    double absoluteTemp = temp + 273.15;
+    altitude = (pow(ratio, double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;
 
-    for(int i=0; i<=10; i++){
+    /*for(int i=0; i<=10; i++){
         altArray[i] = altArray[i-1];
         altArray[0] = altitude;
         
-    }
+    }*/
 
     if(maxAltitude < altitude){
         maxAltitude = altitude;
@@ -240,8 +241,9 @@ void getBmp(){//tempと気圧を取得する関数
 
 void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
     gps.GetData();
-    if(gps.readable == false){
-        imSend("Error! GPS cannot read data.");
+    if(gps.readable){
+        latitude = gps.latitude;
+        longtitude = gps.longtitude;
     }
 
 }
@@ -251,6 +253,7 @@ void sdWrite(){
 }
 
 void imSend(char *send){//無線で送信する関数
+    /*IM用:未完成
     char hexchar[256];
     int hex;
     pc.printf(send);
@@ -259,11 +262,14 @@ void imSend(char *send){//無線で送信する関数
     sprintf(hexchar, "TXDA %d", hex);
     wait_ms(20);
     im920.sendCommand(hexchar);
-
+    */
+    /*Serial用*/
+    pc.printf(send);
+    pc.printf("\r\n");
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"data%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%d", dataNumber, millis(), phase, gps.latitude, gps.longtitude, altitude, maxAltitude, deadTime);
+    sprintf(sendData,"data%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, millis(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
     imSend(sendData);
 }
