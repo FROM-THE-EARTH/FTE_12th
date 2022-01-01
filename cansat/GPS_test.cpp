@@ -15,6 +15,7 @@
 #define goal_longtitude //ここに目的地の緯度をを記入してください
 #define goal_latitude //ここに目的地の経度を記入して下さい
 #define samples 30
+#define CRITERION //ここに分散を記入して下さい
 
 Serial.pc(USBTX,USBRX);
 pc.baud(115200);
@@ -27,6 +28,8 @@ bool gps_select_correct_data = false;
 bool gps_get_imformation = false;
 float sum_longtitude;
 float sum_latitude;
+float sum_square_longtitude;
+float sum_square_latitude;
 float average_longtitude;
 float average_latitude;
 
@@ -63,6 +66,47 @@ int main(){
 
         /*GPSのデータが安定したことを確かめる方法を吟味する必要がある
         例えば、前後のデータの誤差が一定値よりも低い状況が所定回数繰り返されたならば、安定化したと判断するなど
+        分散を求め、一定値よりも低ければ安定化と判断するのもあり
+        
+        分散から安定化を判断する場合、以下のようなコードになる
+        安定化を判断する基準となる分散をCRITERIONとしてマクロ定義してください
+        
+        ******************************************************************************************************
+        while(gps_sastanability != false){
+            
+            for(int i=0;i<=30;i++){
+                array_longtitude[i]=longtitude;
+                array_latitude[i]=latitude;
+            }
+            
+            for(int i=0;i<=samples;i++){
+
+                sum_longtitude += array_longtitude[i];
+                sum_latitude += array_latitude[i];
+
+                sum_square_longtitude += array_longtitude[i]*array_longtitude[i];
+                sum_square_latitude += array_latitude[i]*array_latitude[i];
+
+                average_longtitude = sum_longtitude/samples;
+                average_latitude = sum_latitude/samples;
+
+                average_square_longtitude = sum_square_longtitude/samples;
+                average_square_latitude = sum_square_latitude/samples;
+
+                dispersion_longtitude = average_square_longtitude - average_longtitude*average_longtitude;
+                dispersion_latitude = average_square_latitude - average_latitude*average_latitude;
+
+            }
+
+            if(dispersion_longtitude<CRITERION && dispersion_latitude<CRITERION){
+                gps_sastanability = true;
+            }else{
+                gps_sastanability = false;
+            }
+
+        }
+
+        ******************************************************************************************************
         */
 
         for(int i=0;i<samples;i++){//GPSのデータを30回取得
