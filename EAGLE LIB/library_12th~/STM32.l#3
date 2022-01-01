@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="9.6.2">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="2" name="Route2" color="16" fill="1" visible="no" active="yes"/>
+<layer number="3" name="Route3" color="17" fill="1" visible="no" active="yes"/>
+<layer number="4" name="Route4" color="18" fill="1" visible="no" active="yes"/>
+<layer number="5" name="Route5" color="19" fill="1" visible="no" active="yes"/>
+<layer number="6" name="Route6" color="25" fill="1" visible="no" active="yes"/>
+<layer number="7" name="Route7" color="26" fill="1" visible="no" active="yes"/>
+<layer number="8" name="Route8" color="27" fill="1" visible="no" active="yes"/>
+<layer number="9" name="Route9" color="28" fill="1" visible="no" active="yes"/>
+<layer number="10" name="Route10" color="29" fill="1" visible="no" active="yes"/>
+<layer number="11" name="Route11" color="30" fill="1" visible="no" active="yes"/>
+<layer number="12" name="Route12" color="20" fill="1" visible="no" active="yes"/>
+<layer number="13" name="Route13" color="21" fill="1" visible="no" active="yes"/>
+<layer number="14" name="Route14" color="22" fill="1" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="23" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="88" name="SimResults" color="9" fill="1" visible="yes" active="yes"/>
+<layer number="89" name="SimProbes" color="9" fill="1" visible="yes" active="yes"/>
+<layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<packages>
+<package name="STM32-NUCLEO32">
+<wire x1="0" y1="0" x2="50.292" y2="0" width="0.127" layer="21"/>
+<wire x1="50.292" y1="0" x2="50.292" y2="-18.542" width="0.127" layer="21"/>
+<wire x1="50.292" y1="-18.542" x2="0" y2="-18.542" width="0.127" layer="21"/>
+<wire x1="0" y1="-18.542" x2="0" y2="0" width="0.127" layer="21"/>
+<pad name="D12" x="5.461" y="-1.651" drill="0.8"/>
+<pad name="D11" x="8.001" y="-1.651" drill="0.8"/>
+<pad name="D10" x="10.541" y="-1.651" drill="0.8"/>
+<pad name="D9" x="13.081" y="-1.651" drill="0.8"/>
+<pad name="D8" x="15.621" y="-1.651" drill="0.8"/>
+<pad name="D7" x="18.161" y="-1.651" drill="0.8"/>
+<pad name="D6" x="20.701" y="-1.651" drill="0.8"/>
+<pad name="D5" x="23.241" y="-1.651" drill="0.8"/>
+<pad name="D4" x="25.781" y="-1.651" drill="0.8"/>
+<pad name="D3" x="28.321" y="-1.651" drill="0.8"/>
+<pad name="D2" x="30.861" y="-1.651" drill="0.8"/>
+<pad name="GND1" x="33.401" y="-1.651" drill="0.8"/>
+<pad name="RST1" x="35.941" y="-1.651" drill="0.8"/>
+<pad name="D0/RX" x="38.481" y="-1.651" drill="0.8"/>
+<pad name="D1/TX" x="41.021" y="-1.651" drill="0.8"/>
+<pad name="D13" x="5.461" y="-16.891" drill="0.8"/>
+<pad name="3V3" x="8.001" y="-16.891" drill="0.8"/>
+<pad name="REF" x="10.541" y="-16.891" drill="0.8"/>
+<pad name="A0" x="13.081" y="-16.891" drill="0.8"/>
+<pad name="A1" x="15.621" y="-16.891" drill="0.8"/>
+<pad name="A2" x="18.161" y="-16.891" drill="0.8"/>
+<pad name="A3" x="20.701" y="-16.891" drill="0.8"/>
+<pad name="A4" x="23.241" y="-16.891" drill="0.8"/>
+<pad name="A5" x="25.781" y="-16.891" drill="0.8"/>
+<pad name="A6" x="28.321" y="-16.891" drill="0.8"/>
+<pad name="A7" x="30.861" y="-16.891" drill="0.8"/>
+<pad name="5V" x="33.401" y="-16.891" drill="0.8"/>
+<pad name="RST2" x="35.941" y="-16.891" drill="0.8"/>
+<pad name="GND2" x="38.481" y="-16.891" drill="0.8"/>
+<pad name="VIN" x="41.021" y="-16.891" drill="0.8" shape="square"/>
+</package>
+</packages>
+<symbols>
+<symbol name="STM32F303K8-NUCLEO32">
+<pin name="D1/PA_9" x="-5.08" y="0" length="middle"/>
+<pin name="D0/PA_10" x="-5.08" y="-2.54" length="middle"/>
+<pin name="RST1" x="-5.08" y="-5.08" length="middle"/>
+<pin name="GND1" x="-5.08" y="-7.62" length="middle"/>
+<pin name="D2/PA_12" x="-5.08" y="-10.16" length="middle"/>
+<pin name="D3/PB_0" x="-5.08" y="-12.7" length="middle"/>
+<pin name="D4/PB_7" x="-5.08" y="-15.24" length="middle"/>
+<pin name="D5/PB_6" x="-5.08" y="-17.78" length="middle"/>
+<pin name="D6/PB_1" x="-5.08" y="-20.32" length="middle"/>
+<pin name="D7/PF_0" x="-5.08" y="-22.86" length="middle"/>
+<pin name="D8/PF_1" x="-5.08" y="-25.4" length="middle"/>
+<pin name="D9/PA_8" x="-5.08" y="-27.94" length="middle"/>
+<pin name="D10/PA_11" x="-5.08" y="-30.48" length="middle"/>
+<pin name="D11/PB_5" x="-5.08" y="-33.02" length="middle"/>
+<pin name="D12/PB_4" x="-5.08" y="-35.56" length="middle"/>
+<pin name="D13/PB3" x="40.64" y="-35.56" length="middle" rot="R180"/>
+<pin name="3V3" x="40.64" y="-33.02" length="middle" rot="R180"/>
+<pin name="REF" x="40.64" y="-30.48" length="middle" rot="R180"/>
+<pin name="A0/PA_0" x="40.64" y="-27.94" length="middle" rot="R180"/>
+<pin name="A1/PA_1" x="40.64" y="-25.4" length="middle" rot="R180"/>
+<pin name="A2/PA_3" x="40.64" y="-22.86" length="middle" rot="R180"/>
+<pin name="A3/PA_4" x="40.64" y="-20.32" length="middle" rot="R180"/>
+<pin name="A4/PA_5" x="40.64" y="-17.78" length="middle" rot="R180"/>
+<pin name="A5/PA_6" x="40.64" y="-15.24" length="middle" rot="R180"/>
+<pin name="A6/PA_7" x="40.64" y="-12.7" length="middle" rot="R180"/>
+<pin name="A7/PA_2" x="40.64" y="-10.16" length="middle" rot="R180"/>
+<pin name="5V" x="40.64" y="-7.62" length="middle" rot="R180"/>
+<pin name="RST2" x="40.64" y="-5.08" length="middle" rot="R180"/>
+<pin name="GND2" x="40.64" y="-2.54" length="middle" rot="R180"/>
+<pin name="VIN" x="40.64" y="0" length="middle" rot="R180"/>
+<text x="12.7" y="-20.32" size="1.27" layer="94">STM32F303K8
+Nucleo32</text>
+<wire x1="0" y1="2.54" x2="0" y2="-38.1" width="0.254" layer="94"/>
+<wire x1="0" y1="-38.1" x2="35.56" y2="-38.1" width="0.254" layer="94"/>
+<wire x1="35.56" y1="-38.1" x2="35.56" y2="2.54" width="0.254" layer="94"/>
+<wire x1="35.56" y1="2.54" x2="0" y2="2.54" width="0.254" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+</devicesets>
+</library>
+</drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
+</eagle>
