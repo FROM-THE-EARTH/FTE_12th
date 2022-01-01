@@ -24,7 +24,7 @@ float longtitude;
 float latitude;
 float array_longtitude[30]={};
 float array_latitude[30]={};
-bool gps_select_correct_data = false;
+bool gps_start_receiving = false;
 bool gps_get_imformation = false;
 float sum_longtitude;
 float sum_latitude;
@@ -42,23 +42,27 @@ int main(){
 
     gps.getData();//GPSデータ取得開始
 
+　　while(gps_start_receiving = false){//受信が終わるまで
+
     if(gps.readable == true){//受信可能な時間であるならば（1秒おきにGPSのデータが来るため）
         if(gps.longtitude != 0){//経度の値が0でなければ受信していると判断し、その条件下において行う処理
             
             longtitude = gps.longtitude;
             latitude = gps.latitude;
-            gps_select_correct_data = true;//正しく受信できている
+            gps_start_receiving = true;//正しく受信できている
 
         }else{//経度の値が0ならば受信できていないと判断
-            gps_select_correct_data = false;//受信できていない
+            gps_start_receiving = false;//受信できていない
             pc.printf("waiting\n");
         }
     }else{
-        gps_select_correct_data = false;//受信可能な時間帯ではない
+        gps_start_receiving = false;//受信可能な時間帯ではない
         pc.printf("time is wrong\n");//
     }
 
-    if(gps_select_correct_data != false){//受信可能であるならば
+    }
+
+    while(gps_start_receiving != false){//受信可能であるならば
 
         pc.printf("gps start collecting data\n");
 
@@ -75,8 +79,8 @@ int main(){
         while(gps_sastanability != false){
             
             for(int i=0;i<=30;i++){
-                array_longtitude[i]=longtitude;
-                array_latitude[i]=latitude;
+                array_longtitude[i]=gps.longtitude;
+                array_latitude[i]=gps.latitude;
             }
             
             for(int i=0;i<=samples;i++){
@@ -110,8 +114,8 @@ int main(){
         */
 
         for(int i=0;i<samples;i++){//GPSのデータを30回取得
-            array_longtitude[i]=longtitude;
-            array_latitude[i]=latitude;
+            array_longtitude[i]=gps.longtitude;
+            array_latitude[i]=gps.latitude;
         }
 
         for(int i=0;i<samples;i++){//30回のデータから、緯度、経度の平均値を求める
