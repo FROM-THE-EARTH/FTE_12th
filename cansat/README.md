@@ -1,14 +1,21 @@
-## cansat用のコード置き場
-カンサット用の実験的コードです
-### GPS_test.cpp
-GPSのデータから正しく距離と角度を求めるプログラムを開発中です
-### Motor_test.cpp
-デューティー比からモーターを制御するためのプログラムです。角度を引数としたディーティー比の出力を行うための関数を開発中です。
-### Caliblation_test.cpp
-地磁気情報から現在の北からの角度を求めるためのプログラムを開発中です
-### Echo_test.cpp
-超音波センサを使用してゴールを認識するプログラムを開発中です
-### Para_Separation_test.cpp
-飛翔検知からパラシュートの分離を行うためのプログラムを開発中です
-### main.cpp
-最終的な実装コードです。まだまだ未完成です。
+# cansat用諸データの集い
+
+## ライブラリについて
+* [MPU9250](https://os.mbed.com/teams/PQ_Hybrid_Electrical_Equipment_Team/code/mpu9250_i2c/)  revision 16:bea48f4ac712
+* [BMP180](https://os.mbed.com/users/kgills/code/BMP180/)  revision 0:b2219e6e444b
+* [IM920](https://os.mbed.com/users/okini3939/code/IM920/)  revision 5:2fd9b1725283
+* [GPS](https://os.mbed.com/users/Tomo073/code/GPS/)  revision 5:b97034d6df35
+* [millis](https://os.mbed.com/teams/DFRobot/code/millis/)  revision 0:736e6cc31bcd
+* [SDカード]()
+* [Mbed]()  revision 171:3a7713b(08/Nov/2018)
+
+--- 
+17/Dec/2021
+
+
+## EAGLEプロジェクトについて
+* EAGLEのプロジェクトファイル（.brd, .sch）については、自分のPCにダウンロードしてEAGLEから開いてください
+* zipファイルは、pcbgogoへの発注用ファイルです
+
+---
+2/Jan/2022
