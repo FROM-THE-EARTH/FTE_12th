@@ -15,7 +15,7 @@ I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(mpu_SDA, mpu_SCL);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn flightPin(PA_8);
+DigitalIn digitalIn(PA_8);
 PwmOut PWM1(PB_0);
 PwmOut PWM2(PB_1);
 //SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
@@ -52,20 +52,14 @@ int main(){
     //f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
     
     if(!flightPinAttached){//フライトピンが刺さっているならば
-<<<<<<< HEAD
-        flightPin.mode(PullUp);
-        pc.printf("waiting...\n");
-=======
         digitalIn.mode(PullUp);
-        imSend("waiting...");
->>>>>>> cf54c8a524ec33b126bf8d06cd784d683f667515
+        pc.printf("waiting...\n");
         while(1){
             getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
             getbmp(pressure,temp,altitude,l);
-            getGPS();
             pc.printf("%f,%f,%f,%f\n",ax,ay,az,altitude);
             
-            if(flightPin || (ax*ax+ay*ay+az*az)>=2.0*2.0){
+            if(digitalIn || (ax*ax+ay*ay+az*az)>=2.0*2.0){
                 flightPinAttached=true;
                 launched = true;
                 pc.printf("launched\n");
@@ -80,7 +74,6 @@ int main(){
     while(sequence!=3){
         getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
         getbmp(pressure,temp,altitude,l);
-        getGPS();
         //getgps(longtitude,latitude);
         if(maxaltitude<altitude){
             maxaltitude=altitude;
@@ -95,9 +88,9 @@ int main(){
                 }
                 break;
             case 1:
-                if(millis()>15000||maxaltitude-altitude>10){
-                    PWM1.pulsewidth_us(1800);
-                    PWM2.pulsewidth_us(1800);
+                if(millis()>15||maxaltitude-altitude>10){
+                    PWM1.pulsewidth_us(1200);
+                    PWM2.pulsewidth_us(1200);
                     sequence=2;
                     pc.printf("para_open!");
                     pc.printf("%f,%f,%f,%f",ax,ay,az,altitude);
@@ -106,7 +99,7 @@ int main(){
                 }
                 break;
             case 2:
-                if(millis()>60000){
+                if(millis()>60){
                     sequence=3;
                     pc.printf("end!");
                     pc.printf("%f,%f,%f,%f",ax,ay,az,altitude);
@@ -176,7 +169,7 @@ void sendDatas(float latitude, float longtitude, float altitude, float time){//�
         imSend(sendData);
 }
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
-    //NVIC_SetPriority(UART1_IRQn,1); //割り込み優先順位 im -> gps, high -> low
+    NVIC_SetPriority(UART1_IRQn,1); //割り込み優先順位 im -> gps, high -> low
     gps.GetData();
     if(gps.readable == true){
        sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
