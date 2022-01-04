@@ -3,22 +3,29 @@
 3分の待機時間の後に目的地への北からの角度が表示されるはずです
 */
 
-
+/*
+現在地と目的地の距離及び角度を求める計算式として大円近似を使用していますが近い距離ならば直線近似の方が良いかもしれないです
+その場合、以下のサイトを参考にして関数を書き換える必要があります
+https://teratail.com/questions/140018
+誰か実験で微調整求む
+*/
 
 #include "mbed.h"
 #include "GPS.h"
 #include "math.h"
 
 #define r 6378.137//地球の径
-#define pi 3.14159265359　//円周率の定義
+#define pi 3.1415
 
-#define goal_longtitude //ここに目的地の緯度をを記入してください
-#define goal_latitude //ここに目的地の経度を記入して下さい
+
+#define goal_longtitude 37.8755594//ここに目的地の緯度をを記入してください
+#define goal_latitude 139.1124363 //ここに目的地の経度を記入して下さい
 #define samples 30
 #define CRITERION //ここに分散を記入して下さい
 
-Serial.pc(USBTX,USBRX);
-pc.baud(115200);
+Serial pc(USBTX,USBRX);
+
+GPS gps(PA_9,PA_10);
 
 float longtitude;
 float latitude;
@@ -32,34 +39,25 @@ float sum_square_longtitude;
 float sum_square_latitude;
 float average_longtitude;
 float average_latitude;
-
+//const float pi = 3.141592;
 
 double calcudistance(double x1,double y1);//距離計算用関数
 double calcuangle(double x1,double y1);//角度計算用関数
 double distance,angle;//距離・角度
 
 int main(){
-
-    gps.getData();//GPSデータ取得開始
-
-　　while(gps_start_receiving = false){//受信が終わるまで
-
-    if(gps.readable == true){//受信可能な時間であるならば（1秒おきにGPSのデータが来るため）
-        if(gps.longtitude != 0){//経度の値が0でなければ受信していると判断し、その条件下において行う処理
-            
-            longtitude = gps.longtitude;
-            latitude = gps.latitude;
-            gps_start_receiving = true;//正しく受信できている
-
-        }else{//経度の値が0ならば受信できていないと判断
-            gps_start_receiving = false;//受信できていない
-            pc.printf("waiting\n");
+    pc.baud(115200);
+    gps.GetData();
+    while(gps_start_receiving!=true){
+        if(gps.readable==true){
+            if(gps.longtitude != 0){
+                gps_start_receiving = true;
+            }else{
+                gps_start_receiving = false;
+            }
+        }else{
+                gps_start_receiving = false;
         }
-    }else{
-        gps_start_receiving = false;//受信可能な時間帯ではない
-        pc.printf("time is wrong\n");//
-    }
-
     }
 
     while(gps_start_receiving != false){//受信可能であるならば
@@ -125,9 +123,9 @@ int main(){
             sum_latitude += array_latitude[i];//
             average_latitude = sum_latitude/samples;//緯度の平均値
         }
-
+        
         distance = calcudistance(average_longtitude,average_latitude);//現在地と目的地との距離を計算
-        angle = culcuangle(average_longtitude,average_latitude);//目的地への北からの角度を計算
+        angle = calcuangle(average_longtitude,average_latitude);//目的地への北からの角度を計算
 
         gps_get_imformation = true;//必要な情報の取得完了
 
@@ -142,11 +140,13 @@ int main(){
 
 }
 
+
 double calcudistance(double x1,double y1){//距離計算用関数
     double distance;
     distance = (r)*acos(sin(y1)*sin(goal_latitude)+cos(y1)*cos(goal_latitude)*cos(goal_longtitude-x1));
     return distance;
 }
+
 double calcuangle(double x1,double y1){//角度計算用関数
     double angle;
     angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
@@ -156,3 +156,4 @@ double calcuangle(double x1,double y1){//角度計算用関数
         return angle;
     }
 }
+
