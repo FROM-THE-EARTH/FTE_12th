@@ -1,14 +1,30 @@
 
+
+/*
+飛翔検知からパラシュート分離までのコードです
+
+気圧センサにしか頼ってないので、9軸センサをとか使って、気圧センサが応答しない場合にも作動する論理回路にする必要があると思います
+また、サーボモーターが動作したにも関わらずパラシュート分離用のピンの変化を検知できなかった場合どうするかなど、例外処理を加える必要があります
+
+誰かやってくれるとうれしい
+
+
+*/
 #include "mbed.h"
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
 #include "math.h"
 
+#define mpu_SDA PB_7
+#define mpu_SCL PB_6
+
+#define SAMPLES 10
+
 I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(mpu_SDA, mpu_SCL);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DIgitalIn para_recognition(PA_0)
+DigitalIn para_recognition(PA_0);
 PwmOut Servo(PA_12);
 
 Serial pc(USBTX, USBRX);
@@ -59,13 +75,13 @@ int main(){
     switch(stage){
         case 0:if(altitude - minAltitude > 5){//5m上昇で飛翔検知
                         takeoff = true;
-                        pc.printf("takeoff!\n")
+                        pc.printf("takeoff!\n");
                         stage  = 0;
                     
                 }break;
         case 1:if(maxAltitude - minAltitude > 5){//5m降下で降下検知
                         fall = true;
-                        pc.printf("falling!\n")
+                        pc.printf("falling!\n");
                         stage = 1;
                 }break;
         case 2:if(fall = true && altitude - minAltitude < 3){//地上から3m以内でパラ分離のフェーズへ以降
