@@ -77,9 +77,7 @@ int main(){
 
     pc.printf("start calibration!\n");
     
-    for(int i=1;i<200;i++){//キャリブレーションを２００回行う。ここの数も調整必要
-
-　　　　　
+    for(int i=1;i<200;i++){//キャリブレーションを２００回行う。ここの数も調整必要　　　　
         getMpu();
         getBmp();
 
@@ -147,15 +145,15 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro);
     mpu.getMag(mag);
 
-    for(int i=10;i>0;i--){
+    magArrayX[0] = mag[0];
+    magArrayY[0] = mag[1];
+    magArrayZ[0] = mag[2];
+    
+    for(int i=9;i>0;i--){
         
         magArrayX[i] = magArrayX[i-1];
         magArrayY[i] = magArrayY[i-1];
         magArrayZ[i] = magArrayZ[i-1];
-    
-        magArrayX[0] = mag[0];
-        magArrayY[0] = mag[1];
-        magArrayZ[0] = mag[2];
         
     }
 
