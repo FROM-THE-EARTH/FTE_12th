@@ -66,7 +66,6 @@ float maxAltitude;
 
 //GPS
 void getGps();
-bool gpsErrorFlag = false;
 double latitude;
 double longtitude;
 
@@ -154,7 +153,7 @@ void setUp(){
             break;
             }
         if(millis()>10000){
-            gpsErrorFlag = true;
+            imSend("Error! GPS cannot read",1);
             break;
             }
         }
@@ -275,33 +274,31 @@ void sdWrite(){
 }
 
 void imSend(char *send, int num){//無線で送信する関数:data->num=0,message->num=1
-    //IM用:未完成
+    /*IM用*/
     char sendChar[256];
     if(num==1){
         sprintf(sendChar,"s,message,%s",send);
-    }
-    if(num==0){
-        sendChar = send;
+    }else if(num==0){
+        sprintf(sendChar,"s,data%s",send);
     }
     im920.send(sendChar,strlen(sendChar)+1);
-    
+    pc.printf("%s\n",sendChar);
 
     /*Serial用
+    char sendChar[256];
     if(num==1){
-        char sendChar[256];
         sprintf(sendChar,"s,message,%s",send);
-        pc.printf("00,D33D,C9:");
-        pc.printf(sendChar);
-        pc.printf("\r\n");
     }else if(num==0){
-        pc.printf("00,D33D,C9:");
-        pc.printf(send);
-        pc.printf("\r\n");
-    }*/
+        sprintf(sendChar,"s,data%s",send);
+    }
+    pc.printf("00,D33D,C9:");
+    pc.printf(sendChar);
+    pc.printf("\r\n");
+    */
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"s,data%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
+    sprintf(sendData,"%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longtitude, altitude, maxAltitude, deadTime);
     imSend(sendData,0);
 }
