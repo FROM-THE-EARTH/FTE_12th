@@ -222,19 +222,19 @@ void getMpu(){//9軸センサーの値を取得する関数
 
 void getBmp(){//tempと気圧を取得する関数
     if(bmp180.init() != 0){
-        //imSend("Error! BMP180 has some problems.",1);
+        imSend("Error! BMP180 has some problems.",1);
         bmpErrorFlag = true;
     }
     bmp180.startTemperature();
     wait_ms(5);
     if(bmp180.getTemperature(&temp) != 0) {
-        //imSend("Error! BMP180 cannot read temp.",1);
+        imSend("Error! BMP180 cannot read temp.",1);
         bmpErrorFlag = true;
     }
     bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
     wait_ms(10);
     if(bmp180.getPressure(&pressure) != 0) {
-        //imSend("Error! BMP180 cannot read pressure.",1);
+        imSend("Error! BMP180 cannot read pressure.",1);
         bmpErrorFlag = true;
     }
 
@@ -275,18 +275,18 @@ void sdWrite(){
 }
 
 void imSend(char *send, int num){//無線で送信する関数:data->num=0,message->num=1
-    /*IM用:未完成
-    char hexchar[256];
-    int hex;
-    pc.printf(send);
-    pc.printf("\r\n");
-    sscanf(send, "%x", &hex);
-    sprintf(hexchar, "TXDA %d", hex);
-    wait_ms(20);
-    im920.sendCommand(hexchar);
-    */
+    //IM用:未完成
+    char sendChar[256];
+    if(num==1){
+        sprintf(sendChar,"s,message,%s",send);
+    }
+    if(num==0){
+        sendChar = send;
+    }
+    im920.send(sendChar,strlen(sendChar)+1);
+    
 
-    /*Serial用*/
+    /*Serial用
     if(num==1){
         char sendChar[256];
         sprintf(sendChar,"s,message,%s",send);
@@ -297,7 +297,7 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
         pc.printf("00,D33D,C9:");
         pc.printf(send);
         pc.printf("\r\n");
-    }
+    }*/
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
