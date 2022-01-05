@@ -146,21 +146,22 @@ void setUp(){
     //FIL fp;
     //f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
 
-    digitalIn.mode(PullUp);//フライトピンに電圧をかける
+    
     imSend("Waiting...",1);
     while(1){
         if(latitude!=0){
             break;
             }
-        if(millis()>10000){
+        if(millis()>10000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
             imSend("Error! GPS cannot read",1);
             break;
             }
         }
+    digitalIn.mode(PullUp);//フライトピンに電圧をかける
+    wait_ms(1000);
     if(digitalIn){//この段階でピンが抜けていれば
         imSend("Error! Pin is out.",1);
     }
-
     imSend("Setup Complete.",1);
 }
 
