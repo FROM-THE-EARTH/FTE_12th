@@ -1,11 +1,11 @@
 /**
- * @file izu3022.cpp
+ * @file main.cpp
  * @author Hiroto ABE
  * @brief code for IZU
- * @version 1.0
- * @date 2021-12-24
+ * @version 0.1
+ * @date 2022-01-07
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  * 
  */
 
