@@ -81,13 +81,14 @@ int dataNumber = 0;
 
 
 
+
 int main(){
     setUp();
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
-    while(phase!=3){
+    while(phase!=4){
         getDatas();//GPS以外のデータを取得
-        sdWrite();
         sendDatas();
+        sdWrite();
         switch (phase){
             case 0:
                 if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上の加速度があれば
@@ -113,13 +114,12 @@ int main(){
                     phase++;
                 }
                 break;
-            default:
+            case 3:
+                if(interval()>360000){//さらに5分経てば
+                    phase++;
+                }
                 break;
         }
-    }
-    while(1){
-        getDatas();
-        sendDatas();
     }
     //sd.unmount();
     //f_close(&fp);
@@ -193,6 +193,7 @@ void setUp(){
     }
 }
 
+
 void getDatas(){//各種センサーのデータを統括する関数
     timer[0] = millis();//deadTimeを測るため
     function = getMpu();
@@ -201,14 +202,17 @@ void getDatas(){//各種センサーのデータを統括する関数
     deadTime = timer[1]-timer[0];
 }
 
+
 void timerStart(){//interval()のスタート地点
     timer[2] = millis();
 }
+
 
 int interval(){//timeStart()からの時間を返す関数
     timer[3] = millis();
     return timer[3]-timer[2];
 }
+
 
 float calcMedian(float *array, int n){//配列の値の中央値を出す関数
     for(int i=0; i<n; i++) {//昇順にソート
@@ -226,6 +230,7 @@ float calcMedian(float *array, int n){//配列の値の中央値を出す関数
         return((float)array[n/2] + array[n/2+1])/2;
     }
 }
+
 
 int getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
@@ -246,6 +251,7 @@ int getMpu(){//9軸センサーの値を取得する関数
 
     return 0;
 }
+
 
 void getBmp(){//tempと気圧を取得する関数
     if(bmp180.init() != 0){
@@ -292,6 +298,7 @@ void getBmp(){//tempと気圧を取得する関数
     }
 }
 
+
 void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
     gps.GetData();
     if(gps.readable){
@@ -301,9 +308,15 @@ void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
 
 }
 
-void sdWrite(){
 
+void sdWrite(){//SDカードにデータを書き込む関数
+    /*
+    f_printf(&fp,"%d,%d,%d,%f,%f,%.3f,%.3f,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\n",
+        dataNumber, interval(), phase, latitude, longtitude, altitude, maxAltitude, deadTime,
+        acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[0], mag[1], mag[2]);
+    */
 }
+
 
 void imSend(char *send, int num){//無線で送信する関数:data->num=0,message->num=1
     /*IM用*/
@@ -328,6 +341,7 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
     pc.printf("\r\n");
     */
 }
+
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
