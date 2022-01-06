@@ -9,8 +9,11 @@
 
 ## エラーとその対処
 #### GPS
+
 `if(gps.readable==true)`が条件を満たしていて`if`の中身が実行されても、その後の`else`の中身も実行される。
+
 --- 
+
 `gps.readable`が`true`になるのは、GPSからマイコンにRXが届いた一瞬である。さらに、
 ```
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
