@@ -34,7 +34,9 @@ Serial pc(USBTX, USBRX);
 
 //全体で使う関数や変数などの定義
 void setUp();
+bool setUpErrorFlag = false;
 void getDatas();
+int function;
 int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
 void timerStart();
 int interval();
@@ -46,7 +48,7 @@ float calcMedian(float *array, int n);
 
 //以下各モジュールの関数や変数などの定義
 //MPU9250
-void getMpu();
+int getMpu();
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
@@ -55,7 +57,7 @@ float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
 
 //BMP180
-void getBmp();
+int getBmp();
 bool bmpErrorFlag = false;
 int pressure;
 float temp;
@@ -145,29 +147,56 @@ void setUp(){
     f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
     */
 
-    
     imSend("Waiting...",1);
     while(1){
         if(latitude!=0){
+            imSend("GPS OK",1);
             break;
             }
         if(millis()>10000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
             imSend("Error! GPS cannot read",1);
+            setUpErrorFlag = true;
             break;
             }
-        }
+    }
+
     digitalIn.mode(PullUp);//フライトピンに電圧をかける
     wait_ms(1000);
-    if(digitalIn){//この段階でピンが抜けていれば
+    if(digitalIn){//この段階でピンが抜けていればエラーを出力
         imSend("Error! Pin is out.",1);
+        setUpErrorFlag = true;
+    }else{
+        imSend("FlightPin OK",1);
     }
-    imSend("Setup Complete.",1);
+
+    if(getMpu()==0){//mpu9250の動作確認
+        imSend("MPU9250 OK",1);
+    }else{
+        imSend("Error! MPU9250 has some problems",1);
+        setUpErrorFlag = true;
+    }
+
+    if(getBmp()==0){//bmp180の動作確認
+        imSend("BMP180 OK",1);
+    }else{
+        setUpErrorFlag = true;
+    }
+
+    for(int i=0, i<SAMPLES; i++){//calcMedian()を使うために、配列の値をデータで一度満たしておく必要がある:広い意味での初期化
+        getDatas();
+    }
+
+    if(!setUpErrorFlag){
+        imSend("Setup Complete!",1);
+    }else{
+        imSend("Setup Finish.",1);
+    }
 }
 
 void getDatas(){//各種センサーのデータを統括する関数
-    timer[0] = millis();
-    getMpu();
-    getBmp();
+    timer[0] = millis();//deadTimeを測るため
+    function = getMpu();
+    function = getBmp();
     timer[1] = millis();
     deadTime = timer[1]-timer[0];
 }
@@ -181,8 +210,8 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
-float calcMedian(float *array, int n){
-    for(int i=0; i<n; i++) {
+float calcMedian(float *array, int n){//配列の値の中央値を出す関数
+    for(int i=0; i<n; i++) {//昇順にソート
         for(int j = i+1; j<n; j++){
             if(array[i]>array[j]){
                 float changer = array[j];
@@ -198,22 +227,24 @@ float calcMedian(float *array, int n){
     }
 }
 
-void getMpu(){//9軸センサーの値を取得する関数
+int getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
     mpu.getAcc(acc);//加速度をacc[]に格納: acc[0]=ax, acc[1]=ay, acc[2]=az;
     mpu.getGyro(gyro);
     mpu.getMag(mag);
 
+    //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
     accArrayX[0] = acc[0];
     accArrayY[0] = acc[1];
     accArrayZ[0] = acc[2];
-
     for(int i=(SAMPLES-1); i>0; i--){
         accArrayX[i] = accArrayX[i-1];
         accArrayY[i] = accArrayY[i-1];
         accArrayZ[i] = accArrayZ[i-1];
     }
+
+    return 0;
 }
 
 void getBmp(){//tempと気圧を取得する関数
@@ -242,17 +273,22 @@ void getBmp(){//tempと気圧を取得する関数
         double ratio = (1012.25 / t_press );
         altitude = (pow(ratio, double(1 / 5.257)) - 1) * double(temp+273.15) / 0.0065;
 
+        //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
         altArray[0] = altitude;
         for(int i=(SAMPLES-1); i>0; i--){
             altArray[i-1] = altArray[i];
         }
         
-        if(maxAltitude < calcMedian(altArray, SAMPLES){
+        if(maxAltitude < calcMedian(altArray, SAMPLES){//最高高度の更新
             maxAltitude = calcMedian(altArray, SAMPLES);
         }
+
+        return 0;
     }else{//BMPにエラーがあれば、
         altitude = -1;//BMPにエラーがあるとaltitudeの値がinfになってしまうため
         maxAltitude = -1;
+
+        return -1;
     }
 }
 
