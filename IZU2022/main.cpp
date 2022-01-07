@@ -322,7 +322,7 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
     /*IM用*/
     char sendChar[256];
     if(num==1){
-        sprintf(sendChar,"s,message,%s",send);
+        sprintf(sendChar,"s,message,%s",send);//受信ソフト(LatLng-map)がmessageとdataを区別するため
     }else if(num==0){
         sprintf(sendChar,"s,data%s",send);
     }
