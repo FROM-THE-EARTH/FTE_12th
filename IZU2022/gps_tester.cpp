@@ -18,7 +18,7 @@ void imSend(char *send){//無線で送信する関数
 }
 
 void sendDatas(float latitude, float longtitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longtitude, altitude, time);
+        sprintf(sendData,"s,data1,1,1,%f,%f,300,400,25", latitude, longtitude);//LatLng-mapに対応
         imSend(sendData);
 }
 
