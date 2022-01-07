@@ -127,7 +127,7 @@ int main(){
 
 
 void setUp(){
-    pc.baud(115200);
+    pc.baud(11920);
     imSend("Program Start!",1);
     millisStart();//millis(タイマー)をスタート
 
