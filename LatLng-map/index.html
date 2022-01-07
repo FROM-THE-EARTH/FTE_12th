@@ -26,12 +26,12 @@
         const BAUD_RATE = 115200;     //シリアル通信のボードレート
         const INTERVAL = 10;       //map更新の頻度(ms)
         const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
-            TOP_LAT: 38.27464,       //地図画像左上端の緯度
-            TOP_LNG: 140.84572,      //地図画像左上端の経度
-            BOTTOM_LAT: 38.272154,    //地図画像右下端の緯度
-            BOTTOM_LNG: 140.851539,   //地図画像左上端の経度
-            IMG_WIDTH: 1000,         //地図画像の横幅(htmlで表示している横幅のこと)
-            IMG_HEIGHT: 550          //地図画像の縦幅
+            TOP_LAT: 38.26101,       //地図画像左上端の緯度
+            TOP_LNG: 140.84879,      //地図画像左上端の経度
+            BOTTOM_LAT: 38.25923,    //地図画像右下端の緯度
+            BOTTOM_LNG: 140.85268,   //地図画像左上端の経度
+            IMG_WIDTH: 1100,         //地図画像の横幅(htmlで表示している横幅のこと)
+            IMG_HEIGHT: 800
         });
 
         //グローバル変数を定義
@@ -200,7 +200,7 @@
     <div id="data4"><p>MaxAltitude: 0</p></div>
     <div id="data5"><p>DeadTime: 0</p></div>
     <div class="wrapper">
-        <img id="map" src="kato.png" alt="googlemap" width="1000px" height="550px">
+        <img id="map" src="kawauchi.png" alt="googlemap" width="1100px" height="800px">
         <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
     </div>
 
