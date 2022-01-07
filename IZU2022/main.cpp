@@ -41,7 +41,6 @@ int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
 void timerStart();
 int interval();
 int deadTime;
-bool launched = false;
 int phase = 0;
 float calcMedian(float *array, int n);
 #define SAMPLES 3 //medianの標本数
@@ -92,7 +91,6 @@ int main(){
         switch (phase){
             case 0:
                 if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上の加速度があれば
-                    launched = true;
                     imSend("Launched!!",1);
                     phase++;
                     imSend("Phase1 Start",1);
@@ -101,7 +99,7 @@ int main(){
                 break;
             case 1:
                 if(interval()>15000 || (maxAltitude-calcMedian(altArray, SAMPLES)>10){//打ち上がってから15秒後、もしくは10m落下すれば
-                    pwm1.pulsewidth_us(1800);
+                    pwm1.pulsewidth_us(1800);//サーボモータを動かす
                     pwm2.pulsewidth_us(1800);
                     imSend("Para Open!",1);
                     phase++;
