@@ -22,7 +22,7 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 * "Connect"ボタンを押し、適当なUSBポートを選択するとシリアルポートからのデータを取得し始めます。
 * 終了する場合は、USBをポートから抜くか、ページをリロードして下さい。
 ## デモンストレーション
-* Arduinoにこのリポジトリ内にあるdemo.inoを書き込んで、シリアル接続すると、動きを確認できます。
+* Arduinoにこのリポジトリ内にあるdemo.inoを書き込んで、シリアル接続すると、動きを確認できます。(`kawauchi.png`を使ってください。)
 
 ## データ
 * `kawauchi.png`
