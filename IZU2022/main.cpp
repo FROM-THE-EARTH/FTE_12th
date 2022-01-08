@@ -24,7 +24,7 @@ I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(PB_7, PB_6);//i2cBus(mpu_SDA, mpu_SCL)
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn digitalIn(PB_5);//フライトピン
+DigitalIn digitalIn(PF_0);//フライトピン
 PwmOut pwm1(PB_0);
 PwmOut pwm2(PB_1);
 //SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
@@ -82,8 +82,9 @@ int dataNumber = 0;
 
 
 int main(){
-    setUp();
+    
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    setUp();
     while(phase!=4){
         getDatas();//GPS以外のデータを取得
         sendDatas();
@@ -147,11 +148,12 @@ void setUp(){
 
     imSend("Waiting...",1);
     while(1){
+        
         if(latitude!=0){
             imSend("GPS OK",1);
             break;
             }
-        if(millis()>60000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
+        if(millis()>61000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
             imSend("Error! GPS cannot read",1);
             setUpErrorFlag = true;
             break;
@@ -325,7 +327,7 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
         sprintf(sendChar,"s,data%s",send);
     }
     im920.send(sendChar,strlen(sendChar)+1);
-    pc.printf("%s\n",sendChar);
+    pc.printf("00,D33D,c9:%s\n",sendChar);
 
     /*Serial用:デバッグに使う
     char sendChar[256];
