@@ -1,6 +1,6 @@
 //必要な定数の定義
 const BAUD_RATE = 19200;     //シリアル通信のボードレート
-const INTERVAL = 10;       //map更新の頻度(ms)
+const INTERVAL = 100;       //map更新の頻度(ms)
 const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
     TOP_LAT: 38.26101,       //地図画像左上端の緯度
     TOP_LNG: 140.84879,      //地図画像左上端の経度
@@ -101,7 +101,7 @@ function dataUpdate(strings) { console.log("start_dataUpdate");
         data.message = dataArray[4];
         return false;
     }else{
-        //00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
+        //無線から送られてくる値:00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
         data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
         data.phase = dataArray[5] -0;
         data.lat = dataArray[6] -0;
@@ -143,9 +143,11 @@ function mapUpdate() { console.log("start_mapUpdate");
     document.getElementById('data0').innerHTML = `<p>Message: ${data.message}</p>`;
     document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
     document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
-    document.getElementById('data3').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
-    document.getElementById('data4').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
-    document.getElementById('data5').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;
+    document.getElementById('data3').innerHTML = `<p>Time: ${data.lat}</p>`;
+    document.getElementById('data4').innerHTML = `<p>Phase: ${data.lng}</p>`;
+    document.getElementById('data5').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
+    document.getElementById('data6').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
+    document.getElementById('data7').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;
 }
 
 
