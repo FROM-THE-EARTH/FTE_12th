@@ -6,8 +6,8 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
     TOP_LNG: 140.851152,      //地図画像左上端の経度
     BOTTOM_LAT: 38.259848,    //地図画像右下端の緯度
     BOTTOM_LNG: 140.855029,   //地図画像左上端の経度
-    IMG_WIDTH: 1000,         //地図画像の横幅(htmlで表示している横幅のこと)
-    IMG_HEIGHT: 500
+    IMG_WIDTH: 1200,         //地図画像の横幅(htmlで表示している横幅のこと)
+    IMG_HEIGHT: 600
 });
 
 //グローバル変数を定義
