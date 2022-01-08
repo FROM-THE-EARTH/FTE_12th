@@ -16,7 +16,7 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 ```
 `script.js`のこの部分をコメントの通りに変更します。
   
-以下にあるURLでは、上記のコードで初期化されています。
+上記は一例です。以下にあるURLでは、上記のコードではなく、別の値で初期化されています。
 ## 使い方
 * URLは[https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html](https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html)にあります。
 * "Connect"ボタンを押し、適当なUSBポートを選択するとシリアルポートからのデータを取得し始めます。
