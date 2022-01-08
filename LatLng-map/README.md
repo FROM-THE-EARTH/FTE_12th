@@ -14,7 +14,7 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
     IMG_HEIGHT: 800          //地図画像の縦幅
     });
 ```
-この部分をコメントの通りに変更します。
+`script.js`のこの部分をコメントの通りに変更します。
   
 以下にあるURLでは、上記のコードで初期化されています。
 ## 使い方
@@ -25,33 +25,49 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 * Arduinoにこのリポジトリ内にあるdemo.inoを書き込んで、シリアル接続すると、動きを確認できます。(`kawauchi.png`を使ってください。)
 
 ## データ
+上のコードがjs、下のコードがhtmlの変更部分です。
 * `kawauchi.png`
 ```
-TOP_LAT: 38.26101,       //地図画像左上端の緯度
-TOP_LNG: 140.84879,      //地図画像左上端の経度
-BOTTOM_LAT: 38.25923,    //地図画像右下端の緯度
-BOTTOM_LNG: 140.85268,   //地図画像左上端の経度
-IMG_WIDTH: 1100,         //地図画像の横幅(htmlで表示している横幅のこと)
-IMG_HEIGHT: 800
+    TOP_LAT: 38.26101,       //地図画像左上端の緯度
+    TOP_LNG: 140.84879,      //地図画像左上端の経度
+    BOTTOM_LAT: 38.25923,    //地図画像右下端の緯度
+    BOTTOM_LNG: 140.85268,   //地図画像左上端の経度
+    IMG_WIDTH: 1100,         //地図画像の横幅(htmlで表示している横幅のこと)
+    IMG_HEIGHT: 800
 ```
 ```
-<div class="wrapper">
-    <img id="map" src="kawauchi.png" alt="googlemap" width="1100px" height="800px">
-    <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
-</div>
+        <div class="wrapper">
+            <img id="map" src="kawauchi.png" alt="googlemap" width="1100px" height="800px">
+            <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
+        </div>
 ```
 * `kato.png`
 ```
-TOP_LAT: 38.27464,       //地図画像左上端の緯度
-TOP_LNG: 140.84572,      //地図画像左上端の経度
-BOTTOM_LAT: 38.272154,    //地図画像右下端の緯度
-BOTTOM_LNG: 140.851539,   //地図画像左上端の経度
-IMG_WIDTH: 1000,         //地図画像の横幅(htmlで表示している横幅のこと)
-IMG_HEIGHT: 550          //地図画像の縦幅
+    TOP_LAT: 38.27464,       //地図画像左上端の緯度
+    TOP_LNG: 140.84572,      //地図画像左上端の経度
+    BOTTOM_LAT: 38.272154,    //地図画像右下端の緯度
+    BOTTOM_LNG: 140.851539,   //地図画像左上端の経度
+    IMG_WIDTH: 1000,         //地図画像の横幅(htmlで表示している横幅のこと)
+    IMG_HEIGHT: 550          //地図画像の縦幅
 ```
 ```
-<div class="wrapper">
-    <img id="map" src="kato.png" alt="googlemap" width="1000px" height="550px">
-    <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
-</div>
+        <div class="wrapper">
+            <img id="map" src="kato.png" alt="googlemap" width="1000px" height="550px">
+            <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
+        </div>
+```
+* `clubroom.png`
+```
+    TOP_LAT: 38.261363,       //地図画像左上端の緯度
+    TOP_LNG: 140.851152,      //地図画像左上端の経度
+    BOTTOM_LAT: 38.259848,    //地図画像右下端の緯度
+    BOTTOM_LNG: 140.855029,   //地図画像左上端の経度
+    IMG_WIDTH: 1000,         //地図画像の横幅(htmlで表示している横幅のこと)
+    IMG_HEIGHT: 500
+```
+```
+        <div class="wrapper">
+            <img id="map" src="clubroom.png" alt="googleMap" width="1000px" height="500px">
+            <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
+        </div>
 ```

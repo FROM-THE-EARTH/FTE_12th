@@ -2,12 +2,12 @@
 const BAUD_RATE = 19200;     //シリアル通信のボードレート
 const INTERVAL = 100;       //map更新の頻度(ms)
 const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
-    TOP_LAT: 38.26101,       //地図画像左上端の緯度
-    TOP_LNG: 140.84879,      //地図画像左上端の経度
-    BOTTOM_LAT: 38.25923,    //地図画像右下端の緯度
-    BOTTOM_LNG: 140.85268,   //地図画像左上端の経度
-    IMG_WIDTH: 1100,         //地図画像の横幅(htmlで表示している横幅のこと)
-    IMG_HEIGHT: 800
+    TOP_LAT: 38.261363,       //地図画像左上端の緯度
+    TOP_LNG: 140.851152,      //地図画像左上端の経度
+    BOTTOM_LAT: 38.259848,    //地図画像右下端の緯度
+    BOTTOM_LNG: 140.855029,   //地図画像左上端の経度
+    IMG_WIDTH: 1000,         //地図画像の横幅(htmlで表示している横幅のこと)
+    IMG_HEIGHT: 500
 });
 
 //グローバル変数を定義
