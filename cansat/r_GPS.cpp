@@ -17,16 +17,18 @@ https://teratail.com/questions/140018
 #define r 6378.137//地球の径
 #define pi 3.1415
 
+#define goal_longtitude 139.1124363//ここに目的地の緯度をを記入してください
+#define goal_latitude  37.8755594//ここに目的地の経度を記入して下さい
 
-#define goal_longtitude 37.8755594//ここに目的地の緯度をを記入してください
-#define goal_latitude 139.1124363 //ここに目的地の経度を記入して下さい
 #define samples 30
-#define CRITERION //ここに分散を記入して下さい
+#define CRITERION 
+//ここに分散を記入して下さい
 
 Serial pc(USBTX,USBRX);
 
 GPS gps(PA_9,PA_10);
 
+void getGps();
 float longtitude;
 float latitude;
 float array_longtitude[30]={};
@@ -47,10 +49,11 @@ double distance,angle;//距離・角度
 
 int main(){
     pc.baud(115200);
-    gps.GetData();
+    gps.attach(getGps);
+    
     while(gps_start_receiving!=true){
         if(gps.readable==true){
-            if(gps.longtitude != 0){
+            if(longtitude != 0){
                 gps_start_receiving = true;
             }else{
                 gps_start_receiving = false;
@@ -60,7 +63,7 @@ int main(){
         }
     }
 
-    while(gps_start_receiving != false){//受信可能であるならば
+    while(1){//受信可能であるならば
 
         pc.printf("gps start collecting data\n");
 
@@ -112,8 +115,8 @@ int main(){
         */
 
         for(int i=0;i<samples;i++){//GPSのデータを30回取得
-            array_longtitude[i]=gps.longtitude;
-            array_latitude[i]=gps.latitude;
+            array_longtitude[i]=longtitude;
+            array_latitude[i]=latitude;
         }
 
         for(int i=0;i<samples;i++){//30回のデータから、緯度、経度の平均値を求める
@@ -138,6 +141,14 @@ int main(){
         //次の処理へ
     //}
 
+}
+
+void getGps(){
+    gps.GetData();
+    if(gps.readable == true){
+        longtitude = gps.longtitude;
+        latitude = gps.latitude;
+    }
 }
 
 
