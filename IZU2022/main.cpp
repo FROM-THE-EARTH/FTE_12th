@@ -2,8 +2,8 @@
  * @file main.cpp
  * @author Hiroto ABE
  * @brief code for IZU
- * @version 0.1
- * @date 2022-01-07
+ * @version 0.2
+ * @date 2022-01-08
  * 
  * @copyright Copyright (c) 2022
  * 
@@ -33,21 +33,23 @@ GPS gps(PA_9, PA_10);
 Serial pc(USBTX, USBRX);
 
 //全体で使う関数や変数などの定義
-void setUp();
+void setUp();//各モジュールの確認やサーボモータの初期化をする関数
 bool setUpErrorFlag = false;
-void getDatas();
-int function;
+void getDatas();//各種センサーのデータを統括する関数
+int function;//int型関数を使うために使用する
+bool launchDetection();//飛翔検出の関数:打ち上げられたらtrueを返す
+bool flightPinErrorFlag = false;
 int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
-void timerStart();
-int interval();
-int deadTime;
+void timerStart();//interval()のスタート地点
+int interval();//timeStart()からの時間を返す関数
+int deadTime;//センサーモジュールの実行時間
 int phase = 0;
-float calcMedian(float *array, int n);
+float calcMedian(float *array, int n);//配列の値の中央値を出す関数
 #define SAMPLES 3 //medianの標本数
 
 //以下各モジュールの関数や変数などの定義
 //MPU9250
-int getMpu();
+int getMpu();//9軸センサーの値を取得する関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
@@ -56,7 +58,7 @@ float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
 
 //BMP180
-int getBmp();
+int getBmp();//tempと気圧を取得する関数
 bool bmpErrorFlag = false;
 int pressure;
 float temp;
@@ -65,24 +67,23 @@ float altArray[SAMPLES];
 float maxAltitude;
 
 //GPS
-void getGps();
+void getGps();//GPSの値を取得する関数:gps.attachで割り込む
 double latitude;
 double longtitude;
 
 //SD
-void sdWrite();
+void sdWrite();//SDカードにデータを書き込む関数
 
 //IM920
-void imSend(char *send,int num);
-void sendDatas();
-char sendData[256];//送るデータのchar型配列(im920はchar型でしか送れない。)
+void imSend(char *send,int num);//無線で送信する関数:data->num=1,message->num=0
+void sendDatas();//データを文字列に変換してimSendを呼び出して送信する関数
+char sendData[256];//送るデータのchar型配列(im920はchar型でしか送れない)
 int dataNumber = 0;
 
 
 
 
 int main(){
-    
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     setUp();
     while(phase!=4){
@@ -91,10 +92,10 @@ int main(){
         sdWrite();
         switch (phase){
             case 0:
-                if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上の加速度があれば
-                    imSend("Launched!!",1);
+                if(launchDetection()){//飛翔を検出したら
+                    imSend("Launched!!",0);
                     phase++;
-                    imSend("Phase1 Start",1);
+                    imSend("Phase1 Start",0);
                     timerStart();
                 }
                 break;
@@ -102,14 +103,14 @@ int main(){
                 if(interval()>40000 || (maxAltitude-calcMedian(altArray, SAMPLES)>5)){//打ち上がってから15秒後、もしくは10m落下すれば
                     pwm1.pulsewidth_us(1800);//サーボモータを動かす
                     pwm2.pulsewidth_us(1800);
-                    imSend("Para Open!",1);
+                    imSend("Para Open!",0);
                     phase++;
-                    imSend("Phase2 Start",1);
+                    imSend("Phase2 Start",0);
                 }
                 break;
             case 2:
                 if(interval()>60000){//打ち上がってから60秒経てば
-                    imSend("End!",1);
+                    imSend("End!",0);
                     phase++;
                 }
                 break;
@@ -127,9 +128,9 @@ int main(){
 
 
 
-void setUp(){
+void setUp(){//各モジュールの確認やサーボモータの初期化をする関数
     pc.baud(19200);
-    imSend("Program Start!",1);
+    imSend("Program Start!",0);
     millisStart();//millis(タイマー)をスタート
 
     //サーボモータの初期位置
@@ -146,15 +147,14 @@ void setUp(){
     f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
     */
 
-    imSend("Waiting...",1);
+    imSend("Waiting...",0);
     while(1){
-        
         if(latitude!=0){
-            imSend("GPS OK",1);
+            imSend("GPS OK",0);
             break;
             }
-        if(millis()>61000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
-            imSend("Error! GPS cannot read",1);
+        if(millis()>300000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
+            imSend("Error! GPS cannot read",0);
             setUpErrorFlag = true;
             break;
             }
@@ -163,21 +163,22 @@ void setUp(){
     digitalIn.mode(PullUp);//フライトピンに電圧をかける
     wait_ms(1000);
     if(digitalIn){//この段階でピンが抜けていればエラーを出力
-        imSend("Error! Pin is out.",1);
+        imSend("Error! Pin is out.",0);
+        flightPinErrorFlag = true;
         setUpErrorFlag = true;
     }else{
-        imSend("FlightPin OK",1);
+        imSend("FlightPin OK",0);
     }
 
     if(getMpu()==0){//mpu9250の動作確認
-        imSend("MPU9250 OK",1);
+        imSend("MPU9250 OK",0);
     }else{
-        imSend("Error! MPU9250 has some problems",1);
+        imSend("Error! MPU9250 has some problems",0);
         setUpErrorFlag = true;
     }
 
     if(getBmp()==0){//bmp180の動作確認
-        imSend("BMP180 OK",1);
+        imSend("BMP180 OK",0);
     }else{
         setUpErrorFlag = true;
     }
@@ -187,9 +188,9 @@ void setUp(){
     }
 
     if(!setUpErrorFlag){
-        imSend("Setup Complete!",1);
+        imSend("Setup Complete!",0);
     }else{
-        imSend("Setup Finish.",1);
+        imSend("Setup Finish.",0);
     }
 }
 
@@ -200,6 +201,23 @@ void getDatas(){//各種センサーのデータを統括する関数
     function = getBmp();
     timer[1] = millis();
     deadTime = timer[1]-timer[0];
+}
+
+
+bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
+    if(!flightPinErrorFlag){
+        if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        if((acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが元から抜けていた場合、2G以上であれば
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 
@@ -226,7 +244,7 @@ float calcMedian(float *array, int n){//配列の値の中央値を出す関数
     }
     if(n%2 == 0){
         return array[n/2];
-    } else {
+    }else{
         return((float)array[n/2] + array[n/2+1])/2;
     }
 }
@@ -248,29 +266,30 @@ int getMpu(){//9軸センサーの値を取得する関数
         accArrayY[i] = accArrayY[i-1];
         accArrayZ[i] = accArrayZ[i-1];
     }
-
     return 0;
 }
 
 
 int getBmp(){//tempと気圧を取得する関数
     if(bmp180.init() != 0){
-        imSend("Error! BMP180 has some problems.",1);
+        imSend("Error! BMP180 has some problems.",0);
         bmpErrorFlag = true;
     }
 
-    bmp180.startTemperature();
-    wait_ms(5);
-    if(bmp180.getTemperature(&temp) != 0) {
-        imSend("Error! BMP180 cannot read temp.",1);
-        bmpErrorFlag = true;
-    }
+    if(!bmpErrorFlag){
+        bmp180.startTemperature();
+        wait_ms(5);
+        if(bmp180.getTemperature(&temp) != 0) {
+            imSend("Error! BMP180 cannot read temp.",0);
+            bmpErrorFlag = true;
+        }
 
-    bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
-    wait_ms(10);
-    if(bmp180.getPressure(&pressure) != 0) {
-        imSend("Error! BMP180 cannot read pressure.",1);
-        bmpErrorFlag = true;
+        bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
+        wait_ms(10);
+        if(bmp180.getPressure(&pressure) != 0) {
+            imSend("Error! BMP180 cannot read pressure.",0);
+            bmpErrorFlag = true;
+        }
     }
 
     if(!bmpErrorFlag){//BMPにエラーがなければ、
@@ -288,18 +307,16 @@ int getBmp(){//tempと気圧を取得する関数
         if(maxAltitude < calcMedian(altArray, SAMPLES)){//最高高度の更新
             maxAltitude = calcMedian(altArray, SAMPLES);
         }
-
         return 0;
     }else{//BMPにエラーがあれば、
         altitude = -1;//BMPにエラーがあるとaltitudeの値がinfになってしまうため
         maxAltitude = -1;
-
         return -1;
     }
 }
 
 
-void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
+void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     gps.GetData();
     if(gps.readable){
         latitude = gps.latitude;
@@ -318,16 +335,16 @@ void sdWrite(){//SDカードにデータを書き込む関数
 }
 
 
-void imSend(char *send, int num){//無線で送信する関数:data->num=0,message->num=1
+void imSend(char *send, int num){//無線で送信する関数:data->num=1,message->num=0
     /*IM用*/
     char sendChar[256];
-    if(num==1){
+    if(num==0){
         sprintf(sendChar,"s,message,%s",send);//受信ソフト(LatLng-map)がmessageとdataを区別するため
-    }else if(num==0){
+    }else if(num==1){
         sprintf(sendChar,"s,data%s",send);
     }
     im920.send(sendChar,strlen(sendChar)+1);
-    pc.printf("00,D33D,c9:%s\n",sendChar);
+    pc.printf("00,D33D,C9:%s\n",sendChar);
 
     /*Serial用:デバッグに使う
     char sendChar[256];
@@ -345,6 +362,6 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=0,messa
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"%d,%d,%d,%f,%f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longtitude, calcMedian(altArray, SAMPLES), maxAltitude, deadTime);
-    imSend(sendData,0);
+    sprintf(sendData,"%d,%d,%d,%.6f,%.6f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longtitude, calcMedian(altArray, SAMPLES), maxAltitude, deadTime);
+    imSend(sendData,1);
 }

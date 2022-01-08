@@ -104,8 +104,12 @@ function dataUpdate(strings) { console.log("start_dataUpdate");
         //無線から送られてくる値:00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
         data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
         data.phase = dataArray[5] -0;
-        data.lat = dataArray[6] -0;
-        data.lng = dataArray[7] -0;
+        if(dataArray[6]-0 != 0){
+            data.lat = dataArray[6] -0;
+        }
+        if(dataArray[7]-0 != 0){
+            data.lng = dataArray[7] -0;
+        }
         data.altitude = dataArray[8] -0;
         data.maxAltitude = dataArray[9] -0;
         data.deadTime = dataArray[10] -0;
@@ -143,8 +147,8 @@ function mapUpdate() { console.log("start_mapUpdate");
     document.getElementById('data0').innerHTML = `<p>Message: ${data.message}</p>`;
     document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
     document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
-    document.getElementById('data3').innerHTML = `<p>Time: ${data.lat}</p>`;
-    document.getElementById('data4').innerHTML = `<p>Phase: ${data.lng}</p>`;
+    document.getElementById('data3').innerHTML = `<p>Latitude: ${data.lat}</p>`;
+    document.getElementById('data4').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
     document.getElementById('data5').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
     document.getElementById('data6').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
     document.getElementById('data7').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;
