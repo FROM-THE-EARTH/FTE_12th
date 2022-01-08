@@ -25,7 +25,7 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 * Arduinoにこのリポジトリ内にあるdemo.inoを書き込んで、シリアル接続すると、動きを確認できます。(`kawauchi.png`を使ってください。)
 
 ## データ
-上のコードがjs、下のコードがhtmlの変更部分です。
+上のコードが`script.js`、下のコードが`index.html`の変更部分です。
 * `kawauchi.png`
 ```
     TOP_LAT: 38.26101,       //地図画像左上端の緯度
