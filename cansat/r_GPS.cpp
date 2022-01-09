@@ -1,34 +1,35 @@
 /*
 このコードが成功した場合、gps start collecting dataがTeratermに表示されたあと、
 3分の待機時間の後に目的地への北からの角度が表示されるはずです
+ちなみに、西なら90度、南なら180度、東なら270度です
 */
 
 /*
-現在地と目的地の距離及び角度を求める計算式として大円近似を使用していますが近い距離ならば直線近似の方が良いかもしれないです
-その場合、以下のサイトを参考にして関数を書き換える必要があります
+参考にした計算式
 https://teratail.com/questions/140018
-誰か実験で微調整求む
 */
 
 #include "mbed.h"
 #include "GPS.h"
-#include "math.h"
+#include <stdio.h>
+#include <math.h>
 
 #define r 6378.137//地球の径
-#define pi 3.1415
+#define pi 3.1415926535897932384626433832795
 
-#define goal_longtitude 139.1124363//ここに目的地の緯度をを記入してください
-#define goal_latitude  37.8755594//ここに目的地の経度を記入して下さい
+#define goal_latitude  38.040002//ここに目的地の緯度を記入して下さい
+#define goal_longtitude 140.864420//ここに目的地の経度をを記入してください
 
 #define samples 30
-#define CRITERION 
-//ここに分散を記入して下さい
+//#define CRITERION //ここに分散を記入して下さい
 
 Serial pc(USBTX,USBRX);
 
 GPS gps(PA_9,PA_10);
 
+
 void getGps();
+
 float longtitude;
 float latitude;
 float array_longtitude[30]={};
@@ -41,13 +42,14 @@ float sum_square_longtitude;
 float sum_square_latitude;
 float average_longtitude;
 float average_latitude;
-//const float pi = 3.141592;
+
 
 double calcudistance(double x1,double y1);//距離計算用関数
 double calcuangle(double x1,double y1);//角度計算用関数
 double distance,angle;//距離・角度
 
 int main(){
+    
     pc.baud(115200);
     gps.attach(getGps);
     
@@ -62,6 +64,7 @@ int main(){
                 gps_start_receiving = false;
         }
     }
+    
 
     while(1){//受信可能であるならば
 
@@ -113,7 +116,9 @@ int main(){
 
         ******************************************************************************************************
         */
-
+        /*
+        距離求めるときに平均値使いたかったらこのコードです
+        ******************************************************************************************************
         for(int i=0;i<samples;i++){//GPSのデータを30回取得
             array_longtitude[i]=longtitude;
             array_latitude[i]=latitude;
@@ -126,22 +131,26 @@ int main(){
             sum_latitude += array_latitude[i];//
             average_latitude = sum_latitude/samples;//緯度の平均値
         }
+        *******************************************************************************************************
+        */
         
-        distance = calcudistance(average_longtitude,average_latitude);//現在地と目的地との距離を計算
-        angle = calcuangle(average_longtitude,average_latitude);//目的地への北からの角度を計算
 
-        gps_get_imformation = true;//必要な情報の取得完了
+        distance = calcudistance(latitude,longtitude);//現在地と目的地との距離を計算
+        angle = calcuangle(latitude,longtitude);//目的地への北からの角度を計算
 
-        while(1){ 
-        pc.printf("distance=%f,angle=%f\n",distance,angle);//PCに表示
-        }
+        //gps_get_imformation = true;//必要な情報の取得完了
+
+        
+        pc.printf("distance=%fkm,angle=%fdo\n",distance,angle);//PCに表示
+        
     }
 
     //if(gps_get_imformation != false){
         //次の処理へ
-    //}
+    }
 
-}
+
+
 
 void getGps(){
     gps.GetData();
@@ -152,15 +161,30 @@ void getGps(){
 }
 
 
-double calcudistance(double x1,double y1){//距離計算用関数
-    double distance;
-    distance = (r)*acos(sin(y1)*sin(goal_latitude)+cos(y1)*cos(goal_latitude)*cos(goal_longtitude-x1));
-    return distance;
+double calcudistance(double x1, double y1){//(緯度,経度)
+    
+    x1 *= pi/180;
+    y1 *= pi/180;
+    float x2 = goal_latitude*(pi/180);
+    float y2 = goal_longtitude*(pi/180);
+
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+    float sy = sin(dy/2.0);
+    float sx = sin(dx/2.0);
+
+    float sigma = sy*sy + cos(y1)*cos(y2)*sx*sx;
+
+    return r *2.0*asin(sqrt(sigma));
+
 }
 
-double calcuangle(double x1,double y1){//角度計算用関数
+//北0度西90度南180度東270度
+double calcuangle(double x1,double y1){//角度計算用関数(緯度,経度)
     double angle;
-    angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
+    float Y = (cos(goal_latitude))*sin(goal_longtitude - y1);
+    float X = (cos(y1))*sin(goal_longtitude) - (sin(x1))*(cos(goal_latitude))*(cos(y1 - goal_longtitude));
+    angle = (180/pi)*atan(Y/X);
     if(angle<0){
         return angle + 360;
     }else{
