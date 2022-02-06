@@ -7,6 +7,7 @@
 #include "millis.h"
 #define SAMPLES 10
 
+//ここはピンの指定を行っている部分です。そこまで重要じゃないよ
 char sendData[256]; //送るデータのchar型配列(im920はchar型でしか送れない。)
 I2C i2cBus(D4, D5);//i2cBus(mpu_SDA, mpu_SCL)
 mpu9250 mpu(i2cBus, AD0_HIGH);
@@ -21,19 +22,19 @@ DigitalIn digitalIn(D2);
 DigitalOut led(D9);
 //int getMpu();//9軸センサーの値を取得する関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
-float gyro[3] = {};
-float mag[3] = {};
-float accArrayX[SAMPLES];
+float gyro[3] = {};//ここに角速度がx,y,zの順で格納される
+float mag[3] = {};//ここに地磁気がx,y,zの順で格納される
+float accArrayX[SAMPLES];//中央値をとるために使う配列
 float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
 
 int getBmp();//tempと気圧を取得する関数
 bool bmpErrorFlag = false;
-int pressure;
-float temp;
-float altitude;
-float altArray[SAMPLES];
-float maxAltitude;
+int pressure;//気圧
+float temp;//温度
+float altitude;//高度
+float altArray[SAMPLES];//中央値を取るための配列
+float maxAltitude;//最高高度
 
 void setUp();//各モジュールの確認やサーボモータの初期化をする関数
 bool setUpErrorFlag = false;
@@ -49,23 +50,23 @@ int phase = 0;
 float calcMedian(float *array, int n);//配列の値の中央値を出す関数
 
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
-float latitude;
-float longtitude;
+float latitude;//緯度
+float longtitude;//経度
 
 void imSend(char *send){//無線で送信する関数
     im920.send(send,strlen(send)+1);
-    pc.printf(send);
+    pc.printf(send);//無線で送った情報をPC側にも送る
     pc.printf("\r\n");
 }
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", acc[1], acc[2],acc[2],mag[0],longtitude,latitude, altitude);
-        imSend(sendData);
+        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", acc[1], acc[2],acc[2],mag[0],longtitude,latitude, altitude);//データを文字列に変換
+        imSend(sendData);//送る
 }
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位(必要に応じて)
-    gps.GetData();
-    if(gps.readable == true){
-       longtitude = gps.longtitude;
+    gps.GetData();//取得開始
+    if(gps.readable == true){//受信したら
+       longtitude = gps.longtitude;//longtitudeに緯度のデータを格納
        latitude = gps.latitude;
        //sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
     }
@@ -74,7 +75,7 @@ int getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
     mpu.getAcc(acc);//加速度をacc[]に格納: acc[0]=ax, acc[1]=ay, acc[2]=az;
-    mpu.getGyro(gyro);
+    mpu.getGyro(gyro);//同上
     mpu.getMag(mag);
     //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
     accArrayX[0] = acc[0];
@@ -90,7 +91,7 @@ int getMpu(){//9軸センサーの値を取得する関数
 
 int getBmp(){//tempと気圧を取得する関数
     if(bmp180.init() != 0){
-        imSend("Error! BMP180 has some problems.");
+        //imSend("Error! BMP180 has some problems.");
         bmpErrorFlag = true;
     }
 
@@ -98,18 +99,18 @@ int getBmp(){//tempと気圧を取得する関数
         bmp180.startTemperature();
         wait_ms(5);
         if(bmp180.getTemperature(&temp) != 0) {
-            imSend("Error! BMP180 cannot read temp.");
+            //imSend("Error! BMP180 cannot read temp.");
             bmpErrorFlag = true;
         }
 
         bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
         wait_ms(10);
         if(bmp180.getPressure(&pressure) != 0) {
-            imSend("Error! BMP180 cannot read pressure.");
+            //imSend("Error! BMP180 cannot read pressure.");
             bmpErrorFlag = true;
         }
     }
-
+    //ここでは気圧と温度から高度を計算している
     if(!bmpErrorFlag){//BMPにエラーがなければ、
         //変換式
         double t_press = float(pressure)/100;
@@ -149,6 +150,7 @@ float calcMedian(float *array, int n){//配列の値の中央値を出す関数
         return((float)array[n/2] + array[n/2+1])/2;
     }
 }
+
 void setUp(){//各モジュールの確認やサーボモータの初期化をする関数
     //pc.baud(19200);
     //imSend("Program Start!",0);
@@ -218,7 +220,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
 
 void getDatas(){//各種センサーのデータを統括する関数
     timer[0] = millis();//deadTimeを測るため
-    function = getMpu();
+    function = getMpu();//getMpuはint型なのでこのように記載
     function = getBmp();
     timer[1] = millis();
     deadTime = timer[1]-timer[0];
@@ -233,6 +235,7 @@ int interval(){//timeStart()からの時間を返す関数
     timer[3] = millis();
     return timer[3]-timer[2];
 }
+
 
 bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
     if(!flightPinErrorFlag){
