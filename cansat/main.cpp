@@ -1,4 +1,7 @@
 
+/*
+ライブラリのインクルード、ピン指定、関数設置まで行った関数です
+*/
 #include "mbed.h"
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
@@ -47,189 +50,27 @@ char sendData[256];
 
 Timer get_time;
 
+double latitude,longtitude;//緯度・経度
+double distance,angle;//距離・角度
+    
+float acc[3] = {};//ここに加速度がx,y,zの順で格納される
+float gyro[3] = {};
+float mag[3] = {};
+float accArrayX[SAMPLES];
+float accArrayY[SAMPLES];
+float accArrayZ[SAMPLES];
+
+int pressure;
+float temp;
+float altitude;
+float altArray[SAMPLES];
+float maxAltitude;
+float minAltitude;
+
 int main(){
-    int stage=0;
-  
-    bool flightPinAttached=false;
-    bool launched=false;
-    bool takeoff = false;//離床検知
-    bool fall = false;//落下開始検知
-    bool touchdown = false;//着陸検知
-    bool para_Separation=false;//パラシュート分離検知
-    bool neat = false;
-    bool goal = false;//ゴール検知
-
-    double latitude,longtitude;//緯度・経度
-    double distance,angle;//距離・角度
-    
-    float acc[3] = {};//ここに加速度がx,y,zの順で格納される
-    float gyro[3] = {};
-    float mag[3] = {};
-    float accArrayX[SAMPLES];
-    float accArrayY[SAMPLES];
-    float accArrayZ[SAMPLES];
-
-    int pressure;
-    float temp;
-    float altitude;
-    float altArray[SAMPLES];
-    float maxAltitude;
-    float minAltitude;
-
-
-
-    pra_recognition.mode(Pullup);
-    
-    Servo.period_us(20000);
-    Servo.pulsewidth_us(500);
-    
-    //パラシュート分離まで
-    while(stage!=3){
-        
-        getBmp();
-          
-        if(max_altitude < altitude){
-            max_altitude = altitude;
-        }
-        
-        if(min_altitude > altitude){
-            min_altitude = altitude;
-        }
-        
-        switch(stage){
-            case 0:if(altitude - min_altitude > 5){//5m上昇で飛翔検知
-                         takeoff = true;
-                         pc.printf("takeoff!")
-                         stage  = 0;
-                    
-                   }break;
-            case 1:if(altitude - min_altitude > 5){//5m効果で降下検知
-                         fall = true;
-                         pc.printf("falling!")
-                         stage = 1;
-                    }break;
-            case 2:if(fall = true && altitude - min_altitude < 3){//地上から3m以内でパラ分離のフェーズへ以降
-                         wait(20);//待機
-                         Servo.pulsewidth_us(500);
-                         stage = 2;
-                    }break;
-            case 3:if(pra_recognition){//パラシュート分離用のピンが抜けたことを確認
-                        para_Separation=true;
-                        stage = 3;
-                    }break;
-                    
-         }
-       
-    }
-    
-    //一定の距離に近づくまで
-    while(!near){
-        
-        bool gps_get  = false;
-        float max_mx,min_mx,max_my,min_my;
-        
-        wait(10);
-        
-        getMpu();
-        gps.GetData();
-        
-        if(gps.readable == true){
-
-            gps_get = true;
-            latitude=gps.latitude;
-            longtitude=gps.longtitude;
-
-        }else{
-            gps_get = false;
-        }
-        
-        //キャリブレーションおよび走行アルゴリズム
-        if(!gps_get){//GPS取得可能ならば
-            
-            distance = calcudistance(longtitude,latitude,39.8261,21.4225);//目的地への距離
-            angle = calcuangle(longtitude,latitude,39.8261,21.4225);//目的地までの角度
-            
-            pc.printf("start calibration!");
-
-            for(int i=1;i<200;i++){//キャリブレーションを２００回行う
-
-                if(max_mx < mag[0]){
-                   mag[0] = max_mx;
-                }
-                if(min_mx > mag[0]){
-                   mag[0] = min_mx;
-                }
-                if(max_my < mag[1]){
-                   mag[1] = max_my;
-                }
-                if(min_my > mag[1]){
-                   mag[1] = min_my;
-                }
-            }
-
-            pc.printf("end calibration!");
-            
-            
-            float centerX = (max_mx + min_mx)/2;
-            float centerY = (max_my + min_my)/2;
-            
-            float north_angle = atan(2*((my - centerY)/(mx - centerX)));//現在の北からの角度
-            
-            float rotate_angle = angle - north_angle;//回転すべき角度
-            
-            int pulse = calcupulse(rotate_angle);//出力すべき周波数
-                  
-            FIN1.pulsewidth_us(pulse);
-            RIN1.pulsewidth_us(0);
-
-            FIN2.pulsewidth_us(pulse);
-            RIN2.pulsewidth_us(0);
-            
-            wait(20);
-            
-            //走行
-            for(int i=1;i<=200;i++){
-                FIN1.pulsewidth_us(20000);
-                RIN1.pulsewidth_us(0);
-
-                FIN2.pulsewidth_us(20000);
-                RIN2.pulsewidth_us(0);
-            }
-
-            for(int i=0;i<200;i++){
-                //GPSから距離を測定して十分近いかどうかを判断
-                //ローパスフィルタをかける必要あり
-                if(distance < 10){
-                    near = true;
-                }else{
-                    near = false;
-                }
-            }  
-
-
-            
-        }
-    }
-    
-    
-    //超音波センサによるゴール認識
-    while(goal!=false){
-
-        
-        trigger1 = 0;
-        trigger2 = 0;
-
-        if(Echo1() > Echo2()){
-            //ここのアルゴリズム未定
-        }else{
-
-        }
-
-        //車体回転しながら距離計測
-    
-    }
-        
-    
+    /*
+    ここにカンサットのメインコードを書いてみよう
+    */
 }            
     
             
@@ -325,12 +166,14 @@ double calcuangle(double x1,double y1,double x2,double y2){//角度計算用関�
     return angle;
 }
 
+//PID制御用の関数
+
 double calcupulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
     float pulse;
     return pulse;
 }
 
-float Echo1(void)
+float Echo1(void)//超音波センサから距離を取得する関数
 {
     float distance1;
     
