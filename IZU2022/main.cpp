@@ -258,14 +258,14 @@ int getMpu(){//9軸センサーの値を取得する関数
     mpu.getMag(mag);
 
     //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
-    accArrayX[0] = acc[0];
-    accArrayY[0] = acc[1];
-    accArrayZ[0] = acc[2];
     for(int i=(SAMPLES-1); i>0; i--){
         accArrayX[i] = accArrayX[i-1];
         accArrayY[i] = accArrayY[i-1];
         accArrayZ[i] = accArrayZ[i-1];
     }
+    accArrayX[0] = acc[0];
+    accArrayY[0] = acc[1];
+    accArrayZ[0] = acc[2];
     return 0;
 }
 
@@ -299,10 +299,10 @@ int getBmp(){//tempと気圧を取得する関数
         altitude = (pow(ratio, double(1 / 5.257)) - 1) * double(temp+273.15) / 0.0065;
 
         //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
-        altArray[0] = altitude;
         for(int i=(SAMPLES-1); i>0; i--){
             altArray[i] = altArray[i-1];
         }
+        altArray[0] = altitude;
         
         if(maxAltitude < calcMedian(altArray, SAMPLES)){//最高高度の更新
             maxAltitude = calcMedian(altArray, SAMPLES);
