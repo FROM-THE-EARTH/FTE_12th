@@ -18,7 +18,7 @@ GPS gps(D1,D0); //GPSの初期化(tx,rx)mbed:D1,D0
 IM920 im920(A7,A2,D7,D13); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D13 arduinoシールド:D9,D8,D10,- *resetは使用しなかった*
 PwmOut pwm1(D3);
 PwmOut pwm2(D6);
-DigitalIn digitalIn(D2);
+DigitalIn FlightPin(D8);
 DigitalOut led(D9);
 //int getMpu();//9軸センサーの値を取得する関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
@@ -38,6 +38,7 @@ float maxAltitude;//最高高度
 
 void setUp();//各モジュールの確認やサーボモータの初期化をする関数
 bool setUpErrorFlag = false;
+int val;
 void getDatas();//各種センサーのデータを統括する関数
 int function;//int型関数を使うために使用する
 bool launchDetection();//飛翔検出の関数:打ち上げられたらtrueを返す
@@ -183,9 +184,10 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
             }
     }
 
-    digitalIn.mode(PullUp);//フライトピンに電圧をかける
+    FlightPin.mode(PullDown);//フライトピンに電圧をかける
     wait_ms(1000);
-    if(digitalIn){//この段階でピンが抜けていればエラーを出力
+    val = FlightPin;
+    if(val==0){//この段階でピンが抜けていればエラーを出力
         imSend("Error! Pin is out.");
         flightPinErrorFlag = true;
         setUpErrorFlag = true;
@@ -239,7 +241,7 @@ int interval(){//timeStart()からの時間を返す関数
 
 bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
     if(!flightPinErrorFlag){
-        if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
+        if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
             return true;
         }else{
             return false;
