@@ -20,11 +20,11 @@ mpu9250 mpu(i2cBus, AD0_HIGH);
 IM920 im920(A7, A2, A4, A5);
 GPS gps(D1, D0);
 DigitalIn pra_recognition(A0);
-DigitalOut triger1(D8);
-DigitalIn echo1 (A6);
-DigitalOut triger2(D10);
-DigitalIN echo2(A1);
-PwmOut Servo(D2);
+DigitalOut trigerR(D8);
+DigitalIn echoR(A6);
+DigitalOut trigerL(D10);
+DigitalIN echoL(A1);
+PwmOut servo(D2);
 PwmOut FIN1(D7);
 PwmOut RIN1(D9);
 PwmOut FIN2(D3);
@@ -36,11 +36,10 @@ void getMpu();//9軸センサ用関数
 void imSend(char *send);//無線用関数
 void sendDatas(float latitude, float longtitude, float altitude, float time);//無線用関数
 void getGPS();//GPS用関数
-float Echo1(void);
-float Echo2(void);
-double calcudistance(double x1,double y1,double x2,double y2);//距離計算用関数
-double calcuangle(double x1,double y1,double x2,double y2);//角度計算用関数
-double calcupulse(double rotate_angle_1);//モーター用の周波数計算関数（未完成）
+void echo();//超音波センサから距離を取得する関数
+double calcDistance(double x1,double y1,double x2,double y2);//距離計算用関数
+double calcAngle(double x1,double y1,double x2,double y2);//角度計算用関数
+double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数（未完成）
 char sendData[256];
 
 Timer get_time;
@@ -53,10 +52,16 @@ struct coordinate thisPos;//現在位置
 struct coordinate targetPos;//ターゲットの位置
 
 struct polar{//極座標
-    double distance;//距離
+    double radius;//動径距離
     double angle;//角度
 }
 struct polar polar;
+
+struct sonic{
+    float distanceR;//右の超音波センサーの距離
+    float distanceL;//左の超音波センサーの距離
+}
+struct sonic sonic;
 
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
@@ -70,9 +75,10 @@ int main(){
     /*
     ここにカンサットのメインコードを書いてみよう
     */
-}            
-    
-            
+}
+
+
+
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
@@ -95,90 +101,74 @@ void getMpu(){//9軸センサーの値を取得する関数
 
 
 void imSend(char *send){//無線で送信する関数
-    //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位 im -> gps, high -> low
     im920.send(send,strlen(send)+1);
     pc.printf(send);
     pc.printf("\r\n");
 }
+
+
 void sendDatas(float latitude, float longtitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
         sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longtitude, altitude, time);
         imSend(sendData);
 }
-void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
-    //NVIC_SetPriority(UART1_IRQn,1); //割り込み優先順位 im -> gps, high -> low
-    float latitude,longtitude;
+
+
+void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     gps.GetData();
-    if(gps.readable == true){
-       sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
-       //pc.printf("latitude=%f,longtitude=%f",gps.latitude,gps.longtitude);
-       
-    }else{
-        pc.printf("could not get gpsdata");
-        }
+    if(gps.readable){
+        thisPos.latitude = gps.latitude;
+        thisPos.longtitude = gps.longtitude;
+    }
 }
 
- 
- 
-double calcudistance(double x1,double y1,double x2,double y2){//距離計算用関数
+
+double calcDistance(double x1,double y1,double x2,double y2){//距離計算用関数
     double distance;
     distance = (r)*acos(sin(y1)*sin(y2)+cos(y1)*cos(y2)*cos(x2-x1));
     return distance;
 }
-double calcuangle(double x1,double y1,double x2,double y2){//角度計算用関数
+
+
+double calcAngle(double x1,double y1,double x2,double y2){//角度計算用関数
     double angle;
     angle = 90 - atan(2*(sin(x1-x2))/((cos(y1)*tan(y2)-sin(y1)*cos(x2-x1))));
     return angle;
 }
 
-//PID制御用の関数
 
-double calcupulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
+//PID制御用の関数
+double calcPulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
     float pulse;
     return pulse;
 }
 
-float Echo1(void)//超音波センサから距離を取得する関数
-{
-    float distance1;
-    
-    trigger1.write(1);
-    wait_us(10);
-    trigger1.write(0);
 
-    while(echo1.read() == 0){
+void echo(){//超音波センサから距離を取得する関数
+    //右の超音波センサー
+    triggerR.write(1);
+    wait_us(10);
+    triggerR.write(0);
+
+    while(echoR.read() == 0){
         get_time.reset();
         get_time.start();
     }
-    while(echo1.read() == 1){
+    while(echoR.read() == 1){
         get_time.stop();
     }
+    sonic.distanceR = get_time.read_us() * 0.03432f / 2.0f;
 
-    distance1 = get_time.read_us();
-    distance1 = distance1 * 0.03432f / 2.0f;
-    
-    return distance1;
-    
-}
-
-float Echo2(void)
-{
-    float distance2;
-    
-    trigger2.write(1);
+    //左の超音波センサー
+    triggerL.write(1);
     wait_us(10);
-    trigger2.write(0);
-    
-    while(echo2.read() == 0){
+    triggerL.write(0);
+
+    while(echoL.read() == 0){
         get_time.reset();
         get_time.start();
     }
-    while(echo2.read() == 1){
+    while(echoL.read() == 1){
         get_time.stop();
     }
-
-    distance2 = get_time.read_us();
-    distance2 = distance2 * 0.03432f / 2.0f;
-    
-    return distance2;
-    
+    sonic.distanceL = get_time.read_us() * 0.03432f / 2.0f;
 }

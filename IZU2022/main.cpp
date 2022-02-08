@@ -327,7 +327,6 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
         latitude = gps.latitude;
         longtitude = gps.longtitude;
     }
-
 }
 
 
