@@ -178,7 +178,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     }
 
     for(int i=0; i<50; i++){//気圧のデータを50回取得
-        function = GetBmp();
+        function = getBmp();
         if(maxAltitude-calcMedian(altArray, SAMPLES)>3 || calcMedian(altArray, SAMPLES)-minAltitude>3){//高度差が3m以上ならば
             flighting = true;//飛翔中と判断
             setUpErrorFlag = true;
