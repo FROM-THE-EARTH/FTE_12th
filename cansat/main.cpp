@@ -12,27 +12,24 @@
 //#include "ff.h"
 #include<stdio.h>
 
-#define mpu_SDA PB_7
-#define mpu_SCL PB_6
-
 #define r 6378.137
 
-I2C i2c(PB_7, PB_6);
+I2C i2c(D4, D5);
 BMP180 bmp180(&i2c);
-I2C i2cBus(mpu_SDA, mpu_SCL);
+I2C i2cBus(D4, D5);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-IM920 im920(PA_2, PA_3, PA_5, PA_6);
-GPS gps(PA_9, PA_10);
-DigitalIn pra_recognition(PA_0);
-DigitalOut triger1(PF_1);
-DigitalIn echo1 (PA_7);
-DigitalOut triger2(PA_11);
-DigitalIN echo2(PA_1);
-PwmOut Servo(PA_12);
-PwmOut FIN1(PB_0);
-PwmOut RIN1(PB_1);
-PwmOut FIN2(PF_0);
-PwmOut RIN2(PA_8);
+IM920 im920(A7, A2, A4, A5);
+GPS gps(D1, D0);
+DigitalIn pra_recognition(A0);
+DigitalOut triger1(D8);
+DigitalIn echo1 (A6);
+DigitalOut triger2(D10);
+DigitalIN echo2(A1);
+PwmOut Servo(D2);
+PwmOut FIN1(D7);
+PwmOut RIN1(D9);
+PwmOut FIN2(D3);
+PwmOut RIN2(D6);
 
 Serial pc(USBTX, USBRX);
 
