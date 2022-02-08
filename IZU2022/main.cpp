@@ -2,11 +2,12 @@
  * @file main.cpp
  * @author Hiroto ABE
  * @brief code for IZU
- * @version 0.2
+ * @version 1.0
  * @date 2022-01-08
  * 
  * @copyright Copyright (c) 2022
  * 
+ * ver1.0 飛翔中に再起動した際を考慮
  */
 
 #include "mbed.h"
@@ -24,7 +25,7 @@ I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
 I2C i2cBus(PB_7, PB_6);//i2cBus(mpu_SDA, mpu_SCL)
 mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn digitalIn(PF_0);//フライトピン
+DigitalIn flightPin(PF_0);//フライトピン
 PwmOut pwm1(PB_0);
 PwmOut pwm2(PB_1);
 //SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
@@ -35,6 +36,7 @@ Serial pc(USBTX, USBRX);
 //全体で使う関数や変数などの定義
 void setUp();//各モジュールの確認やサーボモータの初期化をする関数
 bool setUpErrorFlag = false;
+bool flighting = false;
 void getDatas();//各種センサーのデータを統括する関数
 int function;//int型関数を使うために使用する
 bool launchDetection();//飛翔検出の関数:打ち上げられたらtrueを返す
@@ -64,7 +66,8 @@ int pressure;
 float temp;
 float altitude;
 float altArray[SAMPLES];
-float maxAltitude;
+float maxAltitude = -10000.0;
+float minAltitude = 10000.0;
 
 //GPS
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
@@ -100,7 +103,7 @@ int main(){
                 }
                 break;
             case 1:
-                if(interval()>40000 || (maxAltitude-calcMedian(altArray, SAMPLES)>5)){//打ち上がってから15秒後、もしくは10m落下すれば
+                if(interval()>15000 || (maxAltitude-calcMedian(altArray, SAMPLES)>10)){//打ち上がってから15秒後、もしくは10m落下すれば
                     pwm1.pulsewidth_us(1800);//サーボモータを動かす
                     pwm2.pulsewidth_us(1800);
                     imSend("Para Open!",0);
@@ -147,22 +150,9 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
     */
 
-    imSend("Waiting...",0);
-    while(1){
-        if(latitude!=0){
-            imSend("GPS OK",0);
-            break;
-            }
-        if(millis()>300000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
-            imSend("Error! GPS cannot read",0);
-            setUpErrorFlag = true;
-            break;
-            }
-    }
-
-    digitalIn.mode(PullUp);//フライトピンに電圧をかける
+    flightPin.mode(PullDown);//フライトピンに電圧をかける
     wait_ms(1000);
-    if(digitalIn){//この段階でピンが抜けていればエラーを出力
+    if(!flightPin){//この段階でピンが抜けていればエラーを出力
         imSend("Error! Pin is out.",0);
         flightPinErrorFlag = true;
         setUpErrorFlag = true;
@@ -187,6 +177,14 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
         getDatas();
     }
 
+    for(int i=0; i<50; i++){//気圧のデータを50回取得
+        function = GetBmp();
+        if(maxAltitude-calcMedian(altArray, SAMPLES)>3 || calcMedian(altArray, SAMPLES)-minAltitude>3){//高度差が3m以上ならば
+            flighting = true;//飛翔中と判断
+            setUpErrorFlag = true;
+        }
+    }
+
     if(!setUpErrorFlag){
         imSend("Setup Complete!",0);
     }else{
@@ -205,17 +203,21 @@ void getDatas(){//各種センサーのデータを統括する関数
 
 
 bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
-    if(!flightPinErrorFlag){
-        if(digitalIn || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
-            return true;
-        }else{
-            return false;
-        }
+    if(flighting){
+        return true;
     }else{
-        if((acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが元から抜けていた場合、2G以上であれば
-            return true;
+        if(!flightPinErrorFlag){
+            if(flightPin || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
+                return true;
+            }else{
+                return false;
+            }
         }else{
-            return false;
+            if((acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが元から抜けていた場合、2G以上であれば
+                return true;
+            }else{
+                return false;
+            }
         }
     }
 }
@@ -306,6 +308,9 @@ int getBmp(){//tempと気圧を取得する関数
         
         if(maxAltitude < calcMedian(altArray, SAMPLES)){//最高高度の更新
             maxAltitude = calcMedian(altArray, SAMPLES);
+        }
+        if(minAltitude > calcMedian(altArray, SAMPLES)){//最低高度の更新
+            minAltitude = calcMedian(altArray, SAMPLES);
         }
         return 0;
     }else{//BMPにエラーがあれば、
