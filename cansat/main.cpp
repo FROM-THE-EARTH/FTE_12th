@@ -12,10 +12,9 @@
 //#include "ff.h"
 #include<stdio.h>
 
-#define r 6378.137
+#define EARTH_RADIUS 6378.137
+#define SAMPLES 5
 
-I2C i2c(D4, D5);
-BMP180 bmp180(&i2c);
 I2C i2cBus(D4, D5);
 mpu9250 mpu(i2cBus, AD0_HIGH);
 IM920 im920(A7, A2, A4, A5);
@@ -34,7 +33,6 @@ PwmOut RIN2(D6);
 Serial pc(USBTX, USBRX);
 
 void getMpu();//9軸センサ用関数
-void getBmp();//気圧センサ用関数
 void imSend(char *send);//無線用関数
 void sendDatas(float latitude, float longtitude, float altitude, float time);//無線用関数
 void getGPS();//GPS用関数
@@ -47,9 +45,19 @@ char sendData[256];
 
 Timer get_time;
 
-double latitude,longtitude;//緯度・経度
-double distance,angle;//距離・角度
-    
+struct coordinate{//座標
+    double latitude;//緯度
+    double longtitude;//経度
+}
+struct coordinate thisPos;//現在位置
+struct coordinate targetPos;//ターゲットの位置
+
+struct polar{//極座標
+    double distance;//距離
+    double angle;//角度
+}
+struct polar polar;
+
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
@@ -57,12 +65,6 @@ float accArrayX[SAMPLES];
 float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
 
-int pressure;
-float temp;
-float altitude;
-float altArray[SAMPLES];
-float maxAltitude;
-float minAltitude;
 
 int main(){
     /*
@@ -91,41 +93,6 @@ void getMpu(){//9軸センサーの値を取得する関数
     }
 }
 
-void getBmp(){
-    if (bmp180.init() != 0) {
-        bool bmp_ini = false;
-        } else {
-            bool bmp_ini = true;;
-        }
-    bmp180.startTemperature();
-    wait_ms(5);    
-    if(bmp180.getTemperature(&temp) != 0) {
-        bool get_temp = false;
-    }
-    bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
-    wait_ms(10);   
-    
-    if(bmp180.getPressure(&pressure) != 0) {
-        bool get_pre = false;
-    }
-    float t_press = float(pressure)/100;
-    float ratio = (1012.25 / t_press );  
-    float absoluteTemp = temp + 273.15;
-    altitude = (pow(double(ratio), double(1 / 5.257)) - 1) * absoluteTemp / 0.0065;bmp180.startTemperature();
-    
-
-    for(int i=(SAMPLES-1); i>=0; i--){
-        if(i!=0){
-            altArray[i] = altArray[i-1];
-        }else{
-            altArray[0] = altitude;
-        }
-    }
-
-    if(maxAltitude < calcMedian(altArray, SAMPLES)){
-        maxAltitude = calcMedian(altArray, SAMPLES);
-    }
-}
 
 void imSend(char *send){//無線で送信する関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位 im -> gps, high -> low
