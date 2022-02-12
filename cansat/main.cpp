@@ -48,20 +48,20 @@ struct coordinate{//座標
     double latitude;//緯度
     double longtitude;//経度
 }
-struct coordinate thisPos;//現在位置
-struct coordinate targetPos;//ターゲットの位置
+coordinate thisPos;//現在位置
+coordinate targetPos;//ターゲットの位置
 
 struct polar{//極座標
     double radius;//動径距離
     double angle;//角度
 }
-struct polar polar;
+polar polar;
 
 struct sonic{
     float distanceR;//右の超音波センサーの距離
     float distanceL;//左の超音波センサーの距離
 }
-struct sonic sonic;
+sonic sonic;
 
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
