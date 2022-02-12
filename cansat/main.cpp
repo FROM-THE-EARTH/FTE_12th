@@ -44,24 +44,24 @@ char sendData[256];
 
 Timer get_time;
 
-struct coordinate{//座標
+struct Coordinate{//座標
     double latitude;//緯度
     double longtitude;//経度
 }
-coordinate thisPos;//現在位置
-coordinate targetPos;//ターゲットの位置
+Coordinate thisPos;//現在位置
+Coordinate targetPos;//ターゲットの位置
 
-struct polar{//極座標
+struct Polar{//極座標
     double radius;//動径距離
     double angle;//角度
 }
-polar polar;
+Polar polar;
 
-struct sonic{
+struct Sonic{
     float distanceR;//右の超音波センサーの距離
     float distanceL;//左の超音波センサーの距離
 }
-sonic sonic;
+Sonic sonic;
 
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};

@@ -20,6 +20,7 @@
 //#include "ff.h"
 #include<stdio.h>
 
+
 //Pinの設定
 I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
@@ -32,6 +33,7 @@ PwmOut pwm2(PB_1);
 IM920 im920(PA_2, PA_3, PF_0, PB_3);
 GPS gps(PA_9, PA_10);
 Serial pc(USBTX, USBRX);
+
 
 //全体で使う関数や変数などの定義
 void setUp();//各モジュールの確認やサーボモータの初期化をする関数
@@ -48,12 +50,14 @@ int deadTime;//センサーモジュールの実行時間
 int phase = 0;//ロケットの状態段階
 float calcMedian(float *array, int n);//配列の値の中央値を出す関数
 
+
 //定数の定義
 #define SAMPLES 3 //medianの標本数
 #define CHECKER 50 //飛翔中か判断する際の気圧測定回数
 #define PARA_OPEN_TIME 15000 //パラシュートが開くまでの最大時間(ms)
 #define PARA_OPEN_DROP 10 //パラシュートが開くまでの最大落下距離(m)
 #define END_TIME 300000 //データを取得し終わる時間(ms)
+
 
 //以下各モジュールの関数や変数などの定義
 //MPU9250
