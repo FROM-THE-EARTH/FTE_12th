@@ -47,7 +47,10 @@ int interval();//timeStart()からの時間を返す関数
 int deadTime;//センサーモジュールの実行時間
 int phase = 0;
 float calcMedian(float *array, int n);//配列の値の中央値を出す関数
+
+//定数の定義
 #define SAMPLES 3 //medianの標本数
+#define CHECKER 50 //飛翔中か判断する際の気圧測定回数
 
 //以下各モジュールの関数や変数などの定義
 //MPU9250
@@ -177,7 +180,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
         getDatas();
     }
 
-    for(int i=0; i<50; i++){//気圧のデータを50回取得
+    for(int i=0; i<CHECKER; i++){//気圧のデータを50回取得
         function = getBmp();
         if(maxAltitude-calcMedian(altArray, SAMPLES)>3 || calcMedian(altArray, SAMPLES)-minAltitude>3){//高度差が3m以上ならば
             flighting = true;//飛翔中と判断
