@@ -30,15 +30,12 @@ int main(void)
     
     trigger1 = 0;
     trigger2 = 0;
-　　
     while(1){
         distance1 = sensor1();
         distance2 = sensor2();
 
         pc.printf("dis1=%f,dis2=%f\n",distance1,distance2);
     }
-　　
-
 }
 
 
