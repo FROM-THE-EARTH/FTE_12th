@@ -2,8 +2,8 @@
  * @file main.cpp
  * @author Hiroto ABE
  * @brief code for IZU
- * @version 1.0
- * @date 2022-01-08
+ * @version 1.3
+ * @date 2022-02-12
  * 
  * @copyright Copyright (c) 2022
  * 
@@ -20,6 +20,7 @@
 //#include "ff.h"
 #include<stdio.h>
 
+
 //Pinの設定
 I2C i2c(PB_7, PB_6);
 BMP180 bmp180(&i2c);
@@ -33,6 +34,7 @@ IM920 im920(PA_2, PA_3, PF_0, PB_3);
 GPS gps(PA_9, PA_10);
 Serial pc(USBTX, USBRX);
 
+
 //全体で使う関数や変数などの定義
 void setUp();//各モジュールの確認やサーボモータの初期化をする関数
 bool setUpErrorFlag = false;
@@ -45,12 +47,17 @@ int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
 void timerStart();//interval()のスタート地点
 int interval();//timeStart()からの時間を返す関数
 int deadTime;//センサーモジュールの実行時間
-int phase = 0;
+int phase = 0;//ロケットの状態段階
 float calcMedian(float *array, int n);//配列の値の中央値を出す関数
+
 
 //定数の定義
 #define SAMPLES 3 //medianの標本数
 #define CHECKER 50 //飛翔中か判断する際の気圧測定回数
+#define PARA_OPEN_TIME 15000 //パラシュートが開くまでの最大時間(ms)
+#define PARA_OPEN_DROP 10 //パラシュートが開くまでの最大落下距離(m)
+#define END_TIME 300000 //データを取得し終わる時間(ms)
+
 
 //以下各モジュールの関数や変数などの定義
 //MPU9250
@@ -63,14 +70,14 @@ float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
 
 //BMP180
-int getBmp();//tempと気圧を取得する関数
+int getBmp();//気温と気圧を取得する関数
 bool bmpErrorFlag = false;
 int pressure;
 float temp;
 float altitude;
 float altArray[SAMPLES];
-float maxAltitude = -10000.0;
-float minAltitude = 10000.0;
+float maxAltitude = -10000.0;//高度の最大値はとても小さい値で初期化
+float minAltitude = 10000.0;//高度の最小値はとても大きい値で初期化
 
 //GPS
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
@@ -92,7 +99,7 @@ int dataNumber = 0;
 int main(){
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     setUp();
-    while(phase!=4){
+    while(phase!=3){
         getDatas();//GPS以外のデータを取得
         sendDatas();
         sdWrite();
@@ -106,7 +113,7 @@ int main(){
                 }
                 break;
             case 1:
-                if(interval()>15000 || (maxAltitude-calcMedian(altArray, SAMPLES)>10)){//打ち上がってから15秒後、もしくは10m落下すれば
+                if(interval()>PARA_OPEN_TIME || (maxAltitude-calcMedian(altArray, SAMPLES)>PARA_OPEN_DROP)){//打ち上がってから'PARA_OPEN_TIME'秒後、もしくは'PARA_OPEN_DROP'm落下すれば
                     pwm1.pulsewidth_us(1800);//サーボモータを動かす
                     pwm2.pulsewidth_us(1800);
                     imSend("Para Open!",0);
@@ -115,13 +122,8 @@ int main(){
                 }
                 break;
             case 2:
-                if(interval()>60000){//打ち上がってから60秒経てば
+                if(interval()>END_TIME){//打ち上がってから'END_TIME'秒経てば
                     imSend("End!",0);
-                    phase++;
-                }
-                break;
-            case 3:
-                if(interval()>360000){//さらに5分経てば
                     phase++;
                 }
                 break;

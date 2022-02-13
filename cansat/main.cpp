@@ -1,7 +1,3 @@
-
-/*
-ライブラリのインクルード、ピン指定、関数設置まで行った関数です
-*/
 #include "mbed.h"
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
@@ -12,9 +8,8 @@
 //#include "ff.h"
 #include<stdio.h>
 
-#define EARTH_RADIUS 6378.137
-#define SAMPLES 5
 
+//Pinの定義
 I2C i2cBus(D4, D5);
 mpu9250 mpu(i2cBus, AD0_HIGH);
 IM920 im920(A7, A2, A4, A5);
@@ -29,46 +24,71 @@ PwmOut FIN1(D7);
 PwmOut RIN1(D9);
 PwmOut FIN2(D3);
 PwmOut RIN2(D6);
-
 Serial pc(USBTX, USBRX);
 
-void getMpu();//9軸センサ用関数
-void imSend(char *send);//無線用関数
-void sendDatas(float latitude, float longtitude, float altitude, float time);//無線用関数
-void getGPS();//GPS用関数
-void echo();//超音波センサから距離を取得する関数
+
+//全体で使う関数や変数などの定義
 double calcDistance(double x1,double y1,double x2,double y2);//距離計算用関数
 double calcAngle(double x1,double y1,double x2,double y2);//角度計算用関数
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数（未完成）
-char sendData[256];
-
 Timer get_time;
 
-struct coordinate{//座標
-    double latitude;//緯度
-    double longtitude;//経度
-}
-struct coordinate thisPos;//現在位置
-struct coordinate targetPos;//ターゲットの位置
 
-struct polar{//極座標
-    double radius;//動径距離
-    double angle;//角度
-}
-struct polar polar;
+//定数の定義
+#define EARTH_RADIUS 6378.137
+#define SAMPLES 5
 
-struct sonic{
-    float distanceR;//右の超音波センサーの距離
-    float distanceL;//左の超音波センサーの距離
-}
-struct sonic sonic;
 
+//以下各モジュールの関数や変数などの定義
+//MPU9250
+void getMpu();//9軸センサ用関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};
 float mag[3] = {};
 float accArrayX[SAMPLES];
 float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
+
+//GPS
+void getGPS();//GPS用関数
+struct Coordinate{//座標
+    double latitude;//緯度
+    double longtitude;//経度
+}
+struct Coordinate thisPos;//現在位置
+struct Coordinate targetPos;//ターゲットの位置
+
+//SONIC
+void echo();//超音波センサから距離を取得する関数
+struct Sonic{
+    float distanceR;//右の超音波センサーの距離
+    float distanceL;//左の超音波センサーの距離
+}
+struct Sonic sonic;
+
+
+//IM920
+void imSend(char *send);//無線用関数
+void sendDatas(float latitude, float longtitude, float altitude, float time);//データを文字列に変換してimSendを呼び出して送信する関数
+char sendData[256];
+int dataNumber = 0;
+
+
+
+
+
+struct Polar{//極座標
+    double radius;//動径距離
+    double angle;//角度
+}
+Polar polar;
+
+struct Sonic{
+    float distanceR;//右の超音波センサーの距離
+    float distanceL;//左の超音波センサーの距離
+}
+Sonic sonic;
+
 
 
 int main(){
