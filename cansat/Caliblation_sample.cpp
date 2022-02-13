@@ -76,31 +76,40 @@ void calibration(){
             
     centerMagX = (maxMagX + minMagX)/2;
     centerMagY = (maxMagY + minMagY)/2;
-    
 }
 
 void culcAzimuth(){
     getMpu();//getMpu()の複数発動に注意
     int code = 0;
     switch(code){
-            case 0:if(magX-centerMagX>0 && magY-centerMagY>=0){
-                        Azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-                        code  = 0;
-                   }break;
-            case 1:if(magX-centerMagX<0 && magY-centerMagY>=0){
-                        Azimuth = 270 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-                        code = 1;
-                    }break;
-            case 2:if(magX-centerMagX<0 && magY-centerMagY<=0){
-                        Azimuth = 270 -  (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-                        code = 2;
-                    }break;
-            case 3:if(magX-centerMagX>0 && magY-centerMagY<=0){
-                        Azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-                        code = 3;
-                    }break;
-                    
-         }
+        case 0:
+        if(magX-centerMagX>0 && magY-centerMagY>=0){
+            Azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+            code  = 0;
+        }
+        break;
+        
+        case 1:
+        if(magX-centerMagX<0 && magY-centerMagY>=0){
+            Azimuth = 270 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+            code = 1;
+        }
+        break;
+
+        case 2:
+        if(magX-centerMagX<0 && magY-centerMagY<=0){
+            Azimuth = 270 -  (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+            code = 2;
+        }
+        break;
+
+        case 3:
+        if(magX-centerMagX>0 && magY-centerMagY<=0){
+            Azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+            code = 3;
+        }
+        break;
+    }
 }
 
 void motorForward(){
