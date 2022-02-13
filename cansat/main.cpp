@@ -28,8 +28,8 @@ Serial pc(USBTX, USBRX);
 
 
 //全体で使う関数や変数などの定義
-double calcDistance(double x1,double y1,double x2,double y2);//距離計算用関数
-double calcAngle(double x1,double y1,double x2,double y2);//角度計算用関数
+void calcDistance();//距離計算用関数
+void calcAngle();//角度計算用関数
 struct Polar{//極座標
     double radius;//動径距離
     double angle;//角度
@@ -104,17 +104,13 @@ int main(){
 
 
 
-double calcDistance(double x1,double y1,double x2,double y2){//距離計算用関数
-    double distance;
-    distance = (r)*acos(sin(y1)*sin(y2)+cos(y1)*cos(y2)*cos(x2-x1));
-    return distance;
+void calcDistance(){//距離計算用関数
+    polar.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
 }
 
 
-double calcAngle(double x1,double y1,double x2,double y2){//角度計算用関数
-    double angle;
-    angle = 90 - atan(2*(sin(x1-x2))/((cos(y1)*tan(y2)-sin(y1)*cos(x2-x1))));
-    return angle;
+void calcAngle(double x1,double y1,double x2,double y2){//角度計算用関数
+    polar.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
 }
 
 
