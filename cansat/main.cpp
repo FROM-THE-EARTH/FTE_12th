@@ -36,12 +36,14 @@ struct Polar{//極座標
 }
 struct Polar polar;
 
-Timer get_time;
+Timer timer;
 
 
 //定数の定義
 #define EARTH_RADIUS 6378.137
 #define SAMPLES 5
+#define TARGET_LAT 0
+#define TARGET_LNG 0
 
 
 //以下各モジュールの関数や変数などの定義
@@ -69,6 +71,8 @@ struct Coordinate{//座標
 }
 struct Coordinate thisPos;//現在位置
 struct Coordinate targetPos;//ターゲットの位置
+targetPos.latitude = TARGET_LAT;
+targetPos.longtitude = TARGET_LNG;
 
 //SONIC
 void echo();//超音波センサから距離を取得する関数
@@ -221,13 +225,13 @@ void echo(){//超音波センサから距離を取得する関数
     triggerR.write(0);
 
     while(echoR.read() == 0){
-        get_time.reset();
-        get_time.start();
+        timer.reset();
+        timer.start();
     }
     while(echoR.read() == 1){
-        get_time.stop();
+        timer.stop();
     }
-    sonicR.distance = get_time.read_us() * 0.03432f / 2.0f;
+    sonicR.distance = timer.read_us() * 0.03432f / 2.0f;
 
     //左の超音波センサー
     triggerL.write(1);
@@ -235,13 +239,13 @@ void echo(){//超音波センサから距離を取得する関数
     triggerL.write(0);
 
     while(echoL.read() == 0){
-        get_time.reset();
-        get_time.start();
+        timer.reset();
+        timer.start();
     }
     while(echoL.read() == 1){
-        get_time.stop();
+        timer.stop();
     }
-    sonicL.distance = get_time.read_us() * 0.03432f / 2.0f;
+    sonicL.distance = timer.read_us() * 0.03432f / 2.0f;
 }
 
 
