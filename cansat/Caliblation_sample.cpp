@@ -27,7 +27,7 @@ void motorForward();
 
 int main(){
     calibration();//一回のみ発動する関数
-    culcAzimuth();//常に発動すべき関数、これを発動すれば変数Azimuthに北からの角度が格納される
+    culcAzimuth();//常に発動すべき関数で、これを発動すれば変数Azimuthに北からの角度が格納される
     pc.printf("angle from north = %f\n",Azimuth);
 }
 
