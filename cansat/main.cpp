@@ -73,10 +73,10 @@ struct Coordinate targetPos;//ターゲットの位置
 //SONIC
 void echo();//超音波センサから距離を取得する関数
 struct Sonic{
-    float distanceR;//右の超音波センサーの距離
-    float distanceL;//左の超音波センサーの距離
+    float distance;//超音波センサーの距離
 }
-struct Sonic sonic;
+struct Sonic sonicR;//右の超音波センサー
+struct Sonic sonicL;//左の超音波センサー
 
 //モーター
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数（未完成）
@@ -227,7 +227,7 @@ void echo(){//超音波センサから距離を取得する関数
     while(echoR.read() == 1){
         get_time.stop();
     }
-    sonic.distanceR = get_time.read_us() * 0.03432f / 2.0f;
+    sonicR.distance = get_time.read_us() * 0.03432f / 2.0f;
 
     //左の超音波センサー
     triggerL.write(1);
@@ -241,7 +241,7 @@ void echo(){//超音波センサから距離を取得する関数
     while(echoL.read() == 1){
         get_time.stop();
     }
-    sonic.distanceL = get_time.read_us() * 0.03432f / 2.0f;
+    sonicL.distance = get_time.read_us() * 0.03432f / 2.0f;
 }
 
 
