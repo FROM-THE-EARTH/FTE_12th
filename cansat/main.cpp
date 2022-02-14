@@ -34,9 +34,9 @@ struct Polar{//極座標
     double radius;//動径距離
     double angle;//角度
 }
-struct Polar polar;
-
-Timer timer;
+struct Polar toTarget;
+void paraSeparation();//パラシュート分離関数
+void targetDecision();//目的地を決定する関数
 
 
 //定数の定義
@@ -55,16 +55,16 @@ float mag[3] = {};
 float accArrayX[SAMPLES];
 float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
-void calibration();
-void culcAzimuth();
+void calibration();//地磁気補正用関数
+void calcAzimuth();//方位角計算用関数
 float magX,magY;
 float centerMagX,centerMagY;
 float maxMagX,minMagX;
 float maxMagY,minMagY;
-float Azimuth;//方位角
+float azimuth;//方位角
 
 //GPS
-void getGPS();//GPS用関数
+void getGps();//GPS用関数
 struct Coordinate{//座標
     double latitude;//緯度
     double longtitude;//経度
@@ -73,18 +73,28 @@ struct Coordinate thisPos;//現在位置
 struct Coordinate targetPos;//ターゲットの位置
 targetPos.latitude = TARGET_LAT;
 targetPos.longtitude = TARGET_LNG;
+bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
 
 //SONIC
+Timer timer;
 void echo();//超音波センサから距離を取得する関数
 struct Sonic{
     float distance;//超音波センサーの距離
 }
 struct Sonic sonicR;//右の超音波センサー
 struct Sonic sonicL;//左の超音波センサー
+bool obstacleDetection();//前方にものがあるか判断する関数:発見->true
 
 //モーター
-double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数（未完成）
-void motorForward();
+double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
+void setDirection();//進行方向を変更する関数
+void obstacleAvoidance()//障害物を回避する関数
+void turn();//cansatを旋回させる関数
+void motorForward();//cansatを前進させる関数
+void motorRight();//cansatを右に進ませる関数
+void motorLeft();//cansatを左に進ませる関数
+void motorBack();//cansatを後退させる関数
+void motorStop();//cansatを停止させる関数
 
 //IM920
 void imSend(char *send);//無線用関数
@@ -96,21 +106,66 @@ int dataNumber = 0;
 
 
 int main(){
-    /*
-    ここにカンサットのメインコードを書いてみよう
-    */
+    //phase2
+    paraSeparation();//パラシュートを分離
+    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    while(1){//GPSが安定したら次の処理へ
+        if(gpsChecker()){
+            break;
+        }
+    }
+
+    //phase3
+    calibration();//地磁気補正
+
+    //phase4
+    while(1){
+        getMpu();//MPU9250からのデータを取得->変数に格納
+        calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+        calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+        calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
+
+        if(toTarget.radius<1){//目的地までの距離が1m以内ならば
+            break;//次のphaseへ
+        }
+
+        setDirection();//進行方向を設定(2回目以降は変更)
+
+        echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+        if(obstacleDetection){//障害物を発見したら
+            obstacleAvoidance();//障害物を回避
+        }
+    }
+
+    //phase5
+    targetDecision();//目的地を判断し決定
+    while(1){
+        if(sonicL.distance<0.1 || sonicR.distance<0.1){//左右どちらかの超音波センサーの値が10cm以下ならば
+            break;//次の処理へ
+        }
+        motorForward();//前進
+    }
+    motorStop();//目的地に到着したのでcansatを停止
 }
 
 
 
 
 void calcDistance(){//距離計算用関数
-    polar.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
+    toTarget.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
 }
 
 
 void calcAngle(double x1,double y1,double x2,double y2){//角度計算用関数
-    polar.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
+    toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
+}
+
+
+void paraSeparation(){//パラシュート分離関数
+}
+
+
+void targetDecision(){//目的地を決定する関数
 }
 
 
@@ -170,37 +225,15 @@ void calibration(){//地磁気補正用関数
 }
 
 
-void culcAzimuth(){
-    getMpu();//getMpu()の複数発動に注意
-    int code = 0;
-    switch(code){
-        case 0:
-        if(magX-centerMagX>0 && magY-centerMagY>=0){
-            Azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-            code  = 0;
-        }
-        break;
-        
-        case 1:
-        if(magX-centerMagX<0 && magY-centerMagY>=0){
-            Azimuth = 270 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-            code = 1;
-        }
-        break;
-
-        case 2:
-        if(magX-centerMagX<0 && magY-centerMagY<=0){
-            Azimuth = 270 -  (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-            code = 2;
-        }
-        break;
-
-        case 3:
-        if(magX-centerMagX>0 && magY-centerMagY<=0){
-            Azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-            code = 3;
-        }
-        break;
+void calcAzimuth(){//方位角計算用関数
+    if(magX-centerMagX>0 && magY-centerMagY>=0){
+        azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+    }else if(magX-centerMagX<0 && magY-centerMagY>=0){
+        azimuth = 270 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+    }else if(magX-centerMagX<0 && magY-centerMagY<=0){
+        azimuth = 270 -  (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+    }else if(magX-centerMagX>0 && magY-centerMagY<=0){
+        azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
     }
 }
 
@@ -211,6 +244,10 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
         thisPos.latitude = gps.latitude;
         thisPos.longtitude = gps.longtitude;
     }
+}
+
+
+bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
 }
 
 
@@ -245,8 +282,40 @@ void echo(){//超音波センサから距離を取得する関数
 }
 
 
-void motorForward(){//前進する関数
-};
+bool obstacleDetection(){//前方にものがあるか判断する関数:発見->true
+}
+
+
+void setDirection(){//進行方向を変更する関数
+}
+
+
+void obstacleAvoidance(){//障害物を回避する関数
+}
+
+
+void turn(){//cansatを旋回させる関数
+}
+
+
+void motorForward(){//cansatを前進させる関数
+}
+
+
+void motorRight(){//cansatを右に進ませる関数
+}
+
+
+void motorLeft(){//cansatを左に進ませる関数
+}
+
+
+void motorBack(){//cansatを後退させる関数
+}
+
+
+void motorStop(){//cansatを停止させる関数
+}
 
 
 double calcPulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
