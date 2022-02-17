@@ -36,7 +36,7 @@ struct Polar{//極座標
 struct Polar toTarget;
 void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
-bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
+bool stuckChecker();//スタックしているかどうか判断する関数:スタック->true
 
 
 //定数の定義
@@ -99,6 +99,7 @@ bool obstacleChecker();//前方にものがあるか判断する関数:発見->t
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
 void setDirection();//進行方向を変更する関数
 void obstacleAvoidance()//障害物を回避する関数
+void handleStuck();//スタックを対処する関数
 void turn();//cansatを旋回させる関数
 void motorForward();//cansatを前進させる関数
 void motorRight();//cansatを右に進ませる関数
@@ -141,6 +142,10 @@ int main(){
 
         setDirection();//進行方向を設定(2回目以降は変更)
 
+        if(stuckChecker()){//スタックしていたら
+
+        }
+
         echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
         if(obstacleChecker){//障害物を発見したら
             obstacleAvoidance();//障害物を回避
@@ -179,8 +184,8 @@ void targetDecision(){//目的地を決定する関数
 }
 
 
-bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
-
+bool stuckChecker(){//スタックしているかどうか判断する関数:スタック->true
+}
 
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
@@ -346,6 +351,10 @@ void setDirection(){//進行方向を変更する関数
 
 
 void obstacleAvoidance(){//障害物を回避する関数
+}
+
+
+void handleStuck(){//スタックを対処する関数
 }
 
 
