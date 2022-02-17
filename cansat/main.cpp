@@ -19,10 +19,10 @@ DigitalIn echoR(A6);
 DigitalOut trigerL(D10);
 DigitalIN echoL(A1);
 PwmOut servo(D2);
-PwmOut FIN1(D7);
-PwmOut RIN1(D9);
-PwmOut FIN2(D3);
-PwmOut RIN2(D6);
+PwmOut FINR(D7);
+PwmOut RINR(D9);
+PwmOut FINL(D3);
+PwmOut RINL(D6);
 Serial pc(USBTX, USBRX);
 
 
@@ -48,18 +48,24 @@ void targetDecision();//目的地を決定する関数
 //以下各モジュールの関数や変数などの定義
 //MPU9250
 void getMpu();//9軸センサ用関数
-float acc[3] = {};//ここに加速度がx,y,zの順で格納される
-float gyro[3] = {};
-float mag[3] = {};
-float accArrayX[SAMPLES];
-float accArrayY[SAMPLES];
-float accArrayZ[SAMPLES];
+struct MpuData{
+    float datas[3] = {};
+    float x;
+    float y;
+    float z;
+    float X[SAMPLES];
+    float Y[SAMPLES];
+    float Z[SAMPLES];
+}
+struct MpuData acc;
+struct MpuData gyro;
+struct MpuData mag;
+struct MpuData maxMag;
+struct MpuData minMag;
+struct MpuData centerMag;
+void createDataArray(Mpudata data);//MPUのデータをSAMPLES個の配列に格納する関数
 void calibration();//地磁気補正用関数
 void calcAzimuth();//方位角計算用関数
-float magX,magY;
-float centerMagX,centerMagY;
-float maxMagX,minMagX;
-float maxMagY,minMagY;
 float azimuth;//方位角
 
 //GPS
@@ -171,24 +177,29 @@ void targetDecision(){//目的地を決定する関数
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
-    mpu.getAcc(acc);//加速度をacc[]に格納
-    mpu.getGyro(gyro);
-    mpu.getMag(mag);
+    mpu.getAcc(acc.datas);//加速度をacc[]に格納
+    mpu.getGyro(gyro.datas);
+    mpu.getMag(mag.datas);
 
-    magX = mag[0];
-    magY = mag[1];
+    createDataArray(acc);
+    createDataArray(gyro);
+    createDataArray(mag);
+}
 
-    for(int i=(SAMPLES-1); i>=0; i--){
-        if(i!=0){
-            accArrayX[i] = accArrayX[i-1];
-            accArrayY[i] = accArrayY[i-1];
-            accArrayZ[i] = accArrayZ[i-1];
-        }else{
-            accArrayX[0] = acc[0];
-            accArrayY[0] = acc[1];
-            accArrayZ[0] = acc[2];
-        }
+
+void createDataArray(Mpudata data){//MPUのデータをSAMPLES個の配列に格納する関数
+    data.x = data.datas[0];
+    data.y = data.datas[1];
+    data.z = data.datas[2];
+
+    for(int i=(SAMPLES-1); i>0; i--){
+        data.X[i] = data.X[i-1];
+        data.Y[i] = data.Y[i-1];
+        data.Z[i] = data.Z[i-1];
     }
+    data.X[0] = data.x;
+    data.Y[0] = data.y;
+    data.Z[0] = data.z;
 }
 
 
@@ -198,20 +209,20 @@ void calibration(){//地磁気補正用関数
         while(millis()<15*1000){
             getMpu();
             millisStart();
-            if(maxMagX < magX){
-                maxMagX = magX;
+            if(maxMag.x < mag.x){
+                maxMag.x = mag.x;
             }
-            if(minMagX > magX){
-                minMagX = magX;
+            if(minMag.x > mag.x){
+                minMag.x = mag.x;
             }
-            if(maxMagY < magY){
-                maxMagY = magY;
+            if(maxMag.y < mag.y){
+                maxMag.y = mag.y;
             }
-            if(minMagY > magY){
-                minMagY = magY;
+            if(minMag.y > mag.y){
+                minMag.y = mag.y;
             }
         }
-        if(((maxMagX-minMagX)>50) && ((maxMagY-minMagY)>50)){
+        if(((maxMag.x-minMag.x)>50) && ((maxMag.y-minMag.y)>50)){
             complete_calibration = true;//キャリブレーション完了
         }else{
             motorForward();//少し移動してからまたキャリブレーション
@@ -219,20 +230,20 @@ void calibration(){//地磁気補正用関数
             complete_calibration = false;
         }
     }
-    centerMagX = (maxMagX+minMagX)/2;
-    centerMagY = (maxMagY+minMagY)/2;
+    centerMag.x = (maxMag.x+minMag.x)/2;
+    centerMag.y = (maxMag.y+minMag.y)/2;
 }
 
 
 void calcAzimuth(){//方位角計算用関数
-    if(magX-centerMagX>0 && magY-centerMagY>=0){
-        azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-    }else if(magX-centerMagX<0 && magY-centerMagY>=0){
-        azimuth = 270 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-    }else if(magX-centerMagX<0 && magY-centerMagY<=0){
-        azimuth = 270 -  (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
-    }else if(magX-centerMagX>0 && magY-centerMagY<=0){
-        azimuth = 90 - (180/pi)*atan((magY - centerMagY)/(magX - centerMagX));
+    if(mag.x-centerMag.x>0 && mag.y-centerMag.y>=0){
+        azimuth = 90 - (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
+    }else if(mag.x-centerMag.x<0 && mag.y-centerMag.y>=0){
+        azimuth = 270 - (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
+    }else if(mag.x-centerMag.x<0 && mag.y-centerMag.y<=0){
+        azimuth = 270 -  (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
+    }else if(mag.x-centerMag.x>0 && mag.y-centerMag.y<=0){
+        azimuth = 90 - (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
     }
 }
 
