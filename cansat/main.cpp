@@ -40,12 +40,13 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 
 
 //定数の定義
-#define EARTH_RADIUS 6378.137//地球の半径(km)
-#define MPU_SAMPLES 5
-#define GPS_SAMPLES 10//GPSのデータは1秒に一回であることに注意
-#define GPS_ACCURACY 50//GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 0
-#define TARGET_LNG 0
+#define EARTH_RADIUS 6378.137 //地球の半径(km)
+#define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
+#define GPS_SAMPLES 10 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
+#define GPS_ACCURACY 50 //GPSの安定を判断する際の精度(cm)
+#define TARGET_LAT 0 //目標の緯度
+#define TARGET_LNG 0 //目標の経度
+#define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 
 
 //以下各モジュールの関数や変数などの定義
@@ -171,7 +172,7 @@ void calcDistance(){//距離計算用関数
 }
 
 
-void calcAngle(double x1,double y1,double x2,double y2){//角度計算用関数
+void calcAngle(){//角度計算用関数
     toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
 }
 
@@ -343,6 +344,9 @@ void echo(){//超音波センサから距離を取得する関数
 
 
 bool obstacleChecker(){//前方にものがあるか判断する関数:発見->true
+    if((sonicL.distance<OBSTACLE_DISTANCE) && (sonicR.distance<OBSTACLE_DISTANCE)){
+        return true;
+    }
 }
 
 
