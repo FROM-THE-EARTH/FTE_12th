@@ -36,11 +36,14 @@ struct Polar{//極座標
 struct Polar toTarget;
 void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
+bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
 
 
 //定数の定義
-#define EARTH_RADIUS 6378.137
-#define SAMPLES 5
+#define EARTH_RADIUS 6378.137//地球の半径(km)
+#define MPU_SAMPLES 5
+#define GPS_SAMPLES 10//GPSのデータは1秒に一回であることに注意
+#define GPS_ACCURACY 50//GPSの安定を判断する際の精度(cm)
 #define TARGET_LAT 0
 #define TARGET_LNG 0
 
@@ -53,9 +56,9 @@ struct MpuData{
     float x;
     float y;
     float z;
-    float X[SAMPLES];
-    float Y[SAMPLES];
-    float Z[SAMPLES];
+    float X[MPU_SAMPLES];
+    float Y[MPU_SAMPLES];
+    float Z[MPU_SAMPLES];
 }
 struct MpuData acc;
 struct MpuData gyro;
@@ -63,7 +66,7 @@ struct MpuData mag;
 struct MpuData maxMag;
 struct MpuData minMag;
 struct MpuData centerMag;
-void createDataArray(Mpudata data);//MPUのデータをSAMPLES個の配列に格納する関数
+void createDataArray(Mpudata data);//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
 void calibration();//地磁気補正用関数
 void calcAzimuth();//方位角計算用関数
 float azimuth;//方位角
@@ -73,6 +76,8 @@ void getGps();//GPS用関数
 struct Coordinate{//座標
     double latitude;//緯度
     double longtitude;//経度
+    double Latitude[GPS_SAMPLES];
+    double Longtitude[GPS_SAMPLES];
 }
 struct Coordinate thisPos;//現在位置
 struct Coordinate targetPos;//ターゲットの位置
@@ -88,7 +93,7 @@ struct Sonic{
 }
 struct Sonic sonicR;//右の超音波センサー
 struct Sonic sonicL;//左の超音波センサー
-bool obstacleDetection();//前方にものがあるか判断する関数:発見->true
+bool obstacleChecker();//前方にものがあるか判断する関数:発見->true
 
 //モーター
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
@@ -137,7 +142,7 @@ int main(){
         setDirection();//進行方向を設定(2回目以降は変更)
 
         echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
-        if(obstacleDetection){//障害物を発見したら
+        if(obstacleChecker){//障害物を発見したら
             obstacleAvoidance();//障害物を回避
         }
     }
@@ -174,25 +179,28 @@ void targetDecision(){//目的地を決定する関数
 }
 
 
+bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
+
+
 void getMpu(){//9軸センサーの値を取得する関数
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
-    mpu.getAcc(acc.datas);//加速度をacc[]に格納
-    mpu.getGyro(gyro.datas);
-    mpu.getMag(mag.datas);
+    mpu.getAcc(acc.datas);//加速度をacc.datas[i](i=0->x成分, 1->y成分, 2->z成分)に格納
+    mpu.getGyro(gyro.datas);//ジャイロ
+    mpu.getMag(mag.datas);//地磁気
 
-    createDataArray(acc);
+    createDataArray(acc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
     createDataArray(gyro);
     createDataArray(mag);
 }
 
 
-void createDataArray(Mpudata data){//MPUのデータをSAMPLES個の配列に格納する関数
+void createDataArray(Mpudata data){//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
     data.x = data.datas[0];
     data.y = data.datas[1];
     data.z = data.datas[2];
 
-    for(int i=(SAMPLES-1); i>0; i--){
+    for(int i=(MPU_SAMPLES-1); i>0; i--){
         data.X[i] = data.X[i-1];
         data.Y[i] = data.Y[i-1];
         data.Z[i] = data.Z[i-1];
@@ -253,11 +261,48 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     if(gps.readable){
         thisPos.latitude = gps.latitude;
         thisPos.longtitude = gps.longtitude;
+        for(int i=(GPS_SAMPLES-1); i>0; i--){
+            thisPos.Latitude[i] = thisPos.Latitude[i-1];
+            thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
+        }
+        thisPos.Latitude[0] = thisPos.latitude;
+        thisPos.Longtitude[0] = thisPos.longtitude;
     }
 }
 
 
 bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
+    double maxLat = 0.0;
+    double minLat = 1000.0;
+    double maxLng = 0.0;
+    double minLng = 1000.0;
+    double difLat;
+    double difLng;
+    double accuracy = GPS_ACCURACY/10000000;
+
+    for(int i=0; i<GPS_SAMPLES; i++){
+        if(thisPos.Latitude[i]>maxLat){
+            maxLat = thisPos.Latitude[i];
+        }
+        if(thisPos.Latitude[i]<minLat){
+            minLat = thisPos.Latitude[i];
+        }
+        if(thisPos.Longtitude[i]>maxLng){
+            maxLng = thisPos.Longtitude[i];
+        }
+        if(thisPos.Longtitude[i]<maxLng){
+            maxLng = thisPos.Longtitude[i];
+        }
+    }
+
+    difLat = (maxLat-minLat);
+    difLng = (maxLng-minLng);
+
+    if((difLat<accuracy)&&(difLng<accuracy)){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 
@@ -292,7 +337,7 @@ void echo(){//超音波センサから距離を取得する関数
 }
 
 
-bool obstacleDetection(){//前方にものがあるか判断する関数:発見->true
+bool obstacleChecker(){//前方にものがあるか判断する関数:発見->true
 }
 
 
