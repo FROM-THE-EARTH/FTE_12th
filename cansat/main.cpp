@@ -49,6 +49,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define TARGET_LAT 0 //目標の緯度
 #define TARGET_LNG 0 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
+#define NON_OBSTACLE_DISTANCE 100 //障害物を回避できたと捉える距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
 #define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
@@ -104,7 +105,6 @@ struct Sonic sonicL;//左の超音波センサー
 bool obstacleChecker();//前方にものがあるか判断する関数:発見->true
 
 //MOTOR
-double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
 void setDirection();//進行方向を変更する関数
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
@@ -140,6 +140,7 @@ int main(){
     }
 
     //phase3
+    for(int i=0; i<MPU_SAMPLES; i++) getMpu();
     calibration();//地磁気補正
 
     //phase4
@@ -356,6 +357,7 @@ void echo(){//超音波センサから距離を取得する関数
         timer.stop();
     }
     sonicR.distance = timer.read_us() * 0.03432f / 2.0f;
+    if(sonicR.distance>2000) sonicR.distance = 1.0;//超音波センサーのバグを修正
 
     //左の超音波センサー
     triggerL.write(1);
@@ -370,6 +372,7 @@ void echo(){//超音波センサから距離を取得する関数
         timer.stop();
     }
     sonicL.distance = timer.read_us() * 0.03432f / 2.0f;
+    if(sonicL.distance>2000) sonicL.distance = 1.0;//超音波センサーのバグを修正
 }
 
 
@@ -393,6 +396,19 @@ void setDirection(){//進行方向を変更する関数
 
 
 void obstacleAvoidance(){//障害物を回避する関数
+    turn(20);//旋回しながら、
+    while(1){
+        echo();//超音波のデータ取得
+        if((sonicR.distance>NON_OBSTACLE_DISTANCE) && (sonicL.distance>NON_OBSTACLE_DISTANCE)) break;//障害物がなくなったら、while脱出->次の処理へ
+    }
+    motorStop();
+    wait_ms(10);
+
+    int before = millis();
+    int after = before;
+    while((after-before)<5000){
+        motorForward(80);
+    }
 }
 
 
@@ -442,12 +458,6 @@ void motorStop(bool emergency){//cansatを停止させる関数
         RINR = 0;
         RINL = 0;
     }
-}
-
-
-double calcPulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
-    float pulse;
-    return pulse;
 }
 
 
