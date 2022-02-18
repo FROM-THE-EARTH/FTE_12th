@@ -13,7 +13,7 @@ I2C i2cBus(D4, D5);
 mpu9250 mpu(i2cBus, AD0_HIGH);
 IM920 im920(A7, A2, A4, A5);
 GPS gps(D1, D0);
-DigitalIn pra_recognition(A0);
+DigitalIn parachuteChecker(A0);
 DigitalOut triggerR(D8);
 DigitalIn echoR(A6);
 DigitalOut triggerL(D10);
@@ -37,6 +37,7 @@ struct Polar toTarget;
 void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
 bool stuckChecker();//スタックしているかどうか判断する関数:スタック->true
+void servoWrite(int servoAngle);
 
 
 //定数の定義
@@ -181,9 +182,32 @@ void calcDistance(){//距離計算用関数
 void calcAngle(){//角度計算用関数
     toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
 }
-
+void servoWrite(int servoAngle){//サーボモーターを角度によって出力する関数
+    int pulse = 500 + 10.5*servoAngle;
+    servo.pulsewidth_us(pulse);
+}
 
 void paraSeparation(){//パラシュート分離関数
+    int startTime = millis();
+    while(1){
+        int previousTime = millis();
+        getMpu();
+        if(acc.x*acc.x+acc.y*acc.y+acc.z*acc.z > 2.0*2.0){//加速度によってカンサットの着地を検知
+            wait(10);//念のため10秒間待機
+            break;
+        }
+        if(previousTime-startTime > 60*1000)break;//一定秒数経過で着地を検知
+    }
+    int parachuteTime = millis();
+    while(1){
+        int regurationTime = millis();
+        parachuteChecker.mode(PullDown);//プルダウンで電圧の初期値を0に設定、ピンが刺さっている場合は電圧は1
+        float val = parachuteChecker;
+        servoWrite(60);//とりあえず60度出力
+        wait(5);
+        if(val==0)break;//ピンが抜けたら
+        if(regurationTime - parachuteTime > 60*1000)break;//一定秒数経過したら
+    }
 }
 
 
