@@ -61,6 +61,9 @@ struct MpuData{
     float X[MPU_SAMPLES];
     float Y[MPU_SAMPLES];
     float Z[MPU_SAMPLES];
+    float medX;
+    float medY;
+    float medZ;
 }
 struct MpuData acc;
 struct MpuData gyro;
@@ -68,7 +71,8 @@ struct MpuData mag;
 struct MpuData maxMag;
 struct MpuData minMag;
 struct MpuData centerMag;
-void createDataArray(Mpudata data);//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
+void createDataArray(Mpudata data);//MPUのデータをMPU_SAMPLES個の配列に順番に格納し、calcMedian()を呼び出して中央値を求める関数
+float calcMedian(float *array, int n);//配列の値の中央値を出す関数
 void calibration();//地磁気補正用関数
 void calcAzimuth();//方位角計算用関数
 float azimuth;//方位角
@@ -140,7 +144,7 @@ int main(){
         calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
         calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
 
-        if(toTarget.radius<1){//目的地までの距離が1m以内ならば
+        if(toTarget.radius<1.0){//目的地までの距離が1m以内ならば
             break;//次のphaseへ
         }
 
@@ -217,6 +221,28 @@ void createDataArray(Mpudata data){//MPUのデータをMPU_SAMPLES個の配列�
     data.X[0] = data.x;
     data.Y[0] = data.y;
     data.Z[0] = data.z;
+
+    data.medX = calcMedian(data.X, MPU_SAMPLES);
+    data.medY = calcMedian(data.Y, MPU_SAMPLES);
+    data.medZ = calcMedian(data.Z, MPU_SAMPLES);
+}
+
+
+float calcMedian(float *array, int n){//配列の値の中央値を出す関数
+    for(int i=0; i<n; i++) {//昇順にソート
+        for(int j = i+1; j<n; j++){
+            if(array[i]>array[j]){
+                float changer = array[j];
+                array[j] = array[i];
+                array[i] = changer;
+            }
+        }
+    }
+    if(n%2 == 0){
+        return array[n/2];
+    }else{
+        return((float)array[n/2] + array[n/2+1])/2;
+    }
 }
 
 
@@ -227,14 +253,14 @@ void calibration(){//地磁気補正用関数
         while(millis()<15*1000){
             getMpu();
             millisStart();
-            if(maxMag.x < mag.x){
-                maxMag.x = mag.x;
-            }else if(minMag.x > mag.x){
-                minMag.x = mag.x;
-            }else if(maxMag.y < mag.y){
-                maxMag.y = mag.y;
-            }else if(minMag.y > mag.y){
-                minMag.y = mag.y;
+            if(maxMag.x < mag.medX){
+                maxMag.x = mag.medX;
+            }else if(minMag.x > mag.medX){
+                minMag.x = mag.medX;
+            }else if(maxMag.y < mag.medY){
+                maxMag.y = mag.medY;
+            }else if(minMag.y > mag.medY){
+                minMag.y = mag.medY;
             }
         }
 
@@ -254,14 +280,14 @@ void calibration(){//地磁気補正用関数
 
 
 void calcAzimuth(){//方位角計算用関数
-    if(mag.x-centerMag.x>0 && mag.y-centerMag.y>=0){
-        azimuth = 90 - (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
-    }else if(mag.x-centerMag.x<0 && mag.y-centerMag.y>=0){
-        azimuth = 270 - (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
-    }else if(mag.x-centerMag.x<0 && mag.y-centerMag.y<=0){
-        azimuth = 270 -  (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
-    }else if(mag.x-centerMag.x>0 && mag.y-centerMag.y<=0){
-        azimuth = 90 - (180/pi)*atan((mag.y - centerMag.y)/(mag.x - centerMag.x));
+    if(mag.medX-centerMag.x>0 && mag.medY-centerMag.y>=0){
+        azimuth = 90 - (180/pi)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    }else if(mag.medX-centerMag.x<0 && mag.medY-centerMag.y>=0){
+        azimuth = 270 - (180/pi)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    }else if(mag.medX-centerMag.x<0 && mag.medY-centerMag.y<=0){
+        azimuth = 270 -  (180/pi)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    }else if(mag.medX-centerMag.x>0 && mag.medY-centerMag.y<=0){
+        azimuth = 90 - (180/pi)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
     }
 }
 
