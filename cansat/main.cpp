@@ -47,6 +47,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define TARGET_LAT 0 //目標の緯度
 #define TARGET_LNG 0 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
+#define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 
 
 //以下各モジュールの関数や変数などの定義
@@ -102,11 +103,13 @@ void setDirection();//進行方向を変更する関数
 void obstacleAvoidance()//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
 void turn();//cansatを旋回させる関数
-void motorForward();//cansatを前進させる関数
-void motorRight();//cansatを右に進ませる関数
-void motorLeft();//cansatを左に進ませる関数
-void motorBack();//cansatを後退させる関数
-void motorStop();//cansatを停止させる関数
+void motorForward(int duty);//cansatを前進させる関数:duty比は0-100の整数値
+void motorRight(int duty);//cansatを右に進ませる関数
+Timeout flipperR;//タイマー割り込み用
+void motorLeft(int duty);//cansatを左に進ませる関数
+Timeout flipperL;//タイマー割り込み用
+void motorBack(int duty);//cansatを後退させる関数
+void motorStop(bool emergency=false);//cansatを停止させる関数:緊急でブレーキが必要なら引数にtrue
 
 //IM920
 void imSend(char *send);//無線用関数
@@ -159,9 +162,9 @@ int main(){
         if(sonicL.distance<0.1 || sonicR.distance<0.1){//左右どちらかの超音波センサーの値が10cm以下ならば
             break;//次の処理へ
         }
-        motorForward();//前進
+        motorForward(80);//前進
     }
-    motorStop();//目的地に到着したのでcansatを停止
+    motorStop();//目的地に到着したのでcansatを通常停止
 }
 
 
@@ -379,23 +382,42 @@ void turn(){//cansatを旋回させる関数
 }
 
 
-void motorForward(){//cansatを前進させる関数
+void motorForward(int duty){//cansatを前進させる関数
+FINR = (duty/100);
+FINL = (duty/100);
 }
 
 
-void motorRight(){//cansatを右に進ませる関数
+void motorRight(int duty){//cansatを右に進ませる関数
+    FINR -= (duty/100);
+    flipperR.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIME秒後に割り込みで前進処理
 }
 
 
-void motorLeft(){//cansatを左に進ませる関数
+void motorLeft(int duty){//cansatを左に進ませる関数
+    FINR -= (duty/100);
+    flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIME秒後に割り込みで前進処理
 }
 
 
-void motorBack(){//cansatを後退させる関数
+void motorBack(int duty){//cansatを後退させる関数
+RINR = (duty/100);
+RINL = (duty/100);
 }
 
 
-void motorStop(){//cansatを停止させる関数
+void motorStop(bool emergency){//cansatを停止させる関数
+    if(emergency){
+        FINR = 0.8;
+        FINL = 0.8;
+        RINR = 0.8;
+        RINL = 0.8;
+    }else{
+        FINR = 0;
+        FINL = 0;
+        RINR = 0;
+        RINL = 0;
+    }
 }
 
 
