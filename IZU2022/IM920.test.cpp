@@ -38,10 +38,12 @@ float maxAltitude;//最高高度
 
 void setUp();//各モジュールの確認やサーボモータの初期化をする関数
 bool setUpErrorFlag = false;
+bool takeoff = false;
 int val;
 void getDatas();//各種センサーのデータを統括する関数
 int function;//int型関数を使うために使用する
 bool launchDetection();//飛翔検出の関数:打ち上げられたらtrueを返す
+void sequenceJudge(){
 bool flightPinErrorFlag = false;
 int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
 void timerStart();//interval()のスタート地点
@@ -49,6 +51,7 @@ int interval();//timeStart()からの時間を返す関数
 int deadTime;//センサーモジュールの実行時間
 int phase = 0;
 float calcMedian(float *array, int n);//配列の値の中央値を出す関数
+bool paraOpen = false;
 
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
 float latitude;//緯度
@@ -170,7 +173,6 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     FIL fp;
     f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
     */
-
     //imSend("Waiting...",0);
     while(1){
         if(latitude!=0){
@@ -185,8 +187,9 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     }
 
     FlightPin.mode(PullDown);//フライトピンに電圧をかける
-    wait_ms(1000);
+    wait(1);
     val = FlightPin;
+    /*
     if(val==0){//この段階でピンが抜けていればエラーを出力
         imSend("Error! Pin is out.");
         flightPinErrorFlag = true;
@@ -194,6 +197,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     }else{
         imSend("FlightPin OK");
     }
+    */
 
     if(getMpu()==0){//mpu9250の動作確認
         imSend("MPU9250 OK");
@@ -238,7 +242,18 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
+void sequenceJudge(){
+    wait(0.5);
+    if(val==1){
+        takeoff = false;
+        imSend("start generak mode")
+    }else{
+        takeoff = true;
+        imSend("flithPin is not attached")
+    }
+}
 
+/*
 bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
     if(!flightPinErrorFlag){
         if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
@@ -254,9 +269,14 @@ bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを�
         }
     }
 }
+*/
 
 int main(){
+
+    sequenceJudge();
     //pc.baud(115200); //mbedのボーレート（必要に応じて)
+
+    if(takeoff = false){
     gps.attach(getGPS);//割り込み処理設定(関数名)
     //getMpu();
     //getBmp();
@@ -267,7 +287,7 @@ int main(){
         //sdWrite();
         switch (phase){
             case 0:
-                if(launchDetection()){//飛翔を検出したら
+                if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2)){//飛翔を検出したら
                     imSend("Launched!!");
                     phase++;
                     led = 1;
@@ -298,12 +318,31 @@ int main(){
                 }
                 break;
             case 3:
-                if(interval()>360000){//さらに5分経てば
+                if(interval()>360*10000){//さらに50分経てば
                     phase++;
                 }
                 break;
         }
     }
+    }else{
+        while(praOpen!=true){
+            getDatas();
+            sendDatas();
+            if(maxAltitude-calcMedian(altArray, SAMPLES)>5){
+                pwm1.pulsewidth_us(1800);//サーボモータを動かす
+                pwm2.pulsewidth_us(1800);
+            }
+            wait(1);
+            praOpen = true;
+        }
+
+        while(1){
+            getDatas();
+            sendDatas();
+        }
+    }
+
+
     /*
     while(1){
         sendDatas();
