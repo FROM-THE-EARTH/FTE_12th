@@ -225,17 +225,15 @@ void calibration(){//地磁気補正用関数
             millisStart();
             if(maxMag.x < mag.x){
                 maxMag.x = mag.x;
-            }
-            if(minMag.x > mag.x){
+            }else if(minMag.x > mag.x){
                 minMag.x = mag.x;
-            }
-            if(maxMag.y < mag.y){
+            }else if(maxMag.y < mag.y){
                 maxMag.y = mag.y;
-            }
-            if(minMag.y > mag.y){
+            }else if(minMag.y > mag.y){
                 minMag.y = mag.y;
             }
         }
+
         if(((maxMag.x-minMag.x)>50) && ((maxMag.y-minMag.y)>50)){
             complete_calibration = true;//キャリブレーション完了
         }else{
@@ -351,6 +349,21 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 
 void setDirection(){//進行方向を変更する関数
+    if((toTarget.angle-azimuth)>180){//toTarget.angleの値とazimuthの値との差の絶対値を180以下にする
+        toTarget.angle -= 360;
+    }else if((azimuth-toTarget.angle)>180){
+        toTarget.angle += 360;
+    }
+
+    if(!FINR && !FINL && !RINR && !RINL){//cansatが止まっていれば
+    motorForward();//前進
+    }
+
+    if((toTarget.angle-azimuth)>0){//進行方向を変更
+        motorLeft();
+    }else if((azimuth-toTarget.angle)>0){
+        motorRight();
+    }
 }
 
 
