@@ -43,12 +43,15 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define EARTH_RADIUS 6378.137 //地球の半径(km)
 #define PI 3.14159265358979 //円周率
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
+#define CALIBRATION_TIME 15000 //地磁気補正のために旋回する時間(ms)
 #define GPS_SAMPLES 10 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 50 //GPSの安定を判断する際の精度(cm)
 #define TARGET_LAT 0 //目標の緯度
 #define TARGET_LNG 0 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
+#define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
+#define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
 
 
 //以下各モジュールの関数や変数などの定義
@@ -125,6 +128,7 @@ int dataNumber = 0;
 
 int main(){
     //phase1
+    millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
 
@@ -183,6 +187,24 @@ void paraSeparation(){//パラシュート分離関数
 
 
 void targetDecision(){//目的地を決定する関数
+    double minDistanceR = 5000;
+    double minDistanceL = 5000;
+    turn(30);//旋回しながら、
+    int before = millis();
+    int after = before;
+    while((after-before)>TARGET_DECISION_TIME){
+        echo();//超音波のデータ取得
+        if(sonicR.distance<minDistanceR) minDistanceR = sonicR.distance;//各左右の超音波センサーの最小値を更新
+        if(sonicL.distance<minDistanceL) minDistanceL = sonicL.distance;
+    }
+    turn(20);
+    while(1){
+        if(sonicR.distance-minDistanceR<TARGET_DECISION_ACCURACY) break;//左右どちらかが最小値近くになったらwhile脱出->次の処理へ
+        else if(sonicL.distance-minDistanceL<TARGET_DECISION_ACCURACY) break;
+    }
+    motorStop(true);
+    wait_ms(10);
+    motorStop();
 }
 
 
@@ -242,13 +264,15 @@ void calibration(){//地磁気補正用関数
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
     turn(50);
     while(complete_calibration == false){
-        while(millis()<15*1000){
+        int before = millis();
+        int after = before;
+        while((after-before)<CALIBRATION_TIME){
             getMpu();
-            millisStart();
             if(maxMag.x < mag.medX) maxMag.x = mag.medX;
             else if(minMag.x > mag.medX) minMag.x = mag.medX;
             else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
             else if(minMag.y > mag.medY) minMag.y = mag.medY;
+            after = millis();
         }
 
         if(((maxMag.x-minMag.x)>50) && ((maxMag.y-minMag.y)>50)){
