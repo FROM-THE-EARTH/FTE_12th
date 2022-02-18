@@ -222,6 +222,7 @@ void createDataArray(Mpudata data){//MPUのデータをMPU_SAMPLES個の配列�
 
 void calibration(){//地磁気補正用関数
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
+    turn();
     while(complete_calibration == false){
         while(millis()<15*1000){
             getMpu();
@@ -242,9 +243,11 @@ void calibration(){//地磁気補正用関数
         }else{
             motorForward();//少し移動してからまたキャリブレーション
             wait(10);
+            turn();
             complete_calibration = false;
         }
     }
+    motorStop();
     centerMag.x = (maxMag.x+minMag.x)/2;
     centerMag.y = (maxMag.y+minMag.y)/2;
 }
