@@ -97,13 +97,13 @@ struct Sonic sonicR;//右の超音波センサー
 struct Sonic sonicL;//左の超音波センサー
 bool obstacleChecker();//前方にものがあるか判断する関数:発見->true
 
-//モーター
+//MOTOR
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
 void setDirection();//進行方向を変更する関数
 void obstacleAvoidance()//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
-void turn();//cansatを旋回させる関数
-void motorForward(int duty);//cansatを前進させる関数:duty比は0-100の整数値
+void turn(int duty);//cansatを旋回させる関数             :duty比は0-100の整数値
+void motorForward(int duty);//cansatを前進させる関数
 void motorRight(int duty);//cansatを右に進ませる関数
 Timeout flipperR;//タイマー割り込み用
 void motorLeft(int duty);//cansatを左に進ませる関数
@@ -381,13 +381,15 @@ void handleStuck(){//スタックを対処する関数
 }
 
 
-void turn(){//cansatを旋回させる関数
+void turn(int duty){//cansatを旋回させる関数
+    FINR = (duty/100);
+    RINL = (duty/100);
 }
 
 
 void motorForward(int duty){//cansatを前進させる関数
-FINR = (duty/100);
-FINL = (duty/100);
+    FINR = (duty/100);
+    FINL = (duty/100);
 }
 
 
