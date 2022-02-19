@@ -196,7 +196,7 @@ void paraSeparation(){//パラシュート分離関数
             wait(10);//念のため10秒間待機
             break;
         }
-        if(previousTime-startTime > 60*1000)break;//一定秒数経過で着地を検知
+        if(previousTime-startTime > 60*1000) break;//一定秒数経過で着地を検知
     }
     int parachuteTime = millis();
     while(1){
@@ -205,8 +205,8 @@ void paraSeparation(){//パラシュート分離関数
         float val = parachuteChecker;
         servoWrite(60);//とりあえず60度出力
         wait(5);
-        if(val==0)break;//ピンが抜けたら
-        if(regurationTime - parachuteTime > 60*1000)break;//一定秒数経過したら
+        if(val==0) break;//ピンが抜けたら
+        if(regurationTime - parachuteTime > 60*1000) break;//一定秒数経過したら
     }
 }
 
