@@ -72,14 +72,14 @@ struct MpuData{
     float medY;
     float medZ;
 };
-struct MpuData acc;
-struct MpuData gyro;
-struct MpuData mag;
-struct MpuData maxMag;
-struct MpuData minMag;
-struct MpuData centerMag;
-void createDataArray(MpuData data);//MPUのデータをMPU_SAMPLES個の配列に順番に格納し、calcMedian()を呼び出して中央値を求める関数
-float calcMedian(float *array, int n);//配列の値の中央値を出す関数
+MpuData acc;
+MpuData gyro;
+MpuData mag;
+MpuData maxMag;
+MpuData minMag;
+MpuData centerMag;
+void createDataArray(MpuData* pData);//MPUのデータをMPU_SAMPLES個の配列に順番に格納し、calcMedian()を呼び出して中央値を求める関数
+float calcMedian(float* array, int n);//配列の値の中央値を出す関数
 void calibration();//地磁気補正用関数
 void calcAzimuth();//方位角計算用関数
 float azimuth;//方位角
@@ -92,8 +92,8 @@ struct Coordinate{//座標
     double Latitude[GPS_SAMPLES];
     double Longtitude[GPS_SAMPLES];
 };
-struct Coordinate thisPos;//現在位置
-struct Coordinate targetPos;//ターゲットの位置
+Coordinate thisPos;//現在位置
+Coordinate targetPos;//ターゲットの位置
 bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
 
 //SONIC
@@ -102,17 +102,19 @@ void echo();//超音波センサから距離を取得する関数
 struct Sonic{
     double distance;//超音波センサーの距離
 };
-struct Sonic sonicR;//右の超音波センサー
-struct Sonic sonicL;//左の超音波センサー
+Sonic sonicR;//右の超音波センサー
+Sonic sonicL;//左の超音波センサー
 bool obstacleChecker();//前方にものがあるか判断する関数:発見->true
 
 //MOTOR
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
 void setDirection();//進行方向を変更する関数
+void calcDirection();//進行方向を計算する関数
+float direction;//向かうべき角度:正->左,負->右
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
 void turn(int duty);//cansatを旋回させる関数             :duty比は0-100の整数値
-void motorForward(int duty);//cansatを前進させる関数
+void motorForward();//cansatを前進させる関数
 void motorRight(int duty);//cansatを右に進ませる関数
 Timeout flipperR;//タイマー割り込み用
 void motorLeft(int duty);//cansatを左に進ませる関数
@@ -134,19 +136,23 @@ int main(){
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
-    thisPos.latitude = THISPOS_LAT;
+    
+    thisPos.latitude = THISPOS_LAT;//テスト用
     thisPos.longtitude = THISPOS_LNG;
 
     //phase2
-    //paraSeparation();//パラシュートを分離
-    //gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
-    //while(1){//GPSが安定したら次の処理へ
-        //if(gpsChecker()) break;
-    //}
+    paraSeparation();//パラシュートを分離
+    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
+        wait(1);
+    }
+    while(!gpsChecker()){//GPSが安定したら次の処理へ
+        wait(1);
+    }
 
     //phase3
     pc.printf("phase3 start\n");
-    wait(3);
+    wait(2);
     for(int i=0; i<MPU_SAMPLES; i++){
         getMpu();
         }
@@ -175,9 +181,13 @@ int main(){
     //phase5
     //targetDecision();//目的地を判断し決定
     while(1){
+        echo();
         if(sonicL.distance<0.1) break;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
         else if(sonicR.distance<0.1) break;
-        motorForward(80);//前進
+        else{
+            motorForward();//前進
+            wait_ms(100);
+        }
     }
     motorStop();//目的地に到着したのでcansatを通常停止
 }
@@ -186,13 +196,12 @@ int main(){
 
 
 void calcDistance(){//距離計算用関数
-    //toTarget.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
     float x1 = thisPos.latitude*PI/180;
     float y1 = thisPos.longtitude*PI/180;
     float x2 = targetPos.latitude*(PI/180);
     float y2 = targetPos.longtitude*(PI/180);
-    float sy = sin(y2-y1/2.0);
-    float sx = sin(x2-x1/2.0);
+    float sy = sin(y2-y1/2.0f);
+    float sx = sin(x2-x1/2.0f);
     float sigma = sy*sy + cos(y1)*cos(y2)*sx*sx;
 
     toTarget.radius = EARTH_RADIUS*2.0*asin(sqrt(sigma));
@@ -243,34 +252,38 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro.datas);//ジャイロ
     mpu.getMag(mag.datas);//地磁気
 
-    createDataArray(acc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
-    createDataArray(gyro);
-    createDataArray(mag);
+    MpuData* pAcc = &acc;
+    MpuData* pGyro = &gyro;
+    MpuData* pMag = &mag;
+    createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
+    createDataArray(pGyro);
+    createDataArray(pMag);
+    pc.printf("test: mag.medX=%f, mag.medY=%f, mag.medZ=%f\n",mag.medX, mag.medY, mag.medZ);
 }
 
 
-void createDataArray(struct MpuData data){//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
-    data.x = data.datas[0];
-    data.y = data.datas[1];
-    data.z = data.datas[2];
+void createDataArray(MpuData* pData){//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
+    pData->x = pData->datas[0];
+    pData->y = pData->datas[1];
+    pData->z = pData->datas[2];
 
 
-    data.X[0] = data.x;
-    data.Y[0] = data.y;
-    data.Z[0] = data.z;
+    pData->X[0] = pData->x;
+    pData->Y[0] = pData->y;
+    pData->Z[0] = pData->z;
     for(int i=(MPU_SAMPLES-1); i>0; i--){
-        data.X[i] = data.X[i-1];
-        data.Y[i] = data.Y[i-1];
-        data.Z[i] = data.Z[i-1];
+        pData->X[i] = pData->X[i-1];
+        pData->Y[i] = pData->Y[i-1];
+        pData->Z[i] = pData->Z[i-1];
     }
 
-    data.medX = calcMedian(data.X, MPU_SAMPLES);
-    data.medY = calcMedian(data.Y, MPU_SAMPLES);
-    data.medZ = calcMedian(data.Z, MPU_SAMPLES);
+    pData->medX = calcMedian(pData->X, MPU_SAMPLES);
+    pData->medY = calcMedian(pData->Y, MPU_SAMPLES);
+    pData->medZ = calcMedian(pData->Z, MPU_SAMPLES);
 }
 
 
-float calcMedian(float *array, int n){//配列の値の中央値を出す関数
+float calcMedian(float* array, int n){//配列の値の中央値を出す関数
     for(int i=0; i<n; i++) {//昇順にソート
         for(int j = i+1; j<n; j++){
             if(array[i]>array[j]){
@@ -309,7 +322,7 @@ void calibration(){//地磁気補正用関数
         }else{
             pc.printf("calibration false!!!\n");
             wait(1);
-            motorForward(80);//少し移動してからまたキャリブレーション
+            motorForward();//少し移動してからまたキャリブレーション
             wait(10);
             turn(50);
             complete_calibration = false;
@@ -341,12 +354,6 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     if(gps.readable){
         thisPos.latitude = gps.latitude;
         thisPos.longtitude = gps.longtitude;
-        /*for(int i=(GPS_SAMPLES-1); i>0; i--){
-            thisPos.Latitude[i] = thisPos.Latitude[i-1];
-            thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
-        }
-        thisPos.Latitude[0] = thisPos.latitude;
-        thisPos.Longtitude[0] = thisPos.longtitude;*/
     }
 }
 
@@ -359,6 +366,13 @@ bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
     double difLat;
     double difLng;
     double accuracy = GPS_ACCURACY/10000000;
+
+    for(int i=(GPS_SAMPLES-1); i>0; i--){
+        thisPos.Latitude[i] = thisPos.Latitude[i-1];
+        thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
+    }
+    thisPos.Latitude[0] = thisPos.latitude;
+    thisPos.Longtitude[0] = thisPos.longtitude;
 
     for(int i=0; i<GPS_SAMPLES; i++){
         if(thisPos.Latitude[i]>maxLat) maxLat = thisPos.Latitude[i];
@@ -417,19 +431,34 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 
 void setDirection(){//進行方向を変更する関数
+    if(!FINR && !FINL && !RINR && !RINL){
+        turn(30);
+        while(1){
+            getMpu();
+            calcAzimuth();
+            calcDirection();
+            if(direction<2.0f || direction>-2.0f) break;
+        }
+        motorStop(true);
+        pc.printf("Set Angle");
+        wait(1);
+        motorForward();
+    }else{
+        calcDirection();
+        if(direction>0) motorLeft(10);
+        else if(direction<0) motorRight(10);
+    }
+}
+
+void calcDirection(){//進行方向を計算する関数
     float angle;
     //toTarget.angleの値とazimuthの値との差の絶対値を180以下にする
     if((toTarget.angle-azimuth)>180) angle = toTarget.angle-360;
     else if((azimuth-toTarget.angle)>180) angle = toTarget.angle+360;
     else angle = toTarget.angle;
     
-    pc.printf("TrueAngle=%f\n", angle-azimuth);
-
-    if(!FINR && !FINL && !RINR && !RINL) motorForward(80);//cansatが止まっていれば前進
-
-    //進行方向を変更
-    if((toTarget.angle-azimuth)>0) motorLeft(10);
-    else if((azimuth-toTarget.angle)>0) motorRight(10);
+    direction = angle-azimuth;
+    pc.printf("direction=%f\n", direction);
 }
 
 
@@ -447,21 +476,21 @@ void turn(int duty){//cansatを旋回させる関数
 }
 
 
-void motorForward(int duty){//cansatを前進させる関数
-    FINR = (duty/100);
-    FINL = (duty/100);
+void motorForward(){//cansatを前進させる関数
+    FINR = (80/100);
+    FINL = (80/100);
 }
 
 
 void motorRight(int duty){//cansatを右に進ませる関数
     FINR = FINR-(duty/100);
-    //flipperR.attach(&motorForward(80), (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIME秒後に割り込みで前進処理
+    flipperR.attach(&motorForward, 1.0);//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
 void motorLeft(int duty){//cansatを左に進ませる関数
     FINL = FINL-(duty/100);
-    //flipperL.attach(&motorForward(80), (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIME秒後に割り込みで前進処理
+    flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
