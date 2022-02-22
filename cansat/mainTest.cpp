@@ -46,12 +46,15 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define CALIBRATION_TIME 15000 //地磁気補正のために旋回する時間(ms)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 50 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 0 //目標の緯度
-#define TARGET_LNG 0 //目標の経度
+#define TARGET_LAT 38.252370 //目標の緯度
+#define TARGET_LNG 140.830410 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
 #define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
+
+#define THISPOS_LAT 38.253559//テスト用
+#define THISPOS_LNG 140.830551
 
 
 //以下各モジュールの関数や変数などの定義
@@ -131,10 +134,12 @@ int main(){
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
+    thisPos.latitude = THISPOS_LAT;
+    thisPos.longtitude = THISPOS_LNG;
 
     //phase2
     //paraSeparation();//パラシュートを分離
-   // gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    //gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     //while(1){//GPSが安定したら次の処理へ
         //if(gpsChecker()) break;
     //}
@@ -142,6 +147,9 @@ int main(){
     //phase3
     pc.printf("phase3 start\n");
     wait(3);
+    for(int i=0; i<MPU_SAMPLES; i++){
+        getMpu();
+        }
     calibration();//地磁気補正
 
     //phase4
@@ -157,12 +165,15 @@ int main(){
 
         //if(stuckChecker()){//スタックしていたら
 
-        echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+        //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
         //if(obstacleChecker) obstacleAvoidance();//障害物を発見したら障害物を回避
     }
+    while(1){
+        pc.printf("GOAL!!!!\n");
+        }
 
     //phase5
-    targetDecision();//目的地を判断し決定
+    //targetDecision();//目的地を判断し決定
     while(1){
         if(sonicL.distance<0.1) break;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
         else if(sonicR.distance<0.1) break;
@@ -175,12 +186,23 @@ int main(){
 
 
 void calcDistance(){//距離計算用関数
-    toTarget.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
+    //toTarget.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
+    float x1 = thisPos.latitude*PI/180;
+    float y1 = thisPos.longtitude*PI/180;
+    float x2 = targetPos.latitude*(PI/180);
+    float y2 = targetPos.longtitude*(PI/180);
+    float sy = sin(y2-y1/2.0);
+    float sx = sin(x2-x1/2.0);
+    float sigma = sy*sy + cos(y1)*cos(y2)*sx*sx;
+
+    toTarget.radius = EARTH_RADIUS*2.0*asin(sqrt(sigma));
+    pc.printf("toTarget.radius=%f\n", toTarget.radius);
 }
 
 
 void calcAngle(){//角度計算用関数
     toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
+    pc.printf("toTarget.angle=%f\n", toTarget.angle);
 }
 
 
@@ -227,19 +249,20 @@ void getMpu(){//9軸センサーの値を取得する関数
 }
 
 
-void createDataArray(MpuData data){//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
+void createDataArray(struct MpuData data){//MPUのデータをMPU_SAMPLES個の配列に順番に格納する関数
     data.x = data.datas[0];
     data.y = data.datas[1];
     data.z = data.datas[2];
 
+
+    data.X[0] = data.x;
+    data.Y[0] = data.y;
+    data.Z[0] = data.z;
     for(int i=(MPU_SAMPLES-1); i>0; i--){
         data.X[i] = data.X[i-1];
         data.Y[i] = data.Y[i-1];
         data.Z[i] = data.Z[i-1];
     }
-    data.X[0] = data.x;
-    data.Y[0] = data.y;
-    data.Z[0] = data.z;
 
     data.medX = calcMedian(data.X, MPU_SAMPLES);
     data.medY = calcMedian(data.Y, MPU_SAMPLES);
@@ -271,15 +294,15 @@ void calibration(){//地磁気補正用関数
         int after = before;
         while((after-before)<CALIBRATION_TIME){
             getMpu();
-            if(maxMag.x < mag.medX) maxMag.x = mag.medX;
-            else if(minMag.x > mag.medX) minMag.x = mag.medX;
-            else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
-            else if(minMag.y > mag.medY) minMag.y = mag.medY;
+            if(maxMag.x < mag.datas[0]) maxMag.x = mag.datas[0];
+            else if(minMag.x > mag.datas[0]) minMag.x = mag.datas[0];
+            else if(maxMag.y < mag.datas[1]) maxMag.y = mag.datas[1];
+            else if(minMag.y > mag.y) minMag.y = mag.datas[1];
             after = millis();
-            pc.printf("magX=%f, magY=%f, time=%d\n", mag.medX, mag.medY, after);
+            pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
         }
 
-        if(((maxMag.x-minMag.x)>50) && ((maxMag.y-minMag.y)>50)){
+        if(((maxMag.x-minMag.x)>20) && ((maxMag.y-minMag.y)>20)){
             pc.printf("calibration complete!\n");
             wait(1);
             complete_calibration = true;//キャリブレーション完了
@@ -300,16 +323,16 @@ void calibration(){//地磁気補正用関数
 
 
 void calcAzimuth(){//方位角計算用関数
-    if(mag.medX-centerMag.x>0 && mag.medY-centerMag.y>=0){
-        azimuth = 90 - (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
-    }else if(mag.medX-centerMag.x<0 && mag.medY-centerMag.y>=0){
-        azimuth = 270 - (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
-    }else if(mag.medX-centerMag.x<0 && mag.medY-centerMag.y<=0){
-        azimuth = 270 -  (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
-    }else if(mag.medX-centerMag.x>0 && mag.medY-centerMag.y<=0){
-        azimuth = 90 - (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    if(mag.datas[0]-centerMag.x>0 && mag.datas[1]-centerMag.y>=0){
+        azimuth = 90 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
+    }else if(mag.datas[0]-centerMag.x<0 && mag.datas[1]-centerMag.y>=0){
+        azimuth = 270 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
+    }else if(mag.datas[0]-centerMag.x<0 && mag.datas[1]-centerMag.y<=0){
+        azimuth = 270 -  (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
+    }else if(mag.datas[0]-centerMag.x>0 && mag.datas[1]-centerMag.y<=0){
+        azimuth = 90 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
     }
-    pc.printf("%f\n", azimuth);
+    pc.printf("azimuth=%f\n", azimuth);
 }
 
 
@@ -318,12 +341,12 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     if(gps.readable){
         thisPos.latitude = gps.latitude;
         thisPos.longtitude = gps.longtitude;
-        for(int i=(GPS_SAMPLES-1); i>0; i--){
+        /*for(int i=(GPS_SAMPLES-1); i>0; i--){
             thisPos.Latitude[i] = thisPos.Latitude[i-1];
             thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
         }
         thisPos.Latitude[0] = thisPos.latitude;
-        thisPos.Longtitude[0] = thisPos.longtitude;
+        thisPos.Longtitude[0] = thisPos.longtitude;*/
     }
 }
 
@@ -394,9 +417,13 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 
 void setDirection(){//進行方向を変更する関数
+    float angle;
     //toTarget.angleの値とazimuthの値との差の絶対値を180以下にする
-    if((toTarget.angle-azimuth)>180) toTarget.angle -= 360;
-    else if((azimuth-toTarget.angle)>180) toTarget.angle += 360;
+    if((toTarget.angle-azimuth)>180) angle = toTarget.angle-360;
+    else if((azimuth-toTarget.angle)>180) angle = toTarget.angle+360;
+    else angle = toTarget.angle;
+    
+    pc.printf("TrueAngle=%f\n", angle-azimuth);
 
     if(!FINR && !FINL && !RINR && !RINL) motorForward(80);//cansatが止まっていれば前進
 
