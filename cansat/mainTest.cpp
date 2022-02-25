@@ -19,10 +19,10 @@ DigitalIn echoR(A6);
 DigitalOut triggerL(D10);
 DigitalIn echoL(A1);
 PwmOut servo(D2);
-PwmOut FINR(D7);
-PwmOut RINR(D9);
-PwmOut FINL(D3);
-PwmOut RINL(D6);
+PwmOut FINR(D3);//右前
+PwmOut RINR(D6);//右後
+PwmOut FINL(D7);//左前
+PwmOut RINL(D9);//左後
 Serial pc(USBTX, USBRX);
 
 
@@ -45,7 +45,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
 #define CALIBRATION_TIME 15000 //地磁気補正のために旋回する時間(ms)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
-#define GPS_ACCURACY 50 //GPSの安定を判断する際の精度(cm)
+#define GPS_ACCURACY 2000 //GPSの安定を判断する際の精度(cm)
 #define TARGET_LAT 38.252370 //目標の緯度
 #define TARGET_LNG 140.830410 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
@@ -133,12 +133,13 @@ int dataNumber = 0;
 
 int main(){
     //phase1
+    pc.baud(115200);
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
     
-    thisPos.latitude = THISPOS_LAT;//テスト用
-    thisPos.longtitude = THISPOS_LNG;
+    thisPos.latitude = 0;//THISPOS_LAT;//テスト用
+    thisPos.longtitude = 0;//THISPOS_LNG;
 
     //phase2
     paraSeparation();//パラシュートを分離
@@ -146,9 +147,12 @@ int main(){
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
         wait(1);
     }
+    pc.printf("gps got\n");
     while(!gpsChecker()){//GPSが安定したら次の処理へ
         wait(1);
+        pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
     }
+    pc.printf("gps stable\n");
 
     //phase3
     pc.printf("phase3 start\n");
@@ -439,7 +443,7 @@ void setDirection(){//進行方向を変更する関数
             calcDirection();
             if(direction<2.0f || direction>-2.0f) break;
         }
-        motorStop(true);
+        motorStop(false);
         pc.printf("Set Angle");
         wait(1);
         motorForward();
