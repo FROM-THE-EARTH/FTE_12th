@@ -5,7 +5,7 @@
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
 //#include "millis.h"
-#include "ff.h"
+//#include "ff.h"
 
 #define SAMPLES 10
 
@@ -16,11 +16,11 @@ mpu9250 mpu(i2cBus, AD0_HIGH);
 I2C i2c(D4, D5);
 BMP180 bmp180(&i2c);
 GPS gps(D1,D0); //GPSの初期化(tx,rx)mbed:D1,D0
-IM920 im920(A7,A2,A4,D13); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D13 arduinoシールド:D9,D8,D10,- *resetは使用しなかった*
+IM920 im920(A7,A2,D7,D9); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D13 arduinoシールド:D9,D8,D10,- *resetは使用しなかった*
 PwmOut servoU(D3);
 PwmOut servoD(D6);
 DigitalIn FlightPin(D8);
-Timer timer;
+Timer millis;
 int getMpu();//9軸センサーの値を取得する関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};//ここに角速度がx,y,zの順で格納される
@@ -83,7 +83,7 @@ void imSend(char *send){//無線で送信する関数
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", phase,acc[0],acc[1],acc[2],longtitude,latitude,altitude,maxAltitude);//データを文字列に変換
+        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", val,acc[0],acc[1],acc[2],longtitude,latitude,altitude,maxAltitude);//データを文字列に変換
         imSend(sendData);//送る
 }
 
@@ -195,7 +195,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     //pc.baud(19200);
     //imSend("Program Start!",0);
     //millisStart();//millis(タイマー)をスタート
-    timer.start();
+    millis.start();
 
     //SDカードの初期化
     /*sd.mount();
@@ -211,7 +211,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
             imSend("GPS OK");
             break;
             }
-        if(millis()>3*000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
+        if(millis.read()>3*000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
             imSend("Error! GPS cannot read");
             setUpErrorFlag = true;
             break;
@@ -267,24 +267,24 @@ void getDatas(){//各種センサーのデータを統括する関数
 }
 
 void timerStart(){//interval()のスタート地点
-    timer[2] = timer.read();
+    timer[2] = millis.read();
 }
 
 
 int interval(){//timeStart()からの時間を返す関数
-    timer[3] = timer.read();
+    timer[3] = millis.read();
     return timer[3]-timer[2];
 }
 
 void sequenceJudge(){
-    wait(0.5);
+    wait(0.2);
     val = FlightPin;
     if(val==1){
         takeoff = false;
         imSend("start general mode");
     }else{
         takeoff = true;
-        imSend("flithPin is not attached");
+        imSend("start flight mode");
     }
 }
 
@@ -308,7 +308,7 @@ bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを�
 
 int main(){
     
-    //pc.baud(115200); 無線なしでシリアルモニタに表示したかったら有効化する必要あり
+    //pc.baud(115200); //無線なしでシリアルモニタに表示したかったら有効化する必要あり
     
     /*無線のテスト用
     while(1){
@@ -329,6 +329,7 @@ int main(){
     servoWriteD(150);
     
     //SDカードの初期化
+    /*
     FATFS fs;
     f_mount(&fs,"",0);
     FIL fp;
@@ -339,7 +340,7 @@ int main(){
         pc.printf("f_open:false");
         f_open(&fp,"IZU.CSV",FA_CREATE_ALWAYS|FA_WRITE);
     }
-    
+    */
     
     
     if(takeoff == false){
@@ -351,20 +352,20 @@ int main(){
      while(phase!=4){
          getDatas();//GPS以外のデータを取得
          sendDatas();
-         createDatas();
+         //createDatas();
          //f_printf(&fp,log);
         
          switch (phase){
             case 0:
-                if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2] >=2*2)){
+                if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) > 2*2){
+                    timerStart();
                     imSend("Launched!!");
                     phase++;
                     //imSend("Phase1 Start",0);
-                    timerStart();
                 }
                 break;
             case 1:
-                if(interval()>10 || (maxAltitude-calcMedian(altArray, SAMPLES)>5)){//打ち上がってから15秒後、もしくは10m落下すれば
+                if(interval()>10.52 || (maxAltitude-calcMedian(altArray, SAMPLES)>5)){//打ち上がってから15秒後、もしくは10m落下すれば
                     servoWriteU(150);//サーボモータを動かす
                     servoWriteD(30);
                     
@@ -380,33 +381,48 @@ int main(){
                 break;
             case 3:
                 if(interval()>360){//さらに50分経てば
-                    f_close(&fp);
+                    //f_close(&fp);
                     phase++;
                 }
                 break;
          }
        }
      }else{
-        while(paraOpen!=true){
-            getDatas();
-            sendDatas();
-            createDatas();
-            //f_printf(&fp,log);
             
-            if(maxAltitude-calcMedian(altArray, SAMPLES)>5){
-                
+        millis.start();
+        imSend("launched");
+        
+        double launchedTime = millis.read();
+        //pc.printf("%f\n",launchedTime);
+        while(paraOpen!=true){
+            //createDatas();
+            //f_printf(&fp,log);
+            double preTime = millis.read();
+            //pc.printf("%f\n",preTime - launchedTime);
+            if((preTime - launchedTime > 10.52) || maxAltitude-calcMedian(altArray, SAMPLES)>5){
+                getDatas(); 
                 servoWriteU(150);
                 servoWriteD(30);
-                
-                wait(1);
+                imSend("paraOpen");
+                //wait(1);
                 paraOpen = true;
+            }else{
+                getDatas();
+                sendDatas();
             }
-            
-           
         }
         
-        //f_close(&fp);
+        imSend("finish");
         
+        float paraopenTime = millis.read();
+        
+        while(paraopenTime - millis.read() > 60){
+            getDatas();
+            sendDatas();
+        }
+        
+        imSend("End");
+        //f_close(&fp);
         while(1){
             getDatas();
             sendDatas();
