@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
-#include "millis.h"
+//#include "millis.h"
 #include "ff.h"
 
 #define SAMPLES 10
@@ -20,7 +20,7 @@ IM920 im920(A7,A2,A4,D13); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D1
 PwmOut servoU(D3);
 PwmOut servoD(D6);
 DigitalIn FlightPin(D8);
-
+Timer timer;
 int getMpu();//9軸センサーの値を取得する関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
 float gyro[3] = {};//ここに角速度がx,y,zの順で格納される
@@ -67,9 +67,9 @@ float latitude;//緯度
 float longtitude;//経度
 
 int results;
-char LOG[800];
+//char log[800];
 
-void writeSD();
+void createDatas();
 
 void servoWriteU(int servoAngle);
 void servoWriteD(int servoAngle);
@@ -88,9 +88,8 @@ void sendDatas(){//データを文字列に変換してimSendを呼び出して�
 }
 
 
-void writeSD(){
-    //sprintf(LOG,"%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",phase,acc[0],acc[1],acc[2],mag[0],mag[1],mag[2],gyro[0],gyro[1],gyro[2],temp,altitude,longtitude,latitude);
-    //f_printf(&fp,LOG);
+void createDatas(){
+    //sprintf(log,"%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",phase,acc[0],acc[1],acc[2],mag[0],mag[1],mag[2],gyro[0],gyro[1],gyro[2],temp,altitude,longtitude,latitude);
 }
 
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
@@ -195,13 +194,8 @@ float calcMedian(float *array, int n){//配列の値の中央値を出す関数
 void setUp(){//各モジュールの確認やサーボモータの初期化をする関数
     //pc.baud(19200);
     //imSend("Program Start!",0);
-    millisStart();//millis(タイマー)をスタート
-
-    //サーボモータの初期位置
-    servoU.period_us(20000);
-    servoWriteU(30);
-    servoD.period_us(20000);
-    servoWriteD(150);
+    //millisStart();//millis(タイマー)をスタート
+    timer.start();
 
     //SDカードの初期化
     /*sd.mount();
@@ -237,7 +231,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     }
     */
 
-    /*
+    
     if(getMpu()==0){//mpu9250の動作確認
         imSend("MPU9250 OK");
     }else{
@@ -250,7 +244,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     }else{
         setUpErrorFlag = true;
     }
-    */
+    
 
     for(int i=0;i<SAMPLES; i++){//calcMedian()を使うために、配列の値をデータで一度満たしておく必要がある:広い意味での初期化
         getDatas();
@@ -273,17 +267,18 @@ void getDatas(){//各種センサーのデータを統括する関数
 }
 
 void timerStart(){//interval()のスタート地点
-    timer[2] = millis();
+    timer[2] = timer.read();
 }
 
 
 int interval(){//timeStart()からの時間を返す関数
-    timer[3] = millis();
+    timer[3] = timer.read();
     return timer[3]-timer[2];
 }
 
 void sequenceJudge(){
     wait(0.5);
+    val = FlightPin;
     if(val==1){
         takeoff = false;
         imSend("start general mode");
@@ -327,8 +322,13 @@ int main(){
     //待機中ならば通常モードで開始
     //飛翔中ならば10ｍ降下のみで減速機構を作動させる
     
+    //サーボモーターの初期化
+    servoU.period_us(20000);
+    servoWriteU(30);
+    servoD.period_us(20000);
+    servoWriteD(150);
+    
     //SDカードの初期化
-    /*
     FATFS fs;
     f_mount(&fs,"",0);
     FIL fp;
@@ -339,20 +339,20 @@ int main(){
         pc.printf("f_open:false");
         f_open(&fp,"IZU.CSV",FA_CREATE_ALWAYS|FA_WRITE);
     }
-    */
+    
     
     
     if(takeoff == false){
      
-     gps.attach(getGPS);//割り込み処理設定(関数名)
+     getGPS();//割り込み処理設定(関数名)
      getDatas();
      setUp();
     
      while(phase!=4){
          getDatas();//GPS以外のデータを取得
          sendDatas();
-         writeSD();
-         //f_printf(&fp,sendData);
+         createDatas();
+         //f_printf(&fp,log);
         
          switch (phase){
             case 0:
@@ -364,27 +364,23 @@ int main(){
                 }
                 break;
             case 1:
-                if(interval()>10*1000 || (maxAltitude-calcMedian(altArray, SAMPLES)>5)){//打ち上がってから15秒後、もしくは10m落下すれば
-                    servoU.pulsewidth_us(1800);//サーボモータを動かす
-                    servoD.pulsewidth_us(1800);
-                    /*
-                    servoWriteU(150);
+                if(interval()>10 || (maxAltitude-calcMedian(altArray, SAMPLES)>5)){//打ち上がってから15秒後、もしくは10m落下すれば
+                    servoWriteU(150);//サーボモータを動かす
                     servoWriteD(30);
-                    */
                     
                     imSend("Para Open!");
                     phase++;
                 }
                 break;
             case 2:
-                if(interval()>60*1000){//打ち上がってから60秒経てば
+                if(interval()>60){//打ち上がってから60秒経てば
                     imSend("End!");
                     phase++;
                 }
                 break;
             case 3:
-                if(interval()>360*10000){//さらに50分経てば
-                    //f_close(&fp);
+                if(interval()>360){//さらに50分経てば
+                    f_close(&fp);
                     phase++;
                 }
                 break;
@@ -394,22 +390,19 @@ int main(){
         while(paraOpen!=true){
             getDatas();
             sendDatas();
-            //writeSD();
-            //f_printf(&fp,LOG);
+            createDatas();
+            //f_printf(&fp,log);
             
             if(maxAltitude-calcMedian(altArray, SAMPLES)>5){
-                servoU.pulsewidth_us(1800);//サーボモータを動かす
-                servoD.pulsewidth_us(1800);
                 
-                /*
                 servoWriteU(150);
                 servoWriteD(30);
-                */
                 
+                wait(1);
+                paraOpen = true;
             }
             
-            wait(1);
-            paraOpen = true;
+           
         }
         
         //f_close(&fp);
