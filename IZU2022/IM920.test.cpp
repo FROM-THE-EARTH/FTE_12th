@@ -333,7 +333,7 @@ int main(){
                 pwm2.pulsewidth_us(1800);
             }
             wait(1);
-            praOpen = true;
+            paraOpen = true;
         }
 
         while(1){
