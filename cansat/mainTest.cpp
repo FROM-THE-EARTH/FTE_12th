@@ -484,10 +484,10 @@ void handleStuck(){//スタックを対処する関数
 
 
 void turn(){//cansatを旋回させる関数
-    FINR = 0.9;
+    FINR = 0.5;
     RINR = 0;
     FINL = 0;
-    RINL = 0.9;
+    RINL = 0.5;
 
 }
 
