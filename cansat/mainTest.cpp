@@ -44,7 +44,8 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define PI 3.14159265358979 //円周率
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
 #define CALIBRATION_TIME 5000 //地磁気補正のために旋回する時間(ms)
-#define GPS_SAMPLES 5 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
+#define MAG_CONST -8.53 //地磁気の補正のための偏角(度)
+#define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 2000 //GPSの安定を判断する際の精度(cm)
 #define TARGET_LAT 38.2849248 //目標の緯度
 #define TARGET_LNG 140.8519829 //目標の経度
@@ -354,6 +355,9 @@ void calcAzimuth(){//方位角計算用関数
     }else if(mag.datas[0]-centerMag.x>0 && mag.datas[1]-centerMag.y<=0){
         azimuth = 90 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
     }
+    azimuth += MAG_CONST;
+    if(azimuth>360) azimuth -= 360;
+    else if(azimuth<0) azimuth += 360;
     pc.printf("azimuth=%f\n", azimuth);
 }
 
