@@ -495,7 +495,7 @@ void motorForward(){//cansatを前進させる関数
 
 
 void motorRight(){//cansatを右に進ませる関数
-    FINR = 0.3;
+    FINR = 0.1;
     RINR = 0;
     FINL = 0.9;
     RINL = 0;
@@ -506,14 +506,14 @@ void motorRight(){//cansatを右に進ませる関数
 void motorLeft(){//cansatを左に進ませる関数
     FINR = 0.9;
     RINR = 0;
-    FINL = 0.3;
+    FINL = 0.1;
     RINL = 0;
     //flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
 void motorBack(){//cansatを後退させる関数
-    FINR = 0
+    FINR = 0;
     RINR = 0.9;
     FINL = 0;
     RINL = 0.9;
