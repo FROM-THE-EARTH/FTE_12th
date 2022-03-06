@@ -43,7 +43,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define EARTH_RADIUS 6378.137 //地球の半径(km)
 #define PI 3.14159265358979 //円周率
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
-#define CALIBRATION_TIME 15000 //地磁気補正のために旋回する時間(ms)
+#define CALIBRATION_TIME 5000 //地磁気補正のために旋回する時間(ms)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 2000 //GPSの安定を判断する際の精度(cm)
 #define TARGET_LAT 38.2849248 //目標の緯度
@@ -114,7 +114,7 @@ void calcDirection();//進行方向を計算する関数
 float direction;//向かうべき角度:正->左,負->右
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
-void turn(int duty=30);//cansatを旋回させる関数
+void turn();//cansatを旋回させる関数
 void motorForward();//cansatを前進させる関数
 void motorRight();//cansatを右に進ませる関数
 Timeout flipperR;//タイマー割り込み用
@@ -444,7 +444,7 @@ void setDirection(){//進行方向を変更する関数
             getMpu();
             calcAzimuth();
             calcDirection();
-            if(direction<2.0f || direction>-2.0f) break;
+            if(direction<2.0f && direction>-2.0f) break;
         }
         motorStop(true);
         pc.printf("Set Angle");
@@ -477,11 +477,11 @@ void handleStuck(){//スタックを対処する関数
 }
 
 
-void turn(int duty){//cansatを旋回させる関数
-    FINR = (duty/100);
+void turn(){//cansatを旋回させる関数
+    FINR = 0.1;
     RINR = 0;
     FINL = 0;
-    RINL = (duty/100);
+    RINL = 0.1;
     
 }
 
