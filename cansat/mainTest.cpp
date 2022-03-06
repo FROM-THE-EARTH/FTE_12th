@@ -46,8 +46,8 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define CALIBRATION_TIME 15000 //地磁気補正のために旋回する時間(ms)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配列の要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 2000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.252370 //目標の緯度
-#define TARGET_LNG 140.830410 //目標の経度
+#define TARGET_LAT 38.2849248 //目標の緯度
+#define TARGET_LNG 140.8519829 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
@@ -113,13 +113,13 @@ void calcDirection();//進行方向を計算する関数
 float direction;//向かうべき角度:正->左,負->右
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
-void turn(int duty);//cansatを旋回させる関数             :duty比は0-100の整数値
+void turn();//cansatを旋回させる関数
 void motorForward();//cansatを前進させる関数
-void motorRight(int duty);//cansatを右に進ませる関数
+void motorRight();//cansatを右に進ませる関数
 Timeout flipperR;//タイマー割り込み用
-void motorLeft(int duty);//cansatを左に進ませる関数
+void motorLeft();//cansatを左に進ませる関数
 Timeout flipperL;//タイマー割り込み用
-void motorBack(int duty);//cansatを後退させる関数
+void motorBack();//cansatを後退させる関数
 void motorStop(bool emergency=false);//cansatを停止させる関数:緊急でブレーキが必要なら引数にtrue
 
 //IM920
@@ -138,12 +138,12 @@ int main(){
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
     
-    thisPos.latitude = 0;//THISPOS_LAT;//テスト用
-    thisPos.longtitude = 0;//THISPOS_LNG;
-
+    thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
+    thisPos.longtitude = 140.8519829;//THISPOS_LNG;
+/*
     //phase2
     paraSeparation();//パラシュートを分離
-    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    //gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
         wait(1);
     }
@@ -154,6 +154,7 @@ int main(){
     }
     pc.printf("gps stable\n");
 
+*/
     //phase3
     pc.printf("phase3 start\n");
     wait(2);
@@ -226,7 +227,7 @@ void paraSeparation(){//パラシュート分離関数
 void targetDecision(){//目的地を決定する関数
     double minDistanceR = 5000;
     double minDistanceL = 5000;
-    turn(30);//旋回しながら、
+    turn();//旋回しながら、
     int before = millis();
     int after = before;
     while((after-before)>TARGET_DECISION_TIME){
@@ -234,7 +235,7 @@ void targetDecision(){//目的地を決定する関数
         if(sonicR.distance<minDistanceR) minDistanceR = sonicR.distance;//各左右の超音波センサーの最小値を更新
         if(sonicL.distance<minDistanceL) minDistanceL = sonicL.distance;
     }
-    turn(20);
+    turn();
     while(1){
         if(sonicR.distance-minDistanceR<TARGET_DECISION_ACCURACY) break;//左右どちらかが最小値近くになったらwhile脱出->次の処理へ
         else if(sonicL.distance-minDistanceL<TARGET_DECISION_ACCURACY) break;
@@ -304,7 +305,7 @@ float calcMedian(float* array, int n){//配列の値の中央値を出す関数
 
 void calibration(){//地磁気補正用関数
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
-    turn(50);
+    turn();
     pc.printf("turn\n");
     while(complete_calibration == false){
         int before = millis();
@@ -328,7 +329,7 @@ void calibration(){//地磁気補正用関数
             wait(1);
             motorForward();//少し移動してからまたキャリブレーション
             wait(10);
-            turn(50);
+            turn();
             complete_calibration = false;
         }
     }
@@ -436,7 +437,7 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 void setDirection(){//進行方向を変更する関数
     if(!FINR && !FINL && !RINR && !RINL){
-        turn(30);
+        turn();
         while(1){
             getMpu();
             calcAzimuth();
@@ -449,8 +450,8 @@ void setDirection(){//進行方向を変更する関数
         motorForward();
     }else{
         calcDirection();
-        if(direction>0) motorLeft(10);
-        else if(direction<0) motorRight(10);
+        if(direction>0) motorLeft();
+        else if(direction<0) motorRight();
     }
 }
 
@@ -474,42 +475,42 @@ void handleStuck(){//スタックを対処する関数
 }
 
 
-void turn(int duty){//cansatを旋回させる関数
-    FINR = (duty/100);
-    RINL = (duty/100);
+void turn(){//cansatを旋回させる関数
+    FINR = (90/100);
+    RINL = (90/100);
 }
 
 
 void motorForward(){//cansatを前進させる関数
-    FINR = (80/100);
-    FINL = (80/100);
+    FINR = (90/100);
+    FINL = (90/100);
 }
 
 
-void motorRight(int duty){//cansatを右に進ませる関数
-    FINR = FINR-(duty/100);
+void motorRight(){//cansatを右に進ませる関数
+    FINR = FINR-(50/100);
     flipperR.attach(&motorForward, 1.0);//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
-void motorLeft(int duty){//cansatを左に進ませる関数
-    FINL = FINL-(duty/100);
+void motorLeft(){//cansatを左に進ませる関数
+    FINL = FINL-(50/100);
     flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
-void motorBack(int duty){//cansatを後退させる関数
-RINR = (duty/100);
-RINL = (duty/100);
+void motorBack(){//cansatを後退させる関数
+RINR = (90/100);
+RINL = (90/100);
 }
 
 
 void motorStop(bool emergency){//cansatを停止させる関数
     if(emergency){
-        FINR = 0.8;
-        FINL = 0.8;
-        RINR = 0.8;
-        RINL = 0.8;
+        FINR = 90/100;
+        FINL = 90/100;
+        RINR = 90/100;
+        RINL = 90/100;
     }else{
         FINR = 0;
         FINL = 0;
