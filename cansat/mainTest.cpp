@@ -109,11 +109,12 @@ bool obstacleChecker();//前方にものがあるか判断する関数:発見->t
 //MOTOR
 double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
 void setDirection();//進行方向を変更する関数
+int times = 0;//phase4のwhileの回数
 void calcDirection();//進行方向を計算する関数
 float direction;//向かうべき角度:正->左,負->右
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
-void turn();//cansatを旋回させる関数
+void turn(int duty=30);//cansatを旋回させる関数
 void motorForward();//cansatを前進させる関数
 void motorRight();//cansatを右に進ませる関数
 Timeout flipperR;//タイマー割り込み用
@@ -178,6 +179,7 @@ int main(){
 
         //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
         //if(obstacleChecker) obstacleAvoidance();//障害物を発見したら障害物を回避
+        times++;
     }
     while(1){
         pc.printf("GOAL!!!!\n");
@@ -333,6 +335,7 @@ void calibration(){//地磁気補正用関数
         }
     }
     motorStop();
+    wait(1);
     centerMag.x = (maxMag.x+minMag.x)/2;
     centerMag.y = (maxMag.y+minMag.y)/2;
     pc.printf("centerX=%f, centerY=%f\n", centerMag.x, centerMag.y);
@@ -435,7 +438,7 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 
 void setDirection(){//進行方向を変更する関数
-    if(!FINR && !FINL && !RINR && !RINL){
+    if(times == 0){
         turn();
         while(1){
             getMpu();
@@ -443,7 +446,7 @@ void setDirection(){//進行方向を変更する関数
             calcDirection();
             if(direction<2.0f || direction>-2.0f) break;
         }
-        motorStop(false);
+        motorStop(true);
         pc.printf("Set Angle");
         wait(1);
         motorForward();
@@ -474,11 +477,11 @@ void handleStuck(){//スタックを対処する関数
 }
 
 
-void turn(){//cansatを旋回させる関数
-    FINR = 0.9;
+void turn(int duty){//cansatを旋回させる関数
+    FINR = (duty/100);
     RINR = 0;
     FINL = 0;
-    RINL = 0.9;
+    RINL = (duty/100);
     
 }
 
@@ -492,20 +495,20 @@ void motorForward(){//cansatを前進させる関数
 
 
 void motorRight(){//cansatを右に進ませる関数
-    FINR = 0.4;
+    FINR = 0.3;
     RINR = 0;
     FINL = 0.9;
     RINL = 0;
-    flipperR.attach(&motorForward, 1.0);//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
+    //flipperR.attach(&motorForward, 1.0);//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
 void motorLeft(){//cansatを左に進ませる関数
     FINR = 0.9;
     RINR = 0;
-    FINL = 0.4;
+    FINL = 0.3;
     RINL = 0;
-    flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
+    //flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
