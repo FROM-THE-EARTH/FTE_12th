@@ -216,9 +216,11 @@ void calcDistance(){//距離計算用関数
 }
 
 
-void calcAngle(){//角度計算用関数
-    toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
-    pc.printf("toTarget.angle=%f\n", toTarget.angle);
+void calcAngle(){//角度計算用関数 :北0度西90度南180度東270度
+    float Y = (cos(targetPos.latitude))*sin(targetPos.longtitude - thisPos.longtitude);
+    float X = (cos(thisPos.longtitude))*sin(targetPos.longtitude) - (sin(thisPos.latitude))*(cos(targetPos.latitude))*(cos(thisPos.longtitude - targetPos.longtitude));
+    toTarget.angle = (180/PI)*atan(Y/X);
+    if(toTarget.angle<0) toTarget.angle += 360;
 }
 
 
@@ -444,7 +446,7 @@ void setDirection(){//進行方向を変更する関数
             getMpu();
             calcAzimuth();
             calcDirection();
-            if(azimuth<1.0f && azimuth>-1.0f) break;
+            if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
         pc.printf("Set Angle");
@@ -465,7 +467,7 @@ void calcDirection(){//進行方向を計算する関数
     else angle = toTarget.angle;
     
     direction = angle-azimuth;
-    pc.printf("direction=%f\n", direction);
+    pc.printf("direction=%f, toTarget.angle=%f, angle=%f\n", direction,toTarget.angle,angle);
 }
 
 
@@ -482,7 +484,7 @@ void turn(){//cansatを旋回させる関数
     RINR = 0;
     FINL = 0;
     RINL = 0.1;
-    
+
 }
 
 
