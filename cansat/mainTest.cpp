@@ -19,10 +19,10 @@ DigitalIn echoR(A6);
 DigitalOut triggerL(D10);
 DigitalIn echoL(A1);
 PwmOut servo(D2);
-PwmOut FINR(D3);//右前
-PwmOut RINR(D6);//右後
-PwmOut FINL(D7);//左前
-PwmOut RINL(D9);//左後
+PwmOut FINR(D11);//右前
+PwmOut RINR(D3);//右後
+PwmOut FINL(D9);//左前
+PwmOut RINL(D12);//左後
 Serial pc(USBTX, USBRX);
 
 
