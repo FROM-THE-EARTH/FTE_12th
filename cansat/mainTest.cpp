@@ -444,7 +444,7 @@ void setDirection(){//進行方向を変更する関数
             getMpu();
             calcAzimuth();
             calcDirection();
-            if(direction<2.0f && direction>-2.0f) break;
+            if(azimuth<1.0f && azimuth>-1.0f) break;
         }
         motorStop(true);
         pc.printf("Set Angle");
