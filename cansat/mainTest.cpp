@@ -305,11 +305,11 @@ float calcMedian(float* array, int n){//配列の値の中央値を出す関数
 
 void calibration(){//地磁気補正用関数
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
-    turn();
     pc.printf("turn\n");
-    while(complete_calibration == false){
+    while(!complete_calibration){
         int before = millis();
         int after = before;
+        turn();
         while((after-before)<CALIBRATION_TIME){
             getMpu();
             if(maxMag.x < mag.datas[0]) maxMag.x = mag.datas[0];
@@ -329,7 +329,6 @@ void calibration(){//地磁気補正用関数
             wait(1);
             motorForward();//少し移動してからまたキャリブレーション
             wait(10);
-            turn();
             complete_calibration = false;
         }
     }
@@ -476,45 +475,58 @@ void handleStuck(){//スタックを対処する関数
 
 
 void turn(){//cansatを旋回させる関数
-    FINR = (90/100);
-    RINL = (90/100);
+    FINR = 0.9;
+    RINR = 0;
+    FINL = 0;
+    RINL = 0.9;
+    
 }
 
 
 void motorForward(){//cansatを前進させる関数
-    FINR = (90/100);
-    FINL = (90/100);
+    FINR = 0.9;
+    RINR = 0;
+    FINL = 0.9;
+    RINL = 0;
 }
 
 
 void motorRight(){//cansatを右に進ませる関数
-    FINR = FINR-(50/100);
+    FINR = 0.4;
+    RINR = 0;
+    FINL = 0.9;
+    RINL = 0;
     flipperR.attach(&motorForward, 1.0);//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
 void motorLeft(){//cansatを左に進ませる関数
-    FINL = FINL-(50/100);
+    FINR = 0.9;
+    RINR = 0;
+    FINL = 0.4;
+    RINL = 0;
     flipperL.attach(&motorForward, (MOTOR_RESET_TIME/1000));//MOTOR_RESET_TIMEミリ秒後に割り込みで前進処理
 }
 
 
 void motorBack(){//cansatを後退させる関数
-RINR = (90/100);
-RINL = (90/100);
+    FINR = 0
+    RINR = 0.9;
+    FINL = 0;
+    RINL = 0.9;
 }
 
 
 void motorStop(bool emergency){//cansatを停止させる関数
     if(emergency){
-        FINR = 90/100;
-        FINL = 90/100;
-        RINR = 90/100;
-        RINL = 90/100;
+        FINR = 0.9;
+        RINR = 0.9;
+        FINL = 0.9;
+        RINL = 0.9;
     }else{
         FINR = 0;
-        FINL = 0;
         RINR = 0;
+        FINL = 0;
         RINL = 0;
     }
 }
