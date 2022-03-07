@@ -140,9 +140,9 @@ int main(){
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
     
-    thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
-    thisPos.longtitude = 140.8519829;//THISPOS_LNG;
-/*
+    thisPos.latitude = 0//38.1849248;//THISPOS_LAT;//テスト用
+    thisPos.longtitude = 0//140.8519829;//THISPOS_LNG;
+
     //phase2
     paraSeparation();//パラシュートを分離
     //gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
@@ -156,7 +156,6 @@ int main(){
     }
     pc.printf("gps stable\n");
 
-*/
     //phase3
     pc.printf("phase3 start\n");
     wait(2);
