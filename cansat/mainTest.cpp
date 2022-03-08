@@ -266,7 +266,6 @@ bool stuckChecker(){//スタックしているかどうか判断する関数:ス
 }
 
 void getMpu(){//9軸センサーの値を取得する関数
-    int before = millis();
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
     mpu.getAcc(acc.datas);//加速度をacc.datas[i](i=0->x成分, 1->y成分, 2->z成分)に格納
@@ -280,9 +279,6 @@ void getMpu(){//9軸センサーの値を取得する関数
     createDataArray(pGyro);
     createDataArray(pMag);
     //pc.printf("test: mag.medX=%f, mag.medY=%f, mag.medZ=%f\n",mag.medX, mag.medY, mag.medZ);
-
-    int after = millis();
-    pc.printf("getmpuTIME=%d\n", after-before);
 }
 
 
@@ -433,7 +429,7 @@ void echo(){//超音波センサから距離を取得する関数
     timer.reset();
     timer.start();
     while(echoR.read() == 1){
-        if(timer.read_us()>11655) break;
+        //if(timer.read_us()>11655) break;
     }
     timer.stop();
     sonicR.distance = timer.read_us() * 0.03432f / 2.0f;
@@ -448,7 +444,7 @@ void echo(){//超音波センサから距離を取得する関数
     timer.reset();
     timer.start();
     while(echoL.read() == 1){
-        if(timer.read_us()>11655) break;
+        //if(timer.read_us()>11655) break;
     }
     timer.stop();
     sonicL.distance = timer.read_us() * 0.03432f / 2.0f;
