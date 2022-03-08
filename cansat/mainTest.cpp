@@ -44,7 +44,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define EARTH_RADIUS 6378.137 //地球の半径(km)
 #define PI 3.14159265358979 //円周率
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
-#define CALIBRATION_TIME 5000 //地磁気補正のために旋回する時間(ms)
+#define CALIBRATION_TIME 10000 //地磁気補正のために旋回する時間(ms)
 #define MAG_CONST -8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 2000 //GPSの安定を判断する際の精度(cm)
@@ -141,13 +141,14 @@ int main(){
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
     
-    thisPos.latitude = 0//38.1849248;//THISPOS_LAT;//テスト用
-    thisPos.longtitude = 0//140.8519829;//THISPOS_LNG;
+    thisPos.latitude = 0;//38.1849248;//THISPOS_LAT;//テスト用
+    thisPos.longtitude = 0;//140.8519829;//THISPOS_LNG;
 
     //phase2
     paraSeparation();//パラシュートを分離
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
+        imSend("gps waiting...");
         wait(1);
     }
     imSend("gps got");
