@@ -116,6 +116,7 @@ float direction;//向かうべき角度:正->左,負->右
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
 void turn();//cansatを旋回させる関数
+void slowTurn();//cansatをゆっくり旋回させる関数
 void motorForward();//cansatを前進させる関数
 void motorRight();//cansatを右に進ませる関数
 Timeout flipperR;//タイマー割り込み用
@@ -315,13 +316,13 @@ void calibration(){//地磁気補正用関数
     while(!complete_calibration){
         int before = millis();
         int after = before;
-        turn();
+        slowTurn();
         while((after-before)<CALIBRATION_TIME){
             getMpu();
-            if(maxMag.x < mag.datas[0]) maxMag.x = mag.datas[0];
-            else if(minMag.x > mag.datas[0]) minMag.x = mag.datas[0];
-            else if(maxMag.y < mag.datas[1]) maxMag.y = mag.datas[1];
-            else if(minMag.y > mag.y) minMag.y = mag.datas[1];
+            if(maxMag.x < mag.datas[0]) maxMag.x = mag.medX;
+            else if(minMag.x > mag.medX) minMag.x = mag.medX;
+            else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
+            else if(minMag.y > mag.y) minMag.y = mag.medY;
             after = millis();
             //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
         }
@@ -508,6 +509,13 @@ void turn(){//cansatを旋回させる関数
     RINR = 0;
     FINL = 0;
     RINL = 0.5;
+}
+
+void slowTurn(){//cansatをゆっくり旋回させる関数
+    FINR = 0.1;
+    RINR = 0;
+    FINL = 0.5;
+    RINL = 0;
 }
 
 
