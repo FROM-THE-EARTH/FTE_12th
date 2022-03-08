@@ -273,6 +273,17 @@ bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを�
 
 int main(){
 
+    while (1){
+        getDatas();
+        sendData();
+    }
+
+    
+    {
+        /* code */
+    }
+    
+
     sequenceJudge();
     //pc.baud(115200); //mbedのボーレート（必要に応じて)
 
