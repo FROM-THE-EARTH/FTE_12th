@@ -34,6 +34,7 @@ struct Polar{//極座標
     double angle;//角度
 };
 struct Polar toTarget;
+float angle;
 void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
 bool stuckChecker();//スタックしているかどうか判断する関数:スタック->true
@@ -126,7 +127,7 @@ void motorStop(bool emergency=false);//cansatを停止させる関数:緊急で�
 
 //IM920
 void imSend(char *send);//無線用関数
-void sendDatas(float latitude, float longtitude, float altitude, float time);//データを文字列に変換してimSendを呼び出して送信する関数
+void sendDatas();//データを文字列に変換してimSendを呼び出して送信する関数
 char sendData[256];
 int dataNumber = 0;
 
@@ -145,19 +146,19 @@ int main(){
 
     //phase2
     paraSeparation();//パラシュートを分離
-    //gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
         wait(1);
     }
-    pc.printf("gps got\n");
+    imSend("gps got");
     while(!gpsChecker()){//GPSが安定したら次の処理へ
         wait(1);
         pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
     }
-    pc.printf("gps stable\n");
+    imSend("gps stable");
 
     //phase3
-    pc.printf("phase3 start\n");
+    imSend("phase3 start");
     wait(2);
     for(int i=0; i<MPU_SAMPLES; i++){
         getMpu();
@@ -174,15 +175,16 @@ int main(){
         if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
 
         setDirection();//進行方向を設定(2回目以降は変更)
+        sendDatas();
 
-        //if(stuckChecker()){//スタックしていたら
-
-        //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+        if(stuckChecker())handleStuck();//スタックしていたら
+        
+        echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
         //if(obstacleChecker) obstacleAvoidance();//障害物を発見したら障害物を回避
         times++;
     }
     while(1){
-        pc.printf("GOAL!!!!\n");
+        imSend("GOAL!!!!");
         }
 
     //phase5
@@ -212,7 +214,7 @@ void calcDistance(){//距離計算用関数
     float sigma = sy*sy + cos(y1)*cos(y2)*sx*sx;
 
     toTarget.radius = EARTH_RADIUS*2.0*asin(sqrt(sigma));
-    pc.printf("toTarget.radius=%f\n", toTarget.radius);
+    //pc.printf("toTarget.radius=%f\n", toTarget.radius);
 }
 
 
@@ -251,7 +253,8 @@ void targetDecision(){//目的地を決定する関数
 
 
 bool stuckChecker(){//スタックしているかどうか判断する関数:スタック->true
-    return false;
+    if(acc.medX*acc.medY<0.1) return true;
+    else return false;
 }
 
 void getMpu(){//9軸センサーの値を取得する関数
@@ -267,7 +270,7 @@ void getMpu(){//9軸センサーの値を取得する関数
     createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
     createDataArray(pGyro);
     createDataArray(pMag);
-    pc.printf("test: mag.medX=%f, mag.medY=%f, mag.medZ=%f\n",mag.medX, mag.medY, mag.medZ);
+    //pc.printf("test: mag.medX=%f, mag.medY=%f, mag.medZ=%f\n",mag.medX, mag.medY, mag.medZ);
 }
 
 
@@ -309,7 +312,7 @@ float calcMedian(float* array, int n){//配列の値の中央値を出す関数
 
 void calibration(){//地磁気補正用関数
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
-    pc.printf("turn\n");
+    //pc.printf("turn\n");
     while(!complete_calibration){
         int before = millis();
         int after = before;
@@ -321,15 +324,15 @@ void calibration(){//地磁気補正用関数
             else if(maxMag.y < mag.datas[1]) maxMag.y = mag.datas[1];
             else if(minMag.y > mag.y) minMag.y = mag.datas[1];
             after = millis();
-            pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
+            //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
         }
 
         if(((maxMag.x-minMag.x)>20) && ((maxMag.y-minMag.y)>20)){
-            pc.printf("calibration complete!\n");
+            imSend("calibration complete!");
             wait(1);
             complete_calibration = true;//キャリブレーション完了
         }else{
-            pc.printf("calibration false!!!\n");
+            imSend("calibration false!!!");
             wait(1);
             motorForward();//少し移動してからまたキャリブレーション
             wait(10);
@@ -340,7 +343,7 @@ void calibration(){//地磁気補正用関数
     wait(1);
     centerMag.x = (maxMag.x+minMag.x)/2;
     centerMag.y = (maxMag.y+minMag.y)/2;
-    pc.printf("centerX=%f, centerY=%f\n", centerMag.x, centerMag.y);
+    //pc.printf("centerX=%f, centerY=%f\n", centerMag.x, centerMag.y);
 }
 
 
@@ -357,7 +360,7 @@ void calcAzimuth(){//方位角計算用関数
     azimuth += MAG_CONST;
     if(azimuth>360) azimuth -= 360;
     else if(azimuth<0) azimuth += 360;
-    pc.printf("azimuth=%f\n", azimuth);
+    //pc.printf("azimuth=%f\n", azimuth);
 }
 
 
@@ -396,7 +399,7 @@ bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
     difLat = (maxLat-minLat);
     difLng = (maxLng-minLng);
     
-    pc.printf("lat=%f, lng=%f\n", thisPos.Latitude[0], thisPos.Longtitude[0]);
+    //pc.printf("lat=%f, lng=%f\n", thisPos.Latitude[0], thisPos.Longtitude[0]);
 
     if((difLat<accuracy)&&(difLng<accuracy)) return true;
     else return false;
@@ -452,7 +455,7 @@ void setDirection(){//進行方向を変更する関数
             if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
-        pc.printf("Set Angle");
+        imSend("Set Angle");
         wait(1);
         motorForward();
     }else{
@@ -463,22 +466,41 @@ void setDirection(){//進行方向を変更する関数
 }
 
 void calcDirection(){//進行方向を計算する関数
-    float angle;
     //toTarget.angleの値とazimuthの値との差の絶対値を180以下にする
     if((toTarget.angle-azimuth)>180) angle = toTarget.angle-360;
     else if((azimuth-toTarget.angle)>180) angle = toTarget.angle+360;
     else angle = toTarget.angle;
     
     direction = angle-azimuth;
-    pc.printf("direction=%f, toTarget.angle=%f, angle=%f\n", direction,toTarget.angle,angle);
+    //pc.printf("direction=%f, toTarget.angle=%f, angle=%f\n", direction,toTarget.angle,angle);
 }
 
 
 void obstacleAvoidance(){//障害物を回避する関数
+    motorBack();
+    wait(1);
+    getMpu();
+    calcAzimuth();
+    calcDirection();
+    float dir_b = direction;
+    float dir_a = dir_b;
+    turn();
+    while((dir_a-dir_b)>90||(dir_b-dir_a)>90){
+        getMpu();
+        calcAzimuth();
+        calcDirection();
+        dir_a = direction;
+    }
+    motorStop();
 }
 
 
 void handleStuck(){//スタックを対処する関数
+    motorBack();
+    wait(3);
+    turn();
+    wait(3);
+    motorStop();
 }
 
 
@@ -487,7 +509,6 @@ void turn(){//cansatを旋回させる関数
     RINR = 0;
     FINL = 0;
     RINL = 0.5;
-
 }
 
 
@@ -553,7 +574,8 @@ void imSend(char *send){//無線で送信する関数
 }
 
 
-void sendDatas(float latitude, float longtitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longtitude, altitude, time);
+void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
+        sprintf(sendData,"data%d,azi=%.2f,ang=%.4f,dir=%.2f,rad=%.2f,acx=%.2f,acy=%.2f,acz=%.2f", dataNumber, azimuth, angle, direction, toTarget.radius, acc.medX, acc.medY, acc.medZ);
         imSend(sendData);
+        dataNumber++;
 }
