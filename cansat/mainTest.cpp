@@ -331,7 +331,8 @@ void calibration(){//地磁気補正用関数
         slowTurn();
         while((after-before)<CALIBRATION_TIME){
             getMpu();
-            if(maxMag.x < mag.datas[0]) maxMag.x = mag.medX;
+            sendDatas();
+            if(maxMag.x < mag.medX) maxMag.x = mag.medX;
             else if(minMag.x > mag.medX) minMag.x = mag.medX;
             else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
             else if(minMag.y > mag.y) minMag.y = mag.medY;
@@ -465,6 +466,7 @@ void setDirection(){//進行方向を変更する関数
             calcAzimuth();
             calcAngle();
             calcDirection();
+            sendDatas();
             if(direction<2.0f && direction>-2.0f) break;
         }
         motorStop(true);
@@ -582,7 +584,7 @@ void motorStop(bool emergency){//cansatを停止させる関数
 
 
 void imSend(char *send){//無線で送信する関数
-    im920.send(send,strlen(send)+1);
+    //im920.send(send,strlen(send)+1);
     pc.printf(send);
     pc.printf("\r\n");
 }
