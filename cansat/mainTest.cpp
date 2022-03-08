@@ -43,11 +43,11 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 //定数の定義
 #define EARTH_RADIUS 6378.137 //地球の半径(km)
 #define PI 3.14159265358979 //円周率
-#define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
+#define MPU_SAMPLES 15 //MPUのデータを何個の中の中央値を用いるか
 #define CALIBRATION_TIME 10000 //地磁気補正のために旋回する時間(ms)
 #define MAG_CONST -8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
-#define GPS_ACCURACY 2000 //GPSの安定を判断する際の精度(cm)
+#define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
 #define TARGET_LAT 38.2849248 //目標の緯度
 #define TARGET_LNG 140.8519829 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
@@ -266,6 +266,7 @@ bool stuckChecker(){//スタックしているかどうか判断する関数:ス
 }
 
 void getMpu(){//9軸センサーの値を取得する関数
+    int before = millis();
     mpu.setAccLPF(NO_USE);
     mpu.setAcc(_16G);
     mpu.getAcc(acc.datas);//加速度をacc.datas[i](i=0->x成分, 1->y成分, 2->z成分)に格納
@@ -279,6 +280,9 @@ void getMpu(){//9軸センサーの値を取得する関数
     createDataArray(pGyro);
     createDataArray(pMag);
     //pc.printf("test: mag.medX=%f, mag.medY=%f, mag.medZ=%f\n",mag.medX, mag.medY, mag.medZ);
+
+    int after = millis();
+    pc.printf("getmpuTIME=%d\n", after-before);
 }
 
 
@@ -455,12 +459,13 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 void setDirection(){//進行方向を変更する関数
     if(times == 0){
-        turn();
+        slowTurn();
         while(1){
             getMpu();
             calcAzimuth();
+            calcAngle();
             calcDirection();
-            if(direction<1.0f && direction>-1.0f) break;
+            if(direction<2.0f && direction>-2.0f) break;
         }
         motorStop(true);
         imSend("Set Angle");
