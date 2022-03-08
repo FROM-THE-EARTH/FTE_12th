@@ -196,22 +196,13 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     //imSend("Program Start!",0);
     //millisStart();//millis(タイマー)をスタート
     millis.start();
-
-    //SDカードの初期化
-    /*sd.mount();
-    FATFS fs;
-    f_mount(&fs,"",0);
-    FIL fp;
-    f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
-    */
-    
     //imSend("Waiting...",0);
     while(1){
         if(latitude!=0){
             imSend("GPS OK");
             break;
             }
-        if(millis.read()>3*000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
+        if(millis.read()>0.1*1000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
             imSend("Error! GPS cannot read");
             setUpErrorFlag = true;
             break;
@@ -219,7 +210,7 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
     }
 
     FlightPin.mode(PullDown);//フライトピンに電圧をかける
-    wait(1);
+    wait(0.1);
     val = FlightPin;
     /*
     if(val==0){//この段階でピンが抜けていればエラーを出力
@@ -230,8 +221,6 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
         imSend("FlightPin OK");
     }
     */
-
-    
     if(getMpu()==0){//mpu9250の動作確認
         imSend("MPU9250 OK");
     }else{
@@ -245,7 +234,6 @@ void setUp(){//各モジュールの確認やサーボモータの初期化を�
         setUpErrorFlag = true;
     }
     
-
     for(int i=0;i<SAMPLES; i++){//calcMedian()を使うために、配列の値をデータで一度満たしておく必要がある:広い意味での初期化
         getDatas();
     }
@@ -276,15 +264,22 @@ int interval(){//timeStart()からの時間を返す関数
     return timer[3]-timer[2];
 }
 
-void sequenceJudge(){
-    wait(0.2);
+void sequenceJudge(){//状況判断関数
+    wait(0.01);//起動直後の待機時間
     val = FlightPin;
-    if(val==1){
-        takeoff = false;
+    if(val==1){//フライトピンが刺さっているならば
+        takeoff = false;//待機中
         imSend("start general mode");
     }else{
-        takeoff = true;
-        imSend("start flight mode");
+        wait(0.01);//電圧の安定化を待ってもう一度判断
+        val = FlightPin;
+        if(val == 0){//この時も抜けているならば飛翔中と判断
+            takeoff = true;
+            imSend("start flight mode");
+        }else{
+            takeoff = false;//二度目の判断でフライトピンが刺さっているならば待機中と判断
+            imSend("start general mode");
+        }
     }
 }
 
@@ -357,7 +352,7 @@ int main(){
         
          switch (phase){
             case 0:
-                if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) > 2*2){
+                if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) > 3*3){
                     timerStart();
                     imSend("Launched!!");
                     phase++;
@@ -387,6 +382,7 @@ int main(){
                 break;
          }
        }
+
      }else{
             
         millis.start();
@@ -399,7 +395,7 @@ int main(){
             //f_printf(&fp,log);
             double preTime = millis.read();
             //pc.printf("%f\n",preTime - launchedTime);
-            if((preTime - launchedTime > 10.52) || maxAltitude-calcMedian(altArray, SAMPLES)>5){
+            if((preTime - launchedTime > 10.52) || maxAltitude-calcMedian(altArray, SAMPLES)>10){
                 getDatas(); 
                 servoWriteU(150);
                 servoWriteD(30);
@@ -412,18 +408,18 @@ int main(){
             }
         }
         
-        imSend("finish");
+        float paraOpenTime = millis.read();
         
-        float paraopenTime = millis.read();
-        
-        while(paraopenTime - millis.read() > 60){
+        while(paraOpenTime - millis.read() > 60){
             getDatas();
+            getGPS();
             sendDatas();
         }
         
         imSend("End");
         //f_close(&fp);
         while(1){
+            getGPS();
             getDatas();
             sendDatas();
         }
