@@ -323,6 +323,10 @@ float calcMedian(float* array, int n){//配列の値の中央値を出す関数
 
 
 void calibration(){//地磁気補正用関数
+    maxMag.x = -10000;//max,minの初期化
+    maxMag.y = -10000;
+    minMag.x = 10000;
+    minMag.y = 10000;
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
     //pc.printf("turn\n");
     while(!complete_calibration){
