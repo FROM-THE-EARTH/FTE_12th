@@ -429,7 +429,7 @@ void echo(){//超音波センサから距離を取得する関数
     timer.reset();
     timer.start();
     while(echoR.read() == 1){
-        //if(timer.read_us()>11655) break;
+        if(timer.read_us()>11655) break;
     }
     timer.stop();
     sonicR.distance = timer.read_us() * 0.03432f / 2.0f;
@@ -444,7 +444,7 @@ void echo(){//超音波センサから距離を取得する関数
     timer.reset();
     timer.start();
     while(echoL.read() == 1){
-        //if(timer.read_us()>11655) break;
+        if(timer.read_us()>11655) break;
     }
     timer.stop();
     sonicL.distance = timer.read_us() * 0.03432f / 2.0f;
