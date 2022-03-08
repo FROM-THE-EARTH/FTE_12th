@@ -33,8 +33,8 @@ struct Polar{//極座標
     double radius;//動径距離
     double angle;//角度
 };
-struct Polar toTarget;
-float angle;
+struct Polar toTarget;//目的地への極座標
+float angle;//toTarget.angleを0-360に合わせた
 void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
 bool stuckChecker();//スタックしているかどうか判断する関数:スタック->true
@@ -62,24 +62,24 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 //以下各モジュールの関数や変数などの定義
 //MPU9250
 void getMpu();//9軸センサ用関数
-struct MpuData{
-    float datas[3];
-    float x;
+struct MpuData{//MPUのデータを扱う構造体
+    float datas[3];//一旦データがここに入る
+    float x;//それぞれの軸のデータが入る
     float y;
     float z;
-    float X[MPU_SAMPLES];
+    float X[MPU_SAMPLES];//中央値を求めるための配列
     float Y[MPU_SAMPLES];
     float Z[MPU_SAMPLES];
-    float medX;
+    float medX;//それぞれの軸の中央値
     float medY;
     float medZ;
 };
-MpuData acc;
-MpuData gyro;
-MpuData mag;
-MpuData maxMag;
-MpuData minMag;
-MpuData centerMag;
+MpuData acc;//加速度
+MpuData gyro;//角速度
+MpuData mag;//地磁気
+MpuData maxMag;//地磁気の最大値
+MpuData minMag;//地磁気の最小値
+MpuData centerMag;//地磁気補正用
 void createDataArray(MpuData* pData);//MPUのデータをMPU_SAMPLES個の配列に順番に格納し、calcMedian()を呼び出して中央値を求める関数
 float calcMedian(float* array, int n);//配列の値の中央値を出す関数
 void calibration();//地磁気補正用関数
@@ -91,7 +91,7 @@ void getGps();//GPS用関数
 struct Coordinate{//座標
     double latitude;//緯度
     double longtitude;//経度
-    double Latitude[GPS_SAMPLES];
+    double Latitude[GPS_SAMPLES];//GPSの安定化をはかるための配列
     double Longtitude[GPS_SAMPLES];
 };
 Coordinate thisPos;//現在位置
@@ -99,9 +99,9 @@ Coordinate targetPos;//ターゲットの位置
 bool gpsChecker();//GPSが安定しているか判断する関数:安定->true
 
 //SONIC
-Timer timer;
+Timer timer;//超音波が返ってくるまでの時間を測るタイマー
 void echo();//超音波センサから距離を取得する関数
-struct Sonic{
+struct Sonic{//超音波センサーのデータを扱う構造体
     double distance;//超音波センサーの距離
 };
 Sonic sonicR;//右の超音波センサー
@@ -128,15 +128,15 @@ void motorStop(bool emergency=false);//cansatを停止させる関数:緊急で�
 //IM920
 void imSend(char *send);//無線用関数
 void sendDatas();//データを文字列に変換してimSendを呼び出して送信する関数
-char sendData[256];
-int dataNumber = 0;
+char sendData[256];//IM920に送るデータを一時保存する配列
+int dataNumber = 0;//IM920に送るデータのデータナンバー
 
 
 
 
 int main(){
     //phase1
-    pc.baud(115200);
+    pc.baud(115200);//シリアル通信のレートを設定
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
@@ -160,7 +160,7 @@ int main(){
     //phase3
     imSend("phase3 start");
     wait(2);
-    for(int i=0; i<MPU_SAMPLES; i++){
+    for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
         getMpu();
         }
     calibration();//地磁気補正
@@ -175,7 +175,7 @@ int main(){
         if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
 
         setDirection();//進行方向を設定(2回目以降は変更)
-        sendDatas();
+        sendDatas();//IM920にデータを送る
 
         if(stuckChecker()){//スタックしていたら
             imSend("Stucked!!!");
@@ -419,13 +419,13 @@ void echo(){//超音波センサから距離を取得する関数
     wait_us(10);
     triggerR.write(0);
 
-    while(echoR.read() == 0){
-        timer.reset();
-        timer.start();
-    }
+    while(echoR.read() == 0){}
+    timer.reset();
+    timer.start();
     while(echoR.read() == 1){
-        timer.stop();
+        if(timer.read_us()>11655) break;
     }
+    timer.stop();
     sonicR.distance = timer.read_us() * 0.03432f / 2.0f;
     if(sonicR.distance>2000) sonicR.distance = 1.0;//超音波センサーのバグを修正
 
@@ -434,13 +434,13 @@ void echo(){//超音波センサから距離を取得する関数
     wait_us(10);
     triggerL.write(0);
 
-    while(echoL.read() == 0){
-        timer.reset();
-        timer.start();
-    }
+    while(echoL.read() == 0){}
+    timer.reset();
+    timer.start();
     while(echoL.read() == 1){
-        timer.stop();
+        if(timer.read_us()>11655) break;
     }
+    timer.stop();
     sonicL.distance = timer.read_us() * 0.03432f / 2.0f;
     if(sonicL.distance>2000) sonicL.distance = 1.0;//超音波センサーのバグを修正
 }
@@ -583,7 +583,8 @@ void imSend(char *send){//無線で送信する関数
 
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data%d,azi=%.2f,ang=%.4f,dir=%.2f,rad=%.2f,acx=%.2f,acy=%.2f,acz=%.2f", dataNumber, azimuth, angle, direction, toTarget.radius, acc.medX, acc.medY, acc.medZ);
+        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,acx=%.2f,acy=%.2f,acz=%.2f,sol=%.2f,sor=%.2f",
+            dataNumber, azimuth, angle, direction, toTarget.radius, acc.medX, acc.medY, acc.medZ, sonicL.distance, sonicR.distance);
         imSend(sendData);
         dataNumber++;
 }
