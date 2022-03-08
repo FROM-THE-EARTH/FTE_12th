@@ -119,9 +119,9 @@ void turn();//cansatを旋回させる関数
 void slowTurn();//cansatをゆっくり旋回させる関数
 void motorForward();//cansatを前進させる関数
 void motorRight();//cansatを右に進ませる関数
-Timeout flipperR;//タイマー割り込み用
+//Timeout flipperR;//タイマー割り込み用
 void motorLeft();//cansatを左に進ませる関数
-Timeout flipperL;//タイマー割り込み用
+//Timeout flipperL;//タイマー割り込み用
 void motorBack();//cansatを後退させる関数
 void motorStop(bool emergency=false);//cansatを停止させる関数:緊急でブレーキが必要なら引数にtrue
 
