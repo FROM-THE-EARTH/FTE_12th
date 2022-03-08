@@ -467,7 +467,7 @@ void setDirection(){//進行方向を変更する関数
             calcAngle();
             calcDirection();
             sendDatas();
-            if(direction<2.0f && direction>-2.0f) break;
+            if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
         imSend("Set Angle");
@@ -527,8 +527,8 @@ void turn(){//cansatを旋回させる関数
 }
 
 void slowTurn(){//cansatをゆっくり旋回させる関数
-    FINR = 0.1;
-    RINR = 0;
+    FINR = 0;
+    RINR = 0.1;
     FINL = 0.5;
     RINL = 0;
 }
