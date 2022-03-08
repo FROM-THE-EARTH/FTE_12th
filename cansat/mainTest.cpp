@@ -109,7 +109,6 @@ Sonic sonicL;//左の超音波センサー
 bool obstacleChecker();//前方にものがあるか判断する関数:発見->true
 
 //MOTOR
-double calcPulse(double rotate_angle_1);//モーター用の周波数計算関数(未完成)
 void setDirection();//進行方向を変更する関数
 int times = 0;//phase4のwhileの回数
 void calcDirection();//進行方向を計算する関数
@@ -178,7 +177,7 @@ int main(){
         sendDatas();
 
         if(stuckChecker())handleStuck();//スタックしていたら
-        
+
         echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
         //if(obstacleChecker) obstacleAvoidance();//障害物を発見したら障害物を回避
         times++;
@@ -195,10 +194,10 @@ int main(){
         else if(sonicR.distance<0.1) break;
         else{
             motorForward();//前進
-            wait_ms(100);
+            wait(1);
         }
     }
-    motorStop();//目的地に到着したのでcansatを通常停止
+    motorStop(true);//目的地に到着したのでcansatを通常停止
 }
 
 
@@ -247,7 +246,7 @@ void targetDecision(){//目的地を決定する関数
         else if(sonicL.distance-minDistanceL<TARGET_DECISION_ACCURACY) break;
     }
     motorStop(true);
-    wait_ms(10);
+    wait(1);
     motorStop();
 }
 
@@ -558,12 +557,6 @@ void motorStop(bool emergency){//cansatを停止させる関数
         FINL = 0;
         RINL = 0;
     }
-}
-
-
-double calcPulse(double rotate_angle_1){//モーター用の周波数計算関数（未完成）
-    float pulse;
-    return pulse;
 }
 
 
