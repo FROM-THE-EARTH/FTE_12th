@@ -177,10 +177,17 @@ int main(){
         setDirection();//進行方向を設定(2回目以降は変更)
         sendDatas();
 
-        if(stuckChecker())handleStuck();//スタックしていたら
-
+        if(stuckChecker()){//スタックしていたら
+            imSend("Stucked!!!");
+            handleStuck();
+        }
         echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
-        //if(obstacleChecker) obstacleAvoidance();//障害物を発見したら障害物を回避
+        /*
+        if(obstacleChecker){//障害物を発見したら
+            imSend("faced obstacle!!");
+            obstacleAvoidance();//障害物を回避
+        }
+        */
         times++;
     }
     while(1){
