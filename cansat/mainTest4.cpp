@@ -49,15 +49,19 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.2849248 //目標の緯度
-#define TARGET_LNG 140.8519829 //目標の経度
+#define TARGET_LAT 38.265856 //目標の緯度
+#define TARGET_LNG 140.854089 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
 #define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
 
-#define THISPOS_LAT 38.253559//テスト用
-#define THISPOS_LNG 140.830551
+#define THISPOS_LAT 38.264261//テスト用
+#define THISPOS_LNG 140.858781
+#define MAX_MAG_X 29.55
+#define MIN_MAG_X -17.25
+#define MAX_MAG_Y 48.90
+#define MIN_MAG_Y 1.50
 
 
 //以下各モジュールの関数や変数などの定義
@@ -156,75 +160,9 @@ int main(){
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
 
-    thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
-    thisPos.longtitude = 140.8519829;//THISPOS_LNG;
+    thisPos.latitude = THISPOS_LAT;//テスト用
+    thisPos.longtitude = THISPOS_LNG;
 
-/*
-    for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu();
-    }
-    float maxX = mag.medX;//max,minの初期化
-    float maxY = mag.medY;
-    float minX = mag.medX;
-    float minY = mag.medY;
-    float max2X = mag.medX;//max2,min2の初期化
-    float max2Y = mag.medY;
-    float min2X = mag.medX;
-    float min2Y = mag.medY;
-    while(1){
-        getMpu();
-        sendDatas();
-        //最大値と最小値を上書き記録
-        float M1x = maxX-pMag->medX;
-        float M2x = max2X-pMag->medX;
-        float m1x = pMag->medX-minX;
-        float m2x = pMag->medX-min2X;
-        float M1y = maxY-pMag->medY;
-        float M2y = max2Y-pMag->medY;
-        float m1y = pMag->medY-minY;
-        float m2y = pMag->medY-min2Y;
-        if(M1x<0){
-            maxX = mag.medX;
-            pc.printf("1.%f\n\n",maxX);
-        }else if(M2x<0){
-            max2X = mag.medX;
-            pc.printf("2.%f\n\n",max2X);
-        }
-        if(m1x<0){
-            minX = mag.medX;
-            pc.printf("3.%f\n\n",minX);
-        }else if(m2x<0){
-            min2X = mag.medX;
-            pc.printf("4.%f\n\n",min2X);
-        }
-        pc.printf("3=%f\n",minX);
-        if(M1y<0){
-            maxY = mag.medY; 
-            pc.printf("5.%f\n\n",maxY);
-        }else if(M2y<0){
-            max2Y = mag.medY;
-            pc.printf("6.%f\n\n",max2Y);
-        }
-        if(m1y<0){
-            minY = mag.medY;
-            pc.printf("7.%f\n\n",minY);
-        }else if(m2y<0){
-            min2Y = mag.medY;
-            pc.printf("8.%f\n\n",min2Y);
-        }
-
-        //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
-        if((maxX-max2X)>10) maxX = max2X;
-        if((min2X-minX)>10) minX = min2X;
-        if((maxY-max2Y)>10) maxY = max2Y;
-        if((min2Y-minY)>10) minY = min2Y;
-        //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
-        pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxX, minX, maxY, minY, pMag->medX, pMag->medY);
-        pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2X, min2X, max2Y, min2Y);
-        pc.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", M1x, M2x, m1x, m2x, M1y, M2y, m1y, m2y);
-        pc.printf("---------------------------------------\n");
-    }
-*/
 
     //phase2
     wait(10);//パラシュート分離までの待機時間
@@ -264,7 +202,7 @@ int main(){
         if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
 
         setDirection();//進行方向を設定(2回目以降は変更)
-        //sendDatas();//IM920にデータを送る
+        sendDatas();//IM920にデータを送る
 
         //if(stuckChecker()){//スタックしていたら
             //imSend("Stucked!!!");
@@ -441,7 +379,7 @@ void calibration(){//地磁気補正用関数
                 max2X = mag.medX;
                 //pc.printf("2.%f\n\n",max2X);
             }
-            wait_us(100);
+            //wait_us(100);
             if(m1x<0){
                 minX = mag.medX;
                 //pc.printf("3.%f\n\n",minX);
@@ -449,7 +387,7 @@ void calibration(){//地磁気補正用関数
                 min2X = mag.medX;
                 //pc.printf("4.%f\n\n",min2X);
             }
-            wait_us(100);
+            //wait_us(100);
             if(M1y<0){
                 maxY = mag.medY; 
                 //pc.printf("5.%f\n\n",maxY);
@@ -457,7 +395,7 @@ void calibration(){//地磁気補正用関数
                 max2Y = mag.medY;
                 //pc.printf("6.%f\n\n",max2Y);
             }
-            wait_us(100);
+            //wait_us(100);
             if(m1y<0){
                 minY = mag.medY;
                 //pc.printf("7.%f\n\n",minY);
@@ -471,27 +409,32 @@ void calibration(){//地磁気補正用関数
             if((min2X-minX)>10) minX = min2X;
             if((maxY-max2Y)>10) maxY = max2Y;
             if((min2Y-minY)>10) minY = min2Y;
-            //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
+            /*
             pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxX, minX, maxY, minY, pMag->medX, pMag->medY);
             pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2X, min2X, max2Y, min2Y);
             pc.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", M1x, M2x, m1x, m2x, M1y, M2y, m1y, m2y);
             pc.printf("---------------------------------------\n");
+            */
             after = millis();
         }
 
-        if(((maxX-minX)>20) && ((maxY-minY)>20)){
+        //if(((maxX-minX)>20) && ((maxY-minY)>20)){
             imSend("calibration complete!");
             wait(1);
             complete_calibration = true;//キャリブレーション完了
-        }else{
+        /*}else{
             imSend("calibration false!!!");
             wait(1);
             motorForward();//少し移動してからまたキャリブレーション
             wait(10);
             complete_calibration = false;
-        }
+        }*/
     }
     motorStop();
+    maxX = MAX_MAG_X;
+    minX = MIN_MAG_X;
+    maxY = MAX_MAG_Y;
+    minY = MIN_MAG_Y;
     wait(1);
     pCenterMag->x = (maxX+minX)/2;
     pCenterMag->y = (maxY+minY)/2;
@@ -513,10 +456,10 @@ void calcAzimuth(){//方位角計算用関数
     }else if(pCalibMag->x>0 && pCalibMag->y<=0){
         azimuth = 90 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
     }
-    azimuth -= MAG_CONST;
+    azimuth += MAG_CONST;
     if(azimuth>360) azimuth -= 360;
     else if(azimuth<0) azimuth += 360;
-    pc.printf("azimuth=%f (X:%f=%f, Y%f=%f) -- centerX:%f, centerY:%f\n", azimuth, pMag->medX, pCalibMag->x, pMag->medY, pCalibMag->y, pCenterMag->x, pCenterMag->y);
+    //pc.printf("azimuth=%f (X:%f=%f, Y%f=%f) -- centerX:%f, centerY:%f\n", azimuth, pMag->medX, pCalibMag->x, pMag->medY, pCalibMag->y, pCenterMag->x, pCenterMag->y);
 }
 
 
@@ -612,7 +555,7 @@ void setDirection(){//進行方向を変更する関数
             calcAzimuth();
             calcAngle();
             calcDirection();
-            //sendDatas();
+            sendDatas();
             motorValodable_rotate((float)direction);
             if(direction<1.0f && direction>-1.0f) break;
         }
@@ -784,8 +727,8 @@ void imSend(char *send){//無線で送信する関数
 
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,%.2f,%.2f,%.2f,%.2f",
-            dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, pMag->medX, pMag->medY, pMag->medX-pCenterMag->x, pMag->medY-pCenterMag->y);
+        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,medx=%.2f,medy=%.2f",
+            dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, pMag->medX, pMag->medY);
         wait_us(100);
         imSend(sendData);
         dataNumber++;
