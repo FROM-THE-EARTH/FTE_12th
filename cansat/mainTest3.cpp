@@ -162,7 +162,7 @@ int main(){
 
 
 
-
+/*
     for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
         getMpu();
     }
@@ -210,7 +210,7 @@ int main(){
         pc.printf("maxX-pMag->medX=%f\n", maxX-pMag->medX);
         pc.printf("---------------------------------------\n");
     }
-
+*/
 
 
 
