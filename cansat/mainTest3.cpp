@@ -78,13 +78,15 @@ struct MpuData{//MPUのデータを扱う構造体
 MpuData acc;//加速度
 MpuData gyro;//角速度
 MpuData mag;//地磁気
-MpuData maxMag;//地磁気の最大値
-MpuData max2Mag;
-MpuData minMag;//地磁気の最小値
-MpuData min2Mag;
 MpuData centerMag;//地磁気補正用
 MpuData range;//地磁気センサの範囲
 MpuData calibMag;
+MpuData* pAcc = &acc;
+MpuData* pGyro = &gyro;
+MpuData* pMag = &mag;
+MpuData* pCenterMag = &centerMag;
+MpuData* pRange = &range;
+MpuData* pCalibMag = &calibMag;
 void createDataArray(MpuData* pData);//MPUのデータをMPU_SAMPLES個の配列に順番に格納し、calcMedian()を呼び出して中央値を求める関数
 float calcMedian(float* array, int n);//配列の値の中央値を出す関数
 void calibration();//地磁気補正用関数
@@ -144,6 +146,12 @@ int dataNumber = 0;//IM920に送るデータのデータナンバー
 int main(){
     //phase1
     pc.baud(19200);//シリアル通信のレートを設定
+    pAcc = &acc;
+    pGyro = &gyro;
+    pMag = &mag;
+    pCenterMag = &centerMag;
+    pRange = &range;
+    pCalibMag = &calibMag;
 
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
@@ -151,55 +159,60 @@ int main(){
 
     thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
     thisPos.longtitude = 140.8519829;//THISPOS_LNG;
-/*
+
+
+
+
     for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
         getMpu();
     }
-    getMpu();
-    maxMag.x = mag.medX;//max,minの初期化
-    maxMag.y = mag.medY;
-    minMag.x = mag.medX;
-    minMag.y = mag.medY;
-    max2Mag.x = mag.medX;//max2,min2の初期化
-    max2Mag.y = mag.medY;
-    min2Mag.x = mag.medX;
-    min2Mag.y = mag.medY;
+    float maxX = pMag->medX;//max,minの初期化
+    float maxY = pMag->medY;
+    float minX = pMag->medX;
+    float minY = pMag->medY;
+    float max2X = pMag->medX;//max2,min2の初期化
+    float max2Y = pMag->medY;
+    float min2X = pMag->medX;
+    float min2Y = pMag->medY;
     while(1){
-            getMpu();
-            sendDatas();
-            //最大値と最小値を上書き記録
-            if(maxMag.x < mag.medX){
-                maxMag.x = mag.medX;
-            }//else if(max2Mag.x < mag.medX){
-                //max2Mag.x = mag.medX;
-            //}
-            if(minMag.x > mag.medX){
-                minMag.x = mag.medX;
-            }//else if(min2Mag.x > mag.medX){
-                //min2Mag.x = mag.medX;
-            //}
-            if(maxMag.y < mag.medY){
-                maxMag.y = mag.medY;
-            }//else if(max2Mag.y < mag.medY){
-                //max2Mag.y = mag.medY;
-            //}
-            if(minMag.y > mag.y){
-                minMag.y = mag.medY;
-            }//else if(min2Mag.y < mag.y){
-                //min2Mag.y = mag.medY;
-            //}
-            
-            //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
-            if((maxMag.x-max2Mag.x)>10) maxMag.x = max2Mag.x;
-            if((min2Mag.x-minMag.x)>10) minMag.x = min2Mag.x;
-            if((maxMag.y-max2Mag.y)>10) maxMag.y = max2Mag.y;
-            if((min2Mag.y-minMag.y)>10) minMag.y = min2Mag.y;
-            //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
-            pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxMag.x, minMag.x, maxMag.y, minMag.y, mag.medX, mag.medY);
-            pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2Mag.x, min2Mag.x, max2Mag.y, min2Mag.y);
-            pc.printf("---------------------------------------\n");
+        getMpu();
+        sendDatas();
+        //最大値と最小値を上書き記録
+        if(maxX < pMag->medX){
+            maxX = pMag->medX;
+        }else if(max2X < pMag->medX){
+            max2X = pMag->medX;
+        }
+        if(minX > pMag->medX){
+            minX = pMag->medX;
+        }else if(min2X > pMag->medX){
+            min2X = pMag->medX;
+        }
+        if(maxY < pMag->medY){
+            maxY = pMag->medY; 
+        }else if(max2Y < pMag->medY){
+            max2Y = pMag->medY;
+        }
+        if(minY > mag.y){
+            minY = pMag->medY;
+        }else if(min2Y < mag.y){
+            min2Y = pMag->medY;
+        }
+
+        //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
+        if((maxX-max2X)>10) maxX = max2X;
+        if((min2X-minX)>10) minX = min2X;
+        if((maxY-max2Y)>10) maxY = max2Y;
+        if((min2Y-minY)>10) minY = min2Y;
+        //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
+        pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxX, minX, maxY, minY, pMag->medX, pMag->medY);
+        pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2X, min2X, max2Y, min2Y);
+        pc.printf("maxX-pMag->medX=%f\n", maxX-pMag->medX);
+        pc.printf("---------------------------------------\n");
     }
-    */
+
+
+
 
 
     //phase3
@@ -340,13 +353,9 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro.datas);//ジャイロ
     mpu.getMag(mag.datas);//地磁気
 
-    MpuData* pAcc = &acc;
-    MpuData* pGyro = &gyro;
-    MpuData* pMag = &mag;
     createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
     createDataArray(pGyro);
     createDataArray(pMag);
-    //pc.printf("test: mag.medX=%f, mag.medY=%f, mag.medZ=%f\n",mag.medX, mag.medY, mag.medZ);
 }
 
 
@@ -387,23 +396,14 @@ float calcMedian(float* array, int n){//配列の値の中央値を出す関数
 
 
 void calibration(){//地磁気補正用関数
-    float maxX;
-    float max2X;
-    float minX;
-    float min2X;
-    float maxY;
-    float max2Y;
-    float minY;
-    float min2Y;
-
-    maxX = mag.medX;//max,minの初期化
-    maxY = mag.medY;
-    minX = mag.medX;
-    minY = mag.medY;
-    max2X = mag.medX;//max2,min2の初期化
-    max2Y = mag.medY;
-    min2X = mag.medX;
-    min2Y = mag.medY;
+    float maxX = pMag->medX;//max,minの初期化
+    float maxY = pMag->medY;
+    float minX = pMag->medX;
+    float minY = pMag->medY;
+    float max2X = pMag->medX;//max2,min2の初期化
+    float max2Y = pMag->medY;
+    float min2X = pMag->medX;
+    float min2Y = pMag->medY;
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
     //pc.printf("turn\n");
     while(!complete_calibration){
@@ -414,25 +414,25 @@ void calibration(){//地磁気補正用関数
             getMpu();
             sendDatas();
             //最大値と最小値を上書き記録
-            if(maxX < mag.medX){
-                maxX = mag.medX;
-            }else if(max2X < mag.medX){
-                max2X = mag.medX;
+            if(maxX < pMag->medX){
+                maxX = pMag->medX;
+            }else if(max2X < pMag->medX){
+                max2X = pMag->medX;
             }
-            if(minX > mag.medX){
-                minX = mag.medX;
-            }else if(min2X > mag.medX){
-                min2X = mag.medX;
+            if(minX > pMag->medX){
+                minX = pMag->medX;
+            }else if(min2X > pMag->medX){
+                min2X = pMag->medX;
             }
-            if(maxY < mag.medY){
-                maxY = mag.medY; 
-            }else if(max2Y < mag.medY){
-                max2Y = mag.medY;
+            if(maxY < pMag->medY){
+                maxY = pMag->medY; 
+            }else if(max2Y < pMag->medY){
+                max2Y = pMag->medY;
             }
             if(minY > mag.y){
-                minY = mag.medY;
+                minY = pMag->medY;
             }else if(min2Y < mag.y){
-                min2Y = mag.medY;
+                min2Y = pMag->medY;
             }
 
             //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
@@ -442,9 +442,9 @@ void calibration(){//地磁気補正用関数
             if((min2Y-minY)>10) minY = min2Y;
             after = millis();
             //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
-            pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxX, minX, maxY, minY, mag.medX, mag.medY);
+            pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxX, minX, maxY, minY, pMag->medX, pMag->medY);
             pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2X, min2X, max2Y, min2Y);
-            pc.printf("maxX-mag.medX=%f\n", maxX-mag.medX);
+            pc.printf("maxX-pMag->medX=%f\n", maxX-pMag->medX);
             pc.printf("---------------------------------------\n");
         }
 
@@ -462,30 +462,30 @@ void calibration(){//地磁気補正用関数
     }
     motorStop();
     wait(1);
-    centerMag.x = (maxX+minX)/2;
-    centerMag.y = (maxY+minY)/2;
-    range.x = (maxX-minX)/2;
-    range.y = (maxY-minY)/2;
-    //pc.printf("centerX=%f, centerY=%f\n", centerMag.x, centerMag.y);
+    pCenterMag->x = (maxX+minX)/2;
+    pCenterMag->y = (maxY+minY)/2;
+    pRange->x = (maxX-minX)/2;
+    pRange->y = (maxY-minY)/2;
+    //pc.printf("centerX=%f, centerY=%f\n", pCenterMag->x, pCenterMag->y);
 }
 
 
 void calcAzimuth(){//方位角計算用関数
-    calibMag.x = (mag.medX-centerMag.x)/range.x*100;
-    calibMag.y = (mag.medY-centerMag.y)/range.y*100;
-    if(calibMag.x>0 && calibMag.y>=0){
-        azimuth = 90 - (180/PI)*atan(calibMag.y/calibMag.x);
-    }else if(calibMag.x<0 && calibMag.y>=0){
-        azimuth = 270 - (180/PI)*atan(calibMag.y/calibMag.x);
-    }else if(calibMag.x<0 && calibMag.y<=0){
-        azimuth = 270 - (180/PI)*atan(calibMag.y/calibMag.x);
-    }else if(calibMag.x>0 && calibMag.y<=0){
-        azimuth = 90 - (180/PI)*atan(calibMag.y/calibMag.x);
+    pCalibMag->x = (pMag->medX-pCenterMag->x)/pRange->x*100;
+    pCalibMag->y = (pMag->medY-pCenterMag->y)/pRange->y*100;
+    if(pCalibMag->x>0 && pCalibMag->y>=0){
+        azimuth = 90 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
+    }else if(pCalibMag->x<0 && pCalibMag->y>=0){
+        azimuth = 270 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
+    }else if(pCalibMag->x<0 && pCalibMag->y<=0){
+        azimuth = 270 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
+    }else if(pCalibMag->x>0 && pCalibMag->y<=0){
+        azimuth = 90 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
     }
     azimuth -= MAG_CONST;
     if(azimuth>360) azimuth -= 360;
     else if(azimuth<0) azimuth += 360;
-    pc.printf("azimuth=%f (X:%f=%f, Y%f=%f) -- centerX:%f, centerY:%f\n", azimuth, mag.medX, calibMag.x, mag.medY, calibMag.y, centerMag.x, centerMag.y);
+    pc.printf("azimuth=%f (X:%f=%f, Y%f=%f) -- centerX:%f, centerY:%f\n", azimuth, pMag->medX, pCalibMag->x, pMag->medY, pCalibMag->y, pCenterMag->x, pCenterMag->y);
 }
 
 
@@ -754,7 +754,7 @@ void imSend(char *send){//無線で送信する関数
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
         sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,%.2f,%.2f,%.2f,%.2f",
-            dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, mag.medX, mag.medY, mag.medX-centerMag.x, mag.medY-centerMag.y);
+            dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, pMag->medX, pMag->medY, pMag->medX-pCenterMag->x, pMag->medY-pCenterMag->y);
         wait_us(100);
         imSend(sendData);
         dataNumber++;
