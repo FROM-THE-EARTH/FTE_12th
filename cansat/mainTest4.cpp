@@ -117,6 +117,7 @@ struct Sonic{//超音波センサーのデータを扱う構造体
 };
 Sonic sonicR;//右の超音波センサー
 Sonic sonicL;//左の超音波センサー
+float shorterDistance;
 bool obstacleChecker();//前方にものがあるか判断する関数:発見->true
 
 //MOTOR
@@ -222,12 +223,25 @@ int main(){
     //targetDecision();//目的地を判断し決定
     while(1){
         echo();
+        while(1){
+            if(shorterDistance < 100 && shorterDistance > 10){
+                motorForward();
+            }else if(shorterDistance >= 100{
+                slowTurn();
+            }else{
+                wait(0.1);
+                if(shorterDistance < 5)break;
+                else slowTurn();
+            }
+        }
+        /*
         if(sonicL.distance<0.1) break;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
         else if(sonicR.distance<0.1) break;
         else{
             motorForward();//前進
             wait(1);
         }
+        */
     }
     motorStop(true);//目的地に到着したのでcansatを通常停止
     wait(2);
@@ -539,6 +553,13 @@ void echo(){//超音波センサから距離を取得する関数
     timer.stop();
     sonicL.distance = timer.read_us() * 0.03432f / 2.0f;
     if(sonicL.distance>2000) sonicL.distance = 1.0;//超音波センサーのバグを修正
+
+    if(sonicL.distance <= sonicR.distance){
+        shorterDistance = sonicL.distance;
+    }else if(sonicR.distance < sonicL.distance{
+        shorterDistance = sonicR.distance;
+    })
+    }
 }
 
 
