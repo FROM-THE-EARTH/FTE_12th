@@ -35,6 +35,7 @@ struct Polar{//極座標
 };
 struct Polar toTarget;//目的地への極座標
 float angle;//toTarget.angleを0-360に合わせた
+void servoWrite(int servoAngle);//サーボモーターを角度によって出力する関数
 void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
 bool stuckChecker();//スタックしているかどうか判断する関数:スタック->true
@@ -142,21 +143,30 @@ int main(){
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
-    
+
     thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
     thisPos.longtitude = 140.8519829;//THISPOS_LNG;
 
-    //phase2
+
+    //phase3
+    wait(10);//パラシュート分離までの待機時間
     paraSeparation();//パラシュートを分離
-    //gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+    imSend("phase3 start");
+    wait(1);
+    for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
+        getMpu();
+        }
+    calibration();//地磁気補正
+
+
+    //phase2
     /*
+    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
         imSend("gps waiting...");
         wait(1);
     }
-    */
-    //imSend("gps got");
-    /*
+    imSend("gps got");
     while(!gpsChecker()){//GPSが安定したら次の処理へ
         wait(1);
         pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
@@ -164,13 +174,7 @@ int main(){
     imSend("gps stable");
     */
 
-    //phase3
-    imSend("phase3 start");
-    wait(2);
-    for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu();
-        }
-    calibration();//地磁気補正
+
 
     //phase4
     while(1){
@@ -197,9 +201,6 @@ int main(){
         */
         times++;
     }
-    while(1){
-        imSend("GOAL!!!!");
-        }
 
     //phase5
     //targetDecision();//目的地を判断し決定
@@ -213,6 +214,8 @@ int main(){
         }
     }
     motorStop(true);//目的地に到着したのでcansatを通常停止
+    wait(2);
+    motorStop();
 }
 
 
@@ -240,7 +243,14 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180度東270度
 }
 
 
+void servoWrite(int servoAngle){//サーボモーターを角度によって出力する関数
+    int pulse = 500 + 10.5*servoAngle;
+    servo.pulsewidth_us(pulse);
+}
+
+
 void paraSeparation(){//パラシュート分離関数
+        servoWrite(90);//とりあえず90度出力
 }
 
 
@@ -430,8 +440,10 @@ void echo(){//超音波センサから距離を取得する関数
     triggerR.write(1);
     wait_us(10);
     triggerR.write(0);
-
-    while(echoR.read() == 0){}
+    timer.reset();
+    while(echoR.read() == 0){
+        if(timer.read_us()>11655) break;
+    }
     timer.reset();
     timer.start();
     while(echoR.read() == 1){
@@ -445,8 +457,10 @@ void echo(){//超音波センサから距離を取得する関数
     triggerL.write(1);
     wait_us(10);
     triggerL.write(0);
-
-    while(echoL.read() == 0){}
+    timer.reset();
+    while(echoL.read() == 0){
+        if(timer.read_us()>11655) break;
+    }
     timer.reset();
     timer.start();
     while(echoL.read() == 1){
@@ -466,8 +480,7 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 void setDirection(){//進行方向を変更する関数
     if(times == 0){
-        slowTu
-        );
+        slowTurn();
         while(1){
             getMpu();
             calcAzimuth();
