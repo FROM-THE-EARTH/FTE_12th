@@ -354,7 +354,7 @@ void calibration(){//地磁気補正用関数
         slowTurn();
         while((after-before)<CALIBRATION_TIME){
             getMpu();
-            sendDatas();
+            //sendDatas();
             if(maxMag.x < mag.medX) maxMag.x = mag.medX;
             else if(minMag.x > mag.medX) minMag.x = mag.medX;
             else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
@@ -493,7 +493,7 @@ void setDirection(){//進行方向を変更する関数
             calcAngle();
             calcDirection();
             sendDatas();
-            motorValidable_strait(direction);
+            motorValidable_turn(direction);
             if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
@@ -656,7 +656,7 @@ void motorValodable_rotate(float angleOut){
 }
 
 void imSend(char *send){//無線で送信する関数
-    im920.send(send,strlen(send)+1);
+    //im920.send(send,strlen(send)+1);
     pc.printf(send);
     pc.printf("\r\n");
     wait_us(1000);
@@ -667,6 +667,5 @@ void sendDatas(){//データを文字列に変換してimSendを呼び出して�
         sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f",
             dataNumber, azimuth, angle, direction, toTarget.radius,sonicL.distance, sonicR.distance);
         imSend(sendData);
-        
         dataNumber++;
 }
