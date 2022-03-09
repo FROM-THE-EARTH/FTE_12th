@@ -208,7 +208,7 @@ int main(){
             //imSend("Stucked!!!");
             //handleStuck();
         //}
-        echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+        //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
         /*
         if(obstacleChecker){//障害物を発見したら
             imSend("faced obstacle!!");
