@@ -81,6 +81,8 @@ MpuData mag;//地磁気
 MpuData maxMag;//地磁気の最大値
 MpuData minMag;//地磁気の最小値
 MpuData centerMag;//地磁気補正用
+MpuData range;//地磁気センサの範囲
+MpuData calibMag;
 void createDataArray(MpuData* pData);//MPUのデータをMPU_SAMPLES個の配列に順番に格納し、calcMedian()を呼び出して中央値を求める関数
 float calcMedian(float* array, int n);//配列の値の中央値を出す関数
 void calibration();//地磁気補正用関数
@@ -126,7 +128,7 @@ void motorLeft();//cansatを左に進ませる関数
 void motorBack();//cansatを後退させる関数
 void motorStop(bool emergency=false);//cansatを停止させる関数:緊急でブレーキが必要なら引数にtrue
 void motorValidable_strait(float angleOut);
-void motorValidable_turn(float angleOut);
+void motorValodable_rotate(float angleOut);
 
 //IM920
 void imSend(char *send);//無線用関数
@@ -140,13 +142,7 @@ int dataNumber = 0;//IM920に送るデータのデータナンバー
 int main(){
     //phase1
     pc.baud(19200);//シリアル通信のレートを設定
-    //while(1){
-        //imSend("hello");
-        //gps.attach(getGps);
-        //getMpu();
-      //  sendDatas();
-        
-    //}
+
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
@@ -354,7 +350,7 @@ void calibration(){//地磁気補正用関数
         slowTurn();
         while((after-before)<CALIBRATION_TIME){
             getMpu();
-            //sendDatas();
+            sendDatas();
             if(maxMag.x < mag.medX) maxMag.x = mag.medX;
             else if(minMag.x > mag.medX) minMag.x = mag.medX;
             else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
@@ -379,19 +375,23 @@ void calibration(){//地磁気補正用関数
     wait(1);
     centerMag.x = (maxMag.x+minMag.x)/2;
     centerMag.y = (maxMag.y+minMag.y)/2;
+    range.x = (maxMag.x-minMag.x)/2;
+    range.y = (maxMag.y-minMag.y)/2;
     //pc.printf("centerX=%f, centerY=%f\n", centerMag.x, centerMag.y);
 }
 
 
 void calcAzimuth(){//方位角計算用関数
-    if(mag.datas[0]-centerMag.x>0 && mag.datas[1]-centerMag.y>=0){
-        azimuth = 90 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
-    }else if(mag.datas[0]-centerMag.x<0 && mag.datas[1]-centerMag.y>=0){
-        azimuth = 270 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
-    }else if(mag.datas[0]-centerMag.x<0 && mag.datas[1]-centerMag.y<=0){
-        azimuth = 270 -  (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
-    }else if(mag.datas[0]-centerMag.x>0 && mag.datas[1]-centerMag.y<=0){
-        azimuth = 90 - (180/PI)*atan((mag.datas[1] - centerMag.y)/(mag.datas[0] - centerMag.x));
+    calibMag.x = (mag.medX-centerMag.x)/range.x;
+    calibMag.y = (mag.medY-centerMag.y)/range.y;
+    if(calibMag.x>0 && calibMag.y>=0){
+        azimuth = 90 - (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    }else if(mag.medX-centerMag.x<0 && mag.medY-centerMag.y>=0){
+        azimuth = 270 - (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    }else if(mag.medX-centerMag.x<0 && mag.medY-centerMag.y<=0){
+        azimuth = 270 -  (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
+    }else if(mag.medX-centerMag.x>0 && mag.medY-centerMag.y<=0){
+        azimuth = 90 - (180/PI)*atan((mag.medY - centerMag.y)/(mag.medX - centerMag.x));
     }
     azimuth += MAG_CONST;
     if(azimuth>360) azimuth -= 360;
@@ -493,7 +493,7 @@ void setDirection(){//進行方向を変更する関数
             calcAngle();
             calcDirection();
             sendDatas();
-            motorValidable_turn(direction);
+            motorValodable_rotate((float)direction);
             if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
@@ -633,8 +633,8 @@ void motorValidable_strait(float angleOut){
 
 void motorValodable_rotate(float angleOut){
     float diff=angleOut/180.0f;
-    float f_bias=0.2;
-    float r_bias=0.2;
+    float f_bias=0.2f;
+    float r_bias=0.2f;
     float diff_f=diff*(1.0f-f_bias);
     float diff_r=diff*(0.5f-r_bias);
     if(diff>0){
@@ -653,19 +653,20 @@ void motorValodable_rotate(float angleOut){
         FINL=1;
         RINL=1;
     }
+    pc.printf("diff:%f/n", diff);
 }
 
 void imSend(char *send){//無線で送信する関数
     //im920.send(send,strlen(send)+1);
     pc.printf(send);
     pc.printf("\r\n");
-    wait_us(1000);
 }
 
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f",
-            dataNumber, azimuth, angle, direction, toTarget.radius,sonicL.distance, sonicR.distance);
+        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,%.2f,%.2f,%.2f,%.2f",
+            dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, mag.medX, mag.medY, mag.medX-centerMag.x, mag.medY-centerMag.y);
+        wait_us(100);
         imSend(sendData);
         dataNumber++;
 }
