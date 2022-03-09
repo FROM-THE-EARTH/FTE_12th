@@ -480,13 +480,13 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 void setDirection(){//進行方向を変更する関数
     if(times == 0){
-        slowTurn();
         while(1){
             getMpu();
             calcAzimuth();
             calcAngle();
             calcDirection();
             sendDatas();
+            motorValodable_rotate(direction);
             if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
@@ -495,8 +495,9 @@ void setDirection(){//進行方向を変更する関数
         motorForward();
     }else{
         calcDirection();
-        if(direction>0) motorLeft();
-        else if(direction<0) motorRight();
+        motorValidable_strait(direction);
+        //if(direction>0) motorLeft();
+        //else if(direction<0) motorRight();
     }
 }
 
