@@ -393,18 +393,20 @@ int main(){
         while(paraOpen!=true){
             //createDatas();
             //f_printf(&fp,log);
+            getDatas();
+            sendDatas();
+
             double preTime = millis.read();
             //pc.printf("%f\n",preTime - launchedTime);
             if((preTime - launchedTime > 10.52) || maxAltitude-calcMedian(altArray, SAMPLES)>10){
-                getDatas(); 
+                //getDatas(); 
                 servoWriteU(150);
                 servoWriteD(30);
                 imSend("paraOpen");
                 //wait(1);
                 paraOpen = true;
             }else{
-                getDatas();
-                sendDatas();
+                paraOpen = false;
             }
         }
         
@@ -418,6 +420,7 @@ int main(){
         
         imSend("End");
         //f_close(&fp);
+        
         while(1){
             getGPS();
             getDatas();
