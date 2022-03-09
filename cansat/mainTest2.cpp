@@ -342,7 +342,7 @@ void calibration(){//地磁気補正用関数
     maxMag.y = -1000000;
     minMag.x = 1000000;
     minMag.y = 1000000;
-    max2Mag.x = -1000000;//max,minの初期化
+    max2Mag.x = -1000000;//max2,min2の初期化
     max2Mag.y = -1000000;
     min2Mag.x = 1000000;
     min2Mag.y = 1000000;
@@ -354,17 +354,29 @@ void calibration(){//地磁気補正用関数
         slowTurn();
         while((after-before)<CALIBRATION_TIME){
             getMpu();
-            //sendDatas();
+            sendDatas();
             //最大値と最小値を上書き記録
-            if(maxMag.x < mag.medX) maxMag.x = mag.medX;
-            else if(max2Mag.x < mag.medX) max2Mag.x = mag.medX;
-            if(minMag.x > mag.medX) minMag.x = mag.medX;
-            else if(min2Mag.x > mag.medX) min2Mag.x = mag.medX;
-            if(maxMag.y < mag.medY) maxMag.y = mag.medY;
-            else if(max2Mag.y < mag.medY) max2Mag.y = mag.medY;
-            if(minMag.y > mag.y) minMag.y = mag.medY;
-            else if(min2Mag.y < mag.y) min2Mag.y = mag.medY;
-
+            if(maxMag.x < mag.medX){
+                maxMag.x = mag.medX;
+            }else if(max2Mag.x < mag.medX){
+                max2Mag.x = mag.medX;
+            }
+            if(minMag.x > mag.medX){
+                minMag.x = mag.medX;
+            }else if(min2Mag.x > mag.medX){
+                min2Mag.x = mag.medX;
+            }
+            if(maxMag.y < mag.medY){
+                maxMag.y = mag.medY;
+            }else if(max2Mag.y < mag.medY){
+                max2Mag.y = mag.medY;
+            }
+            if(minMag.y > mag.y){
+                minMag.y = mag.medY;
+            }else if(min2Mag.y < mag.y){
+                min2Mag.y = mag.medY;
+            }
+            
             //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
             if((maxMag.x-max2Mag.x)>10) maxMag.x = max2Mag.x;
             if((min2Mag.x-minMag.x)>10) minMag.x = min2Mag.x;
@@ -372,9 +384,9 @@ void calibration(){//地磁気補正用関数
             if((min2Mag.y-minMag.y)>10) minMag.y = min2Mag.y;
             after = millis();
             //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
-            pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f\n", maxMag.x, minMag.x, maxMag.y, minMag.y);
+            pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxMag.x, minMag.x, maxMag.y, minMag.y, mag.medX, mag.medY);
             pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2Mag.x, min2Mag.x, max2Mag.y, min2Mag.y);
-            pc.printf("------------------------------------------\n");
+            pc.printf("---------------------------------------\n");
         }
 
         if(((maxMag.x-minMag.x)>20) && ((maxMag.y-minMag.y)>20)){
