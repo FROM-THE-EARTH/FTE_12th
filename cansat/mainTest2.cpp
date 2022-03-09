@@ -277,7 +277,7 @@ void targetDecision(){//目的地を決定する関数
 
 
 bool stuckChecker(){//スタックしているかどうか判断する関数:スタック->true
-    if(acc.medX*acc.medY<0.1) return true;
+    if(acc.medX*acc.medY<0.1f) return true;
     else return false;
 }
 
@@ -486,7 +486,7 @@ void setDirection(){//進行方向を変更する関数
             calcAngle();
             calcDirection();
             sendDatas();
-            motorValodable_rotate(direction);
+            motorValidable_strait(direction);
             if(direction<1.0f && direction>-1.0f) break;
         }
         motorStop(true);
@@ -605,14 +605,14 @@ void motorStop(bool emergency){//cansatを停止させる関数
 }
 
 void motorValidable_strait(float angleOut){
-    float diff=angleOut/180.0;
+    float diff=angleOut/180.0f;
     if(diff>0){
         FINR=1;
         RINR=0;
-        FINL=(float)(1.0-diff);
+        FINL=(float)(1.0f-diff);
         RINL=0;
     }else if(diff<0){
-        FINR=(float)(1.0+diff);
+        FINR=(float)(1.0f+diff);
         RINR=0;
         FINL=1;
         RINL=0;
@@ -625,20 +625,20 @@ void motorValidable_strait(float angleOut){
 }
 
 void motorValodable_rotate(float angleOut){
-    float diff=angleOut/180.0;
+    float diff=angleOut/180.0f;
     float f_bias=0.2;
     float r_bias=0.2;
-    float diff_f=diff*(1.0-f_bias);
-    float diff_r=diff*(0.5-r_bias);
+    float diff_f=diff*(1.0f-f_bias);
+    float diff_r=diff*(0.5f-r_bias);
     if(diff>0){
-        FINR=(float)(1.0-diff_f);
+        FINR=(float)(1.0f-diff_f);
         RINR=0;
         FINL=0;
-        RINL=(float)(0.5-diff_r);
+        RINL=(float)(0.5f-diff_r);
     }else if(diff<0){
         FINR=0;
-        RINR=(float)(0.5+diff_r);
-        FINL=(float)(1.0+diff_f);
+        RINR=(float)(0.5f+diff_r);
+        FINL=(float)(1.0f+diff_f);
         RINL=0;
     }else{
         FINR=1;
