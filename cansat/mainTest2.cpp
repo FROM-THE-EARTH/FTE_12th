@@ -152,6 +152,51 @@ int main(){
     thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
     thisPos.longtitude = 140.8519829;//THISPOS_LNG;
 
+    getMpu();
+    maxMag.x = mag.medX;//max,minの初期化
+    maxMag.y = mag.medY;
+    minMag.x = mag.medX;
+    minMag.y = mag.medY;
+    max2Mag.x = mag.medX;//max2,min2の初期化
+    max2Mag.y = mag.medY;
+    min2Mag.x = mag.medX;
+    min2Mag.y = mag.medY;
+    while(1){
+            getMpu();
+            sendDatas();
+            //最大値と最小値を上書き記録
+            if(maxMag.x < mag.medX){
+                maxMag.x = mag.medX;
+            }//else if(max2Mag.x < mag.medX){
+                //max2Mag.x = mag.medX;
+            //}
+            if(minMag.x > mag.medX){
+                minMag.x = mag.medX;
+            }//else if(min2Mag.x > mag.medX){
+                //min2Mag.x = mag.medX;
+            //}
+            if(maxMag.y < mag.medY){
+                maxMag.y = mag.medY;
+            }//else if(max2Mag.y < mag.medY){
+                //max2Mag.y = mag.medY;
+            //}
+            if(minMag.y > mag.y){
+                minMag.y = mag.medY;
+            }//else if(min2Mag.y < mag.y){
+                //min2Mag.y = mag.medY;
+            //}
+            
+            //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
+            if((maxMag.x-max2Mag.x)>10) maxMag.x = max2Mag.x;
+            if((min2Mag.x-minMag.x)>10) minMag.x = min2Mag.x;
+            if((maxMag.y-max2Mag.y)>10) maxMag.y = max2Mag.y;
+            if((min2Mag.y-minMag.y)>10) minMag.y = min2Mag.y;
+            //pc.printf("magX=%f, magY=%f, time=%d\n", mag.datas[0], mag.datas[1], after);
+            pc.printf("maxX:%f, minX:%f, maxY:%f, minY:%f, medX:%f, medY:%f\n", maxMag.x, minMag.x, maxMag.y, minMag.y, mag.medX, mag.medY);
+            pc.printf("max2X:%f, min2X:%f, max2Y:%f, min2Y:%f\n", max2Mag.x, min2Mag.x, max2Mag.y, min2Mag.y);
+            pc.printf("---------------------------------------\n");
+    }
+
 
     //phase3
     wait(10);//パラシュート分離までの待機時間
@@ -338,14 +383,15 @@ float calcMedian(float* array, int n){//配列の値の中央値を出す関数
 
 
 void calibration(){//地磁気補正用関数
-    maxMag.x = -1000000;//max,minの初期化
-    maxMag.y = -1000000;
-    minMag.x = 1000000;
-    minMag.y = 1000000;
-    max2Mag.x = -1000000;//max2,min2の初期化
-    max2Mag.y = -1000000;
-    min2Mag.x = 1000000;
-    min2Mag.y = 1000000;
+    getMpu();
+    maxMag.x = mag.medX;//max,minの初期化
+    maxMag.y = mag.medY;
+    minMag.x = mag.medX;
+    minMag.y = mag.medY;
+    max2Mag.x = mag.medX;//max2,min2の初期化
+    max2Mag.y = mag.medY;
+    min2Mag.x = mag.medX;
+    min2Mag.y = mag.medY;
     bool complete_calibration = false;//キャリブレーションの完了を判断する変数
     //pc.printf("turn\n");
     while(!complete_calibration){
@@ -376,7 +422,7 @@ void calibration(){//地磁気補正用関数
             }else if(min2Mag.y < mag.y){
                 min2Mag.y = mag.medY;
             }
-            
+
             //もし最大値と最大値から2番目の値が大きく離れていたら最大値を除く
             if((maxMag.x-max2Mag.x)>10) maxMag.x = max2Mag.x;
             if((min2Mag.x-minMag.x)>10) minMag.x = min2Mag.x;
