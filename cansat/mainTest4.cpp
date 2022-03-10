@@ -166,10 +166,9 @@ int main(){
 
 
     //phase2
-    wait(10);//パラシュート分離までの待機時間
+    wait(1);//パラシュート分離までの待機時間
     //paraSeparation();//パラシュートを分離
     imSend("phase2 start");
-    wait(1);
     for(int i=0; i<(MPU_SAMPLES+100); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
         getMpu();
     }
@@ -194,15 +193,21 @@ int main(){
 
 
     //phase4
+    imSend("phase4 start");
     while(1){
+        imSend("hello");
         getMpu();//MPU9250からのデータを取得->変数に格納
+        imSend("hello");
         calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+        imSend("hello");
         calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+        imSend("hello");
         calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-
-        if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
-
+        imSend("hello");
+        //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
+        imSend("hello");
         setDirection();//進行方向を設定(2回目以降は変更)
+        imSend("hello");
         sendDatas();//IM920にデータを送る
 
         //if(stuckChecker()){//スタックしていたら
@@ -226,7 +231,7 @@ int main(){
         while(1){
             if(shorterDistance < 100 && shorterDistance > 10){
                 motorForward();
-            }else if(shorterDistance >= 100{
+            }else if(shorterDistance >= 100){
                 slowTurn();
             }else{
                 wait(0.1);
@@ -327,10 +332,9 @@ void getMpu(){//9軸センサーの値を取得する関数
     mpu.getGyro(gyro.datas);//ジャイロ
     mpu.getMag(mag.datas);//地磁気
 
-    createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
-    createDataArray(pGyro);
+    //createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
+    //createDataArray(pGyro);
     createDataArray(pMag);
-    wait_us(100);
 }
 
 
@@ -460,7 +464,6 @@ void calibration(){//地磁気補正用関数
     minX = MIN_MAG_X;
     maxY = MAX_MAG_Y;
     minY = MIN_MAG_Y;
-    wait(1);
     pCenterMag->x = (maxX+minX)/2;
     pCenterMag->y = (maxY+minY)/2;
     pRange->x = (maxX-minX)/2;
@@ -567,9 +570,8 @@ void echo(){//超音波センサから距離を取得する関数
 
     if(sonicL.distance <= sonicR.distance){
         shorterDistance = sonicL.distance;
-    }else if(sonicR.distance < sonicL.distance{
+    }else if(sonicR.distance < sonicL.distance){
         shorterDistance = sonicR.distance;
-    })
     }
 }
 
