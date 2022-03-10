@@ -250,24 +250,35 @@ int main(){
 
 
 void calcDistance(){//距離計算用関数
-    float x1 = thisPos.latitude*PI/180;
-    float y1 = thisPos.longtitude*PI/180;
-    float x2 = targetPos.latitude*(PI/180);
-    float y2 = targetPos.longtitude*(PI/180);
-    float sy = sin(y2-y1/2.0f);
-    float sx = sin(x2-x1/2.0f);
-    float sigma = sy*sy + cos(y1)*cos(y2)*sx*sx;
+    float centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
+    float dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
+    float dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
 
-    toTarget.radius = EARTH_RADIUS*2.0*asin(sqrt(sigma));
+    toTarget.radius = sqrt(dx*dx+dy*dy);
     //pc.printf("toTarget.radius=%f\n", toTarget.radius);
 }
 
-
 void calcAngle(){//角度計算用関数 :北0度西90度南180度東270度
-    float Y = (cos(targetPos.latitude))*sin(targetPos.longtitude - thisPos.longtitude);
-    float X = (cos(thisPos.longtitude))*sin(targetPos.longtitude) - (sin(thisPos.latitude))*(cos(targetPos.latitude))*(cos(thisPos.longtitude - targetPos.longtitude));
-    toTarget.angle = (180/PI)*atan(Y/X);
-    if(toTarget.angle<0) toTarget.angle += 360;
+    float centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
+    float dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
+    float dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
+    float forEastAngle;
+    if(dx==0 && dy==0){
+        forEastAngle=0;
+    }else{
+        forEastAngle=(180/PI)*atan2(dy,dx);
+    }
+
+    toTarget.angle = forEastAngle-90;
+    if(toTarget.angle<0){
+        toTarget.angle+=360;
+    }
+    if(toTarget.angle>360){
+        toTarget.angle-=360;
+    }
+    if(toTarget.angle<0){
+        toTarget.angle+=360;
+    }
 }
 
 
