@@ -16,7 +16,8 @@ mpu9250 mpu(i2cBus, AD0_HIGH);
 I2C i2c(D4, D5);
 BMP180 bmp180(&i2c);
 GPS gps(D1,D0); //GPSの初期化(tx,rx)mbed:D1,D0
-IM920 im920(A7,A2,D7,D9); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D13 arduinoシールド:D9,D8,D10,- *resetは使用しなかった*
+IM920 im920(A7,A2,A4,A5); 
+//IM920 im920(A7,A2,D7,D9); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D13 arduinoシールド:D9,D8,D10,- *resetは使用しなかった*
 PwmOut servoU(D3);
 PwmOut servoD(D6);
 DigitalIn FlightPin(D8);
@@ -302,16 +303,31 @@ bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを�
 */
 
 int main(){
+    /*
+    pc.baud(115200); //無線なしでシリアルモニタに表示したかったら有効化する必要あり
+    float maxMagx;
+    float minMagx;
+    while(1){
+        getMpu();
+        if(maxMagx < mag[0]){
+            maxMagx = mag[0];
+        }
+        
+        if(minMagx > mag[0]){
+            minMagx = mag[0];
+        }
+        
+        pc.printf("%f,%f,%f,%f\n",maxMagx,minMagx,mag[0],maxMagx - mag[0]);
+    }
+    */
     
-    //pc.baud(115200); //無線なしでシリアルモニタに表示したかったら有効化する必要あり
-    
-    /*無線のテスト用
+    ///*無線のテスト用
     while(1){
         gps.attach(getGPS);
         getDatas();
         sendDatas();
     }
-    */
+    //*/
     
     sequenceJudge();//フライトピンの情報から、待機中か飛翔中かを判断。
     //待機中ならば通常モードで開始
