@@ -207,11 +207,11 @@ int main(){
     }
     for(int i=0; i<100; i++){
         pc.printf("%d, ", i);
-        getMpu(2);
+        getMpu(0);
         wait(0.01);
     }
     pc.printf(",,,,,,\n");
-    calibration(2);//地磁気補正
+    calibration(0);//地磁気補正
 
 
     //phase3
@@ -234,13 +234,13 @@ int main(){
     //phase4
     imSend("phase4 start");
     while(1){
-        getMpu(2);//MPU9250からのデータを取得->変数に格納
+        getMpu(0);//MPU9250からのデータを取得->変数に格納
         calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
         calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
         calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
-        // setDirection();//進行方向を設定(2回目以降は変更)
-        // sendDatas();//IM920にデータを送る
+        if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
+        setDirection();//進行方向を設定(2回目以降は変更)
+        sendDatas();//IM920にデータを送る
 
         //if(stuckChecker()){//スタックしていたら
             //imSend("Stucked!!!");
@@ -254,7 +254,6 @@ int main(){
         }
         */
         times++;
-        wait(0.1);
     }
 
     //phase5
@@ -293,6 +292,8 @@ void calcDistance(){//距離計算用関数
     double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
     
     //another way
+    radThisPos.latitude = (PI*180)*thisPos.latitude;
+    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
     double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
     toTarget_another.radius = EARTH_RADIUS*acos(sin(radThisPos.latitude)*sin(radTargetPos.latitude) + cos(radThisPos.latitude)*cos(radTargetPos.latitude)*cos(deltaX));
 
@@ -303,6 +304,8 @@ void calcDistance(){//距離計算用関数
 
 void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90度
     //another way
+    radThisPos.latitude = (PI*180)*thisPos.latitude;
+    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
     double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
     toTarget_another.angle = 90 - atan2(sin(deltaX), cos(radThisPos.latitude)*tan(radTargetPos.latitude) - sin(radThisPos.latitude)*cos(deltaX));
 
@@ -617,21 +620,13 @@ void calibration(int mode){//地磁気補正用関数
 
 
 void calcAzimuth(){//方位角計算用関数
-    azimuth = (180/PI)*atan(pMag->medY/pMag->medX);
-    // pCalibMag->x = (pMag->medX-pCenterMag->x)/pRange->x*100;
-    // pCalibMag->y = (pMag->medY-pCenterMag->y)/pRange->y*100;
-    // if(pCalibMag->x>0 && pCalibMag->y>=0){
-    //     azimuth = 90 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
-    // }else if(pCalibMag->x<0 && pCalibMag->y>=0){
-    //     azimuth = 270 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
-    // }else if(pCalibMag->x<0 && pCalibMag->y<=0){
-    //     azimuth = 270 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
-    // }else if(pCalibMag->x>0 && pCalibMag->y<=0){
-    //     azimuth = 90 - (180/PI)*atan(pCalibMag->y/pCalibMag->x);
-    // }
+    azimuth = -(180/PI)*atan(pMag->medY/pMag->medX);
+    if(pMag->medX>0){
+        azimuth += 90;
+    }else if(pMag->medX<0){
+        azimuth -= 90;
+    }
     azimuth += MAG_CONST;
-    // if(azimuth>360) azimuth -= 360;
-    // else if(azimuth<0) azimuth += 360;
     pc.printf("azimuth=%f (X:%f, Y%f) -- biasX:%f, biasY:%f, rangeX:%f, rangeY:%f\n", azimuth, pMag->medX, pMag->medY, MC.bias[0], MC.bias[1], MC.range[0], MC.range[1]);
 }
 
@@ -641,8 +636,6 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     if(gps.readable){
         thisPos.latitude = gps.latitude;
         thisPos.longtitude = gps.longtitude;
-        radThisPos.latitude = (PI*180)*thisPos.latitude;
-        radThisPos.longtitude = (PI*180)*thisPos.longtitude;
     }
 }
 
@@ -908,10 +901,8 @@ void imSend(char *send){//無線で送信する関数
 
 
 void sendDatas(bool prt){//データを文字列に変換してimSendを呼び出して送信する関数
-        if(prt){
-            sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,medx=%.2f,medy=%.2f",
+        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,medx=%.2f,medy=%.2f",
             dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, pMag->medX, pMag->medY);
-        }
         wait_us(100);
         imSend(sendData);
         dataNumber++;
