@@ -67,7 +67,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 
 //以下各モジュールの関数や変数などの定義
 //MPU9250
-void getMpu();//9軸センサ用関数
+void getMpu(int mode=0);//9軸センサ用関数
 struct MpuData{//MPUのデータを扱う構造体
     float datas[3];//一旦データがここに入る
     float x;//それぞれの軸のデータが入る
@@ -187,15 +187,8 @@ int main(){
     radTargetPos.latitude =(PI/180)*TARGET_LAT;
     radTargetPos.longtitude = (PI/180)*TARGET_LNG;
 
-    thisPos.latitude = THISPOS_LAT;//テスト用
-    thisPos.longtitude = THISPOS_LNG;
-    
-    /*
-    while(1){
-        sendDatas();
-    }
-    */
-    
+    //thisPos.latitude = THISPOS_LAT;//テスト用
+    //thisPos.longtitude = THISPOS_LNG;
 
         /*補正値の初期化*/
     for(int i=0; i<3; i++){
@@ -213,36 +206,32 @@ int main(){
     wait(1);//パラシュート分離までの待機時間
     //paraSeparation();//パラシュートを分離
     imSend("phase2 start");
-    /*
     for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu(2);
+        getMpu(1);
     }
     for(int i=0; i<100; i++){
         pc.printf("%d, ", i);
         getMpu(0);
         wait(0.01);
     }
-    */
-    //pc.printf(",,,,,,\n");
-    imSend("calibration start");
-    //calibration(0);//地磁気補正
-    imSend("calibration false");
+    calibration(1);//地磁気補正
+
 
     //phase3
     phase++;
-    /*
+    
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
         imSend("gps waiting...");
         wait(1);
     }
     imSend("gps got");
-    while(!gpsChecker()){//GPSが安定したら次の処理へ
-        wait(1);
-        pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
-    }
+    //while(!gpsChecker()){//GPSが安定したら次の処理へ
+     //   wait(1);
+     //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+   // }
     imSend("gps stable");
-    */
+    
 
 
 
@@ -250,21 +239,14 @@ int main(){
     phase++;
     imSend("phase4 start");
     while(1){
-        sendDatas();//IM920にデータを送る
-        imSend("before getmpu");
-        getMpu();//MPU9250からのデータを取得->変数に格納
-        pc.printf("after getmpu");
-        wait_us(100);
-        imSend("before culcdis");
+        getMpu(0);//MPU9250からのデータを取得->変数に格納
         calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
-        imSend("before culcAngle");
         calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
-        imSend("before azimuth");
         calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
         //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
-        imSend("before setdirection");
+        pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
         setDirection();//進行方向を設定(2回目以降は変更)
-        
+        //sendDatas();//IM920にデータを送る
 
         //if(stuckChecker()){//スタックしていたら
             //imSend("Stucked!!!");
@@ -317,10 +299,10 @@ void calcDistance(){//距離計算用関数
     double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
     
     //another way
-    radThisPos.latitude = (PI*180)*thisPos.latitude;
-    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
-    double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
-    toTarget_another.radius = EARTH_RADIUS*acos(sin(radThisPos.latitude)*sin(radTargetPos.latitude) + cos(radThisPos.latitude)*cos(radTargetPos.latitude)*cos(deltaX));
+    //radThisPos.latitude = (PI*180)*thisPos.latitude;
+    //radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    //double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
+    //toTarget.radius = EARTH_RADIUS*acos(sin(radThisPos.latitude)*sin(radTargetPos.latitude) + cos(radThisPos.latitude)*cos(radTargetPos.latitude)*cos(deltaX));
 
     //previous way
     toTarget.radius = sqrt(dx*dx+dy*dy);
@@ -329,10 +311,13 @@ void calcDistance(){//距離計算用関数
 
 void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90度
     //another way
-    radThisPos.latitude = (PI*180)*thisPos.latitude;
-    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
-    double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
-    toTarget_another.angle = 90 - atan2(sin(deltaX), cos(radThisPos.latitude)*tan(radTargetPos.latitude) - sin(radThisPos.latitude)*cos(deltaX));
+//    radThisPos.latitude = (PI*180)*thisPos.latitude;
+//    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+//    double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
+//    toTarget.angle = atan2(sin(deltaX), cos(radThisPos.latitude)*tan(radTargetPos.latitude) - sin(radThisPos.latitude)*cos(deltaX)) - 90;
+//    if(toTarget.angle < -180){
+//        toTarget.angle += 360;
+//    }
 
     //previous way
     double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
@@ -346,13 +331,13 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     }
 
     toTarget.angle = forEastAngle-90;
-    if(toTarget.angle<0){
+    if(toTarget.angle<-180){
         toTarget.angle+=360;
     }
-    if(toTarget.angle>360){
+    if(toTarget.angle>180){
         toTarget.angle-=360;
     }
-    if(toTarget.angle<0){
+    if(toTarget.angle<-180){
         toTarget.angle+=360;
     }
     //pc.printf("previous=%f, another=%f\n", toTarget.angle, toTarget_another.angle);
@@ -397,7 +382,7 @@ bool stuckChecker(){//スタックしているかどうか判断する関数:ス
     else return false;
 }
 
-void getMpu(){//9軸センサーの値を取得する関数
+void getMpu(int mode){//9軸センサーの値を取得する関数
     /*〇表示モードについて
       mode=0 : 表示無し
       mode=1 : 表示（データ確認用）
@@ -414,7 +399,6 @@ void getMpu(){//9軸センサーの値を取得する関数
         mag.datas[i]=(mag.datas[i]-MC.bias[i])/MC.range[i];
     }
 
-    /*
     switch(mode){
         case 0://表示無し
             break;
@@ -425,12 +409,10 @@ void getMpu(){//9軸センサーの値を取得する関数
         default:
             break;
     }
-    */
     
     //createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
     //createDataArray(pGyro);
     createDataArray(pMag);
-    wait_us(100);
 }
 
 
@@ -589,14 +571,11 @@ void calibration(int mode){//地磁気補正用関数
         int before = millis();
         int after = before;
         slowTurn();
-        sendDatas();
-        imSend("befor loop");
         while((after-before)<CALIBRATION_TIME){
-            getMpu();
-            sendDatas();
+            getMpu(false);
 
-            
-           /*
+            sendDatas(false);
+
             switch (mode){
                 case 0://表示無し
                     break;
@@ -607,7 +586,6 @@ void calibration(int mode){//地磁気補正用関数
                 default:
                     break;
             }
-            */
             
             if(maxMag.x < mag.medX) maxMag.x = mag.medX;
             else if(minMag.x > mag.medX) minMag.x = mag.medX;
@@ -756,27 +734,26 @@ bool obstacleChecker(){//前方にものがあるか判断する関数:発見->t
 
 void setDirection(){//進行方向を変更する関数
     if(times == 0){
+        slowTurn();
         while(1){
-            //getMpu();
+            pc.printf("a");
+            getMpu(0);
             calcAzimuth();
             calcAngle();
             calcDirection();
-            sendDatas();
-            motorValodable_rotate((float)direction);
-            if(direction<1.0f && direction>-1.0f) break;
+            //sendDatas();
+            if(direction<10.0f && direction>-10.0f) break;
+            pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f, latitude:%f, longitude:%f\n", azimuth, toTarget.radius, toTarget.angle, direction, thisPos.latitude, thisPos.longtitude); 
         }
         motorStop(true);
-        //imSend("Set Angle");
+        imSend("Set Angle");
         wait(1);
         motorForward();
-        wait_us(100);
     }else{
-        pc.printf("in else loop");
         calcDirection();
-        motorValidable_strait(direction);
-        //if(direction>0) motorLeft();
-        //else if(direction<0) motorRight();
-        wait_us(100);
+        //motorValidable_strait(direction);
+        if(direction>0) motorLeft();
+        else if(direction<0) motorRight();
     }
 }
 
@@ -938,14 +915,14 @@ void motorValodable_rotate(float angleOut){
 }
 
 void imSend(char *send){//無線で送信する関数
-    im920.send(send,strlen(send)+1);
+    //im920.send(send,strlen(send)+1);
     pc.printf(send);
     pc.printf("\r\n");
 }
 
 
 void sendDatas(bool prt){//データを文字列に変換してimSendを呼び出して送信する関数
-    //pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move\n");
+    pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move\n");
     sprintf(sendData,"%d,%d,%.2f,%f,%f,%.2f,%.2f,%d",
         dataNumber, phase, azimuth, angle, direction, thisPos.latitude, thisPos.longtitude, sonicL.distance, sonicR.distance, move);
     wait_us(100);
