@@ -189,6 +189,10 @@ int main(){
 
     thisPos.latitude = THISPOS_LAT;//テスト用
     thisPos.longtitude = THISPOS_LNG;
+    
+    while(1){
+        imSend("hello");
+    }
 
         /*補正値の初期化*/
     for(int i=0; i<3; i++){
@@ -848,7 +852,7 @@ void motorBack(){//cansatを後退させる関数
 
 
 void motorStop(bool emergency){//cansatを停止させる関数
-    move = 7
+    move = 7;
     if(emergency){
         FINR = 0.9;
         RINR = 0.9;
@@ -910,14 +914,14 @@ void motorValodable_rotate(float angleOut){
 }
 
 void imSend(char *send){//無線で送信する関数
-    //im920.send(send,strlen(send)+1);
+    im920.send(send,strlen(send)+1);
     pc.printf(send);
     pc.printf("\r\n");
 }
 
 
 void sendDatas(bool prt){//データを文字列に変換してimSendを呼び出して送信する関数
-    pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move");
+    pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move\n");
     sprintf(sendData,"%d,%d,%.2f,%f,%f,%.2f,%.2f,%d",
         dataNumber, phase, azimuth, angle, direction, thisPos.latitude, thisPos.longtitude, sonicL.distance, sonicR.distance, move);
     wait_us(100);
