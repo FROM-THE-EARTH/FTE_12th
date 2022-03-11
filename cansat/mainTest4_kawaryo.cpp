@@ -203,7 +203,7 @@ int main(){
     //paraSeparation();//パラシュートを分離
     imSend("phase2 start");
     for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu(1);
+        getMpu(2);
     }
     for(int i=0; i<100; i++){
         pc.printf("%d, ", i);
@@ -235,10 +235,10 @@ int main(){
     imSend("phase4 start");
     while(1){
         getMpu(2);//MPU9250からのデータを取得->変数に格納
-        // calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
-        // calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
-        // calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        // //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
+        calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+        calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+        calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
+        //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
         // setDirection();//進行方向を設定(2回目以降は変更)
         // sendDatas();//IM920にデータを送る
 
@@ -560,7 +560,7 @@ void calibration(int mode){//地磁気補正用関数
         slowTurn();
         while((after-before)<CALIBRATION_TIME){
             getMpu(false);
-            
+
             sendDatas(false);
 
             switch (mode){
