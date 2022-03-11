@@ -320,6 +320,7 @@ int main(){
         pc.printf("%f,%f,%f,%f\n",maxMagx,minMagx,mag[0],maxMagx - mag[0]);
     }
     */
+    FlightPin.mode(PullDown);
     
     ///*無線のテスト用
     while(1){
