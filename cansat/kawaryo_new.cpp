@@ -294,9 +294,12 @@ int main(){
 
 
 void calcDistance(){//距離計算用関数
-    double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
-    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
-    double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
+    radThisPos.latitude = (PI*180)*thisPos.latitude;
+    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    
+    double centerLat = radThisPos.latitude+radTargetPos.latitude)/2;
+    double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
+    double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
     
     //another way
     //radThisPos.latitude = (PI*180)*thisPos.latitude;
@@ -320,9 +323,12 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
 //    }
 
     //previous way
-    double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
-    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
-    double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
+    radThisPos.latitude = (PI*180)*thisPos.latitude;
+    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    
+    double centerLat = radThisPos.latitude+radTargetPos.latitude)/2;
+    double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
+    double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
     double forEastAngle;
     if(dx==0 && dy==0){
         forEastAngle=0;
