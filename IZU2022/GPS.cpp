@@ -17,10 +17,10 @@ void imSend(char *send){//無線で送信する関数
     pc.printf("\r\n");
 }
 
-void sendDatas(float latitude, float longtitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
+void sendDatas(float latitude, float longitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
         pc.printf("start send\n");
         millisStart();
-        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longtitude, altitude, time);
+        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longitude, altitude, time);
         imSend(sendData);
         pc.printf("end send\n,%d",millis());
 }
@@ -29,7 +29,7 @@ void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位(必要に応じて)
     gps.GetData();
     if(gps.readable == true){
-       sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
+       sendDatas(gps.latitude, gps.longitude, gps.altitude, gps.time);
        imSend(a);
     }
 }

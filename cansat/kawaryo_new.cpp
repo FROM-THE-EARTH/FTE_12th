@@ -43,15 +43,15 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 
 
 //定数の定義
-#define EARTH_RADIUS 6378.137 //地球の半径(km)
-#define PI 3.14159265358979 //円周率
+#define EARTH_RADIUS 6378136.59 //地球の半径(m)
+#define PI 3.1415926535897932384626433832795 //円周率
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
 #define CALIBRATION_TIME 10000 //地磁気補正のために旋回する時間(ms)
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.265856 //目標の緯度
-#define TARGET_LNG 140.854089 //目標の経度
+#define TARGET_LAT 38.2614623 //目標の緯度
+#define TARGET_LNG 140.8531527 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
@@ -186,6 +186,10 @@ int main(){
     targetPos.longtitude = TARGET_LNG;
     radTargetPos.latitude =(PI/180)*TARGET_LAT;
     radTargetPos.longtitude = (PI/180)*TARGET_LNG;
+    thisPos.latitude = 38.2614623;//目標を指定
+    thisPos.longtitude = 140.8531527;
+    radThisPos.latitude =(PI/180)*thisPos.latitude;
+    radThisPos.longtitude = (PI/180)*thisPos.longtitude;
 
     //thisPos.latitude = THISPOS_LAT;//テスト用
     //thisPos.longtitude = THISPOS_LNG;
@@ -243,7 +247,7 @@ int main(){
         calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
         calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
         calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
+        if(toTarget.radius<1.5) break;//目的地までの距離が1m以内ならば次のphaseへ
         pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
         setDirection();//進行方向を設定(2回目以降は変更)
         //sendDatas();//IM920にデータを送る
@@ -294,10 +298,15 @@ int main(){
 
 
 void calcDistance(){//距離計算用関数
-    double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
-    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
-    double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
     
+    radThisPos.latitude = (PI*180)*thisPos.latitude;
+    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    /*
+    double centerLat = radThisPos.latitude+radTargetPos.latitude)/2;
+    double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
+    double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
+    */
+
     //another way
     //radThisPos.latitude = (PI*180)*thisPos.latitude;
     //radThisPos.longtitude = (PI*180)*thisPos.longtitude;
@@ -305,7 +314,20 @@ void calcDistance(){//距離計算用関数
     //toTarget.radius = EARTH_RADIUS*acos(sin(radThisPos.latitude)*sin(radTargetPos.latitude) + cos(radThisPos.latitude)*cos(radTargetPos.latitude)*cos(deltaX));
 
     //previous way
-    toTarget.radius = sqrt(dx*dx+dy*dy);
+
+    //toTarget.radius = sqrt(dx*dx+dy*dy);
+
+    
+
+    double Y = (cos(radThisPos.latitude))*sin(radTargetPos.longtitude - radThisPos.longtitude);
+    double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.latitude))*(cos(radThisPos.latitude))*(cos(radTargetPos.longtitude - radThisPos.longtitude));
+    //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
+    toTarget.radius = (180/PI)*atan(Y/X);
+    if(angle<0){
+        toTarget.radius = toTarget.radius + 360;
+    }else{
+        toTarget.radius = toTarget.radius;
+    }
     //pc.printf("previous=%f, another=%f\n", toTarget.radius, toTarget_another.radius);
 }
 
@@ -313,21 +335,25 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     //another way
 //    radThisPos.latitude = (PI*180)*thisPos.latitude;
 //    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
-//    double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
+//    double deltaX = 
+    radTargetPos.longtitude - radThisPos.longtitude;
 //    toTarget.angle = atan2(sin(deltaX), cos(radThisPos.latitude)*tan(radTargetPos.latitude) - sin(radThisPos.latitude)*cos(deltaX)) - 90;
 //    if(toTarget.angle < -180){
 //        toTarget.angle += 360;
 //    }
 
     //previous way
-    double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
-    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
-    double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
-    double forEastAngle;
-    if(dx==0 && dy==0){
-        forEastAngle=0;
-    }else{
-        forEastAngle=(180/PI)*atan2(dy,dx);
+    radThisPos.latitude = (PI*180)*thisPos.latitude;
+    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    
+    double centerLat = (radThisPos.latitude+radTargetPos.latitude)/2;
+    double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
+    double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
+    double forEastAngle = (180/PI)*atan2(dy,dx);
+    if(dx>0){
+        forEastAngle -= 90;
+    }else if(dx<0){
+        forEastAngle += 90;
     }
 
     toTarget.angle = forEastAngle-90;

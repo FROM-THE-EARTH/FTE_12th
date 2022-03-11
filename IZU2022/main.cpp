@@ -82,7 +82,7 @@ float minAltitude = 10000.0;//高度の最小値はとても大きい値で初�
 //GPS
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
 double latitude;
-double longtitude;
+double longitude;
 
 //SD
 void sdWrite();//SDカードにデータを書き込む関数
@@ -330,7 +330,7 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     gps.GetData();
     if(gps.readable){
         latitude = gps.latitude;
-        longtitude = gps.longtitude;
+        longitude = gps.longitude;
     }
 }
 
@@ -338,7 +338,7 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
 void sdWrite(){//SDカードにデータを書き込む関数
     /*
     f_printf(&fp,"%d,%d,%d,%f,%f,%.3f,%.3f,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\n",
-        dataNumber, interval(), phase, latitude, longtitude, altitude, maxAltitude, deadTime,
+        dataNumber, interval(), phase, latitude, longitude, altitude, maxAltitude, deadTime,
         acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[0], mag[1], mag[2]);
     */
 }
@@ -371,6 +371,6 @@ void imSend(char *send, int num){//無線で送信する関数:data->num=1,messa
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
     dataNumber++;
-    sprintf(sendData,"%d,%d,%d,%.6f,%.6f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longtitude, calcMedian(altArray, SAMPLES), maxAltitude, deadTime);
+    sprintf(sendData,"%d,%d,%d,%.6f,%.6f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longitude, calcMedian(altArray, SAMPLES), maxAltitude, deadTime);
     imSend(sendData,1);
 }

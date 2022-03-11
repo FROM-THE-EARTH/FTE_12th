@@ -17,7 +17,7 @@ https://teratail.com/questions/140018
 #define pi 3.1415926535897932384626433832795
 
 #define goal_latitude  38.040002//ここに目的地の緯度を記入して下さい
-#define goal_longtitude 140.864420//ここに目的地の経度をを記入してください
+#define goal_longitude 140.864420//ここに目的地の経度をを記入してください
 
 #define samples 30
 //#define CRITERION //ここに分散を記入して下さい
@@ -29,17 +29,17 @@ GPS gps(PA_9,PA_10);
 
 void getGps();
 
-float longtitude;
+float longitude;
 float latitude;
-float array_longtitude[30]={};
+float array_longitude[30]={};
 float array_latitude[30]={};
 bool gps_start_receiving = false;
 bool gps_get_imformation = false;
-float sum_longtitude;
+float sum_longitude;
 float sum_latitude;
-float sum_square_longtitude;
+float sum_square_longitude;
 float sum_square_latitude;
-float average_longtitude;
+float average_longitude;
 float average_latitude;
 
 
@@ -55,8 +55,8 @@ int main(){
     
     while(1){
 
-        distance = calcudistance(latitude,longtitude);//現在地と目的地との距離を計算
-        angle = calcuangle(latitude,longtitude);//目的地への北からの角度を計算
+        distance = calcudistance(latitude,longitude);//現在地と目的地との距離を計算
+        angle = calcuangle(latitude,longitude);//目的地への北からの角度を計算
         
         pc.printf("distance=%fkm,angle=%fdo\n",distance,angle);//PCに表示
         
@@ -70,7 +70,7 @@ int main(){
 void getGps(){
     gps.GetData();
     if(gps.readable == true){
-        longtitude = gps.longtitude;
+        longitude = gps.longitude;
         latitude = gps.latitude;
     }
 }
@@ -81,7 +81,7 @@ double calcudistance(double x1, double y1){//(緯度,経度)
     x1 *= pi/180;
     y1 *= pi/180;
     float x2 = goal_latitude*(pi/180);
-    float y2 = goal_longtitude*(pi/180);
+    float y2 = goal_longitude*(pi/180);
 
     float dx = x2 - x1;
     float dy = y2 - y1;
@@ -97,8 +97,8 @@ double calcudistance(double x1, double y1){//(緯度,経度)
 //北0度西90度南180度東270度
 double calcuangle(double x1,double y1){//角度計算用関数(緯度,経度)
     double angle;
-    float Y = (cos(goal_latitude))*sin(goal_longtitude - y1);
-    float X = (cos(y1))*sin(goal_longtitude) - (sin(x1))*(cos(goal_latitude))*(cos(y1 - goal_longtitude));
+    float Y = (cos(goal_latitude))*sin(goal_longitude - y1);
+    float X = (cos(y1))*sin(goal_longitude) - (sin(x1))*(cos(goal_latitude))*(cos(y1 - goal_longitude));
     angle = (180/pi)*atan(Y/X);
     if(angle<0){
         return angle + 360;

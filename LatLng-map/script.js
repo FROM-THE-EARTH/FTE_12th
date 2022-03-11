@@ -148,7 +148,7 @@ function mapUpdate() { console.log("start_mapUpdate");
     document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
     document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
     document.getElementById('data3').innerHTML = `<p>Latitude: ${data.lat}</p>`;
-    document.getElementById('data4').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
+    document.getElementById('data4').innerHTML = `<p>longitude: ${data.lng}</p>`;
     document.getElementById('data5').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
     document.getElementById('data6').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
     document.getElementById('data7').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;

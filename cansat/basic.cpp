@@ -55,7 +55,7 @@ float calcMedian(float *array, int n);//配列の値の中央値を出す関数
 
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
 float latitude;//緯度
-float longtitude;//経度
+float longitude;//経度
 
 void imSend(char *send){//無線で送信する関数
     im920.send(send,strlen(send)+1);
@@ -63,16 +63,16 @@ void imSend(char *send){//無線で送信する関数
     pc.printf("\r\n");
 }
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", acc[1], acc[2],acc[2],mag[0],longtitude,latitude, altitude);//データを文字列に変換
+        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", acc[1], acc[2],acc[2],mag[0],longitude,latitude, altitude);//データを文字列に変換
         imSend(sendData);//送る
 }
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位(必要に応じて)
     gps.GetData();//取得開始
     if(gps.readable == true){//受信したら
-       longtitude = gps.longtitude;//longtitudeに緯度のデータを格納
+       longitude = gps.longitude;//longitudeに緯度のデータを格納
        latitude = gps.latitude;
-       //sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
+       //sendDatas(gps.latitude, gps.longitude, gps.altitude, gps.time);
     }
 }
 int getMpu(){//9軸センサーの値を取得する関数

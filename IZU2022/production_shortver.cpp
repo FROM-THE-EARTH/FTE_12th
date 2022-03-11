@@ -37,7 +37,7 @@ void sendDatas();
 
 void getGPS();
 float latitude;
-float longtitude;
+float longitude;
 
 void imSend(char *send){//無線で送信する関数
     im920.send(send,strlen(send)+1);
@@ -46,7 +46,7 @@ void imSend(char *send){//無線で送信する関数
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", phase,acc[0],acc[1],acc[2],longtitude,latitude,altitude,maxAltitude);//データを文字列に変換
+        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", phase,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude);//データを文字列に変換
         imSend(sendData);//送る
 }
 
@@ -54,9 +54,9 @@ void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位(必要に応じて)
     gps.GetData();//取得開始
     if(gps.readable == true){//受信したら
-       longtitude = gps.longtitude;//longtitudeに緯度のデータを格納
+       longitude = gps.longitude;//longitudeに緯度のデータを格納
        latitude = gps.latitude;
-       //sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
+       //sendDatas(gps.latitude, gps.longitude, gps.altitude, gps.time);
     }
 }
 

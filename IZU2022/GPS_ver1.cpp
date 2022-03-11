@@ -27,7 +27,7 @@ bool flightpin();
 void getmpu(float &ax,float &ay,float &az,float &gx,float &gy,float &gz,float &mx,float &my,float &mz);
 void getbmp(int &pressure,float &temp,float &altitude,float &l);
 void imSend(char *send);
-void sendDatas(float latitude, float longtitude, float altitude, float time);
+void sendDatas(float latitude, float longitude, float altitude, float time);
 void getGPS();
 char Data[256]; //送るデータのchar型配列(im920はchar型でしか送れない。)
 
@@ -40,7 +40,7 @@ int main(){
     bool launched=false;
     float ax,ay,az,gx,gy,gz,mx,my,mz;
     float altitude,temp,l;
-    float longtitude,latitude;
+    float longitude,latitude;
     PWM1.period_us(20000);
     PWM1.pulsewidth_us(500);
     PWM2.period_us(20000);
@@ -75,7 +75,7 @@ int main(){
     while(sequence!=3){
         getmpu(ax,ay,az,gx,gy,gz,mx,my,mz);
         getbmp(pressure,temp,altitude,l);
-        //getgps(longtitude,latitude);
+        //getgps(longitude,latitude);
         if(maxaltitude<altitude){
             maxaltitude=altitude;
         }
@@ -84,7 +84,7 @@ int main(){
                 if(launched){
                     millisStart();
                     sequence=1;
-                    //f_printf(&fp,"%f,%f,%f,%f,%f",ax,ay,az,longtitude,latitude);
+                    //f_printf(&fp,"%f,%f,%f,%f,%f",ax,ay,az,longitude,latitude);
                     pc.printf("%f,%f,%f,%f\n",ax,ay,az,altitude);
                 }
                 break;
@@ -165,15 +165,15 @@ void imSend(char *send){//無線で送信する関数
     pc.printf(send);
     pc.printf("\r\n");
 }
-void sendDatas(float latitude, float longtitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(Data,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longtitude, altitude, time);
+void sendDatas(float latitude, float longitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
+        sprintf(Data,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longitude, altitude, time);
         imSend(Data);
 }
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     //NVIC_SetPriority(UART1_IRQn,1); //割り込み優先順位 im -> gps, high -> low
     gps.GetData();
     if(gps.readable == true){
-       sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
+       sendDatas(gps.latitude, gps.longitude, gps.altitude, gps.time);
     }else{
         pc.printf("could not get gpsdata");
         }

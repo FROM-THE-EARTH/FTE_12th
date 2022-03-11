@@ -65,7 +65,7 @@ void sendDatas();
 
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
 float latitude;//緯度
-float longtitude;//経度
+float longitude;//経度
 
 int results;
 //char log[800];
@@ -84,22 +84,22 @@ void imSend(char *send){//無線で送信する関数
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", val,acc[0],acc[1],acc[2],longtitude,latitude,altitude,maxAltitude);//データを文字列に変換
+        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%.3f,%f,%f,%f", val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude);//データを文字列に変換
         imSend(sendData);//送る
 }
 
 
 void createDatas(){
-    //sprintf(log,"%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",phase,acc[0],acc[1],acc[2],mag[0],mag[1],mag[2],gyro[0],gyro[1],gyro[2],temp,altitude,longtitude,latitude);
+    //sprintf(log,"%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",phase,acc[0],acc[1],acc[2],mag[0],mag[1],mag[2],gyro[0],gyro[1],gyro[2],temp,altitude,longitude,latitude);
 }
 
 void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
     //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位(必要に応じて)
     gps.GetData();//取得開始
     if(gps.readable == true){//受信したら
-       longtitude = gps.longtitude;//longtitudeに緯度のデータを格納
+       longitude = gps.longitude;//longitudeに緯度のデータを格納
        latitude = gps.latitude;
-       //sendDatas(gps.latitude, gps.longtitude, gps.altitude, gps.time);
+       //sendDatas(gps.latitude, gps.longitude, gps.altitude, gps.time);
     }
 }
 

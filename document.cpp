@@ -242,17 +242,17 @@ int main()
 GPS gps(PA_9,PA_10); //(tx,rx)
 Serial pc(USBTX, USBRX);
 
-float getgps(float &longtitude,float &latitude);
+float getgps(float &longitude,float &latitude);
 
 int main(){
-    float longtitude,latitude;
-    getgps(longtitude,latitude);
-    pc.printf("%f,%f",longtitude,latitude);
+    float longitude,latitude;
+    getgps(longitude,latitude);
+    pc.printf("%f,%f",longitude,latitude);
 }
 
-float getgps(float &longtitude,float &latitude){
+float getgps(float &longitude,float &latitude){
     gps.GetData();
-    longtitude=gps.longtitude;
+    longitude=gps.longitude;
     latitude=gps.latitude;
 }
 
