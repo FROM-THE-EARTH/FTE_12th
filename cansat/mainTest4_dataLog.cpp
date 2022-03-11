@@ -45,7 +45,7 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 //定数の定義
 #define EARTH_RADIUS 6378.137 //地球の半径(km)
 #define PI 3.14159265358979 //円周率
-#define MPU_SAMPLES 15 //MPUのデータを何個の中の中央値を用いるか
+#define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
 #define CALIBRATION_TIME 10000 //地磁気補正のために旋回する時間(ms)
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
@@ -117,9 +117,9 @@ float azimuth;//方位角
 void getGps();//GPS用関数
 struct Coordinate{//座標
     double latitude;//緯度
-    double longtitude;//経度
+    double longitude;//経度
     double Latitude[GPS_SAMPLES];//GPSの安定化をはかるための配列
-    double Longtitude[GPS_SAMPLES];
+    double longitude[GPS_SAMPLES];
 };
 Coordinate thisPos;//現在位置
 Coordinate targetPos;//ターゲットの位置
@@ -180,12 +180,12 @@ int main(){
 
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
-    targetPos.longtitude = TARGET_LNG;
+    targetPos.longitude = TARGET_LNG;
     radTargetPos.latitude =(PI/180)*TARGET_LAT;
-    radTargetPos.longtitude = (PI/180)*TARGET_LNG;
+    radTargetPos.longitude = (PI/180)*TARGET_LNG;
 
     thisPos.latitude = THISPOS_LAT;//テスト用
-    thisPos.longtitude = THISPOS_LNG;
+    thisPos.longitude = THISPOS_LNG;
 
         /*補正値の初期化*/
     for(int i=0; i<3; i++){
@@ -218,7 +218,7 @@ int main(){
     imSend("gps got");
     while(!gpsChecker()){//GPSが安定したら次の処理へ
         wait(1);
-        pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+        pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longitude);
     }
     imSend("gps stable");
     */
@@ -228,13 +228,13 @@ int main(){
     //phase4
     imSend("phase4 start");
     while(1){
-        getMpu(false);//MPU9250からのデータを取得->変数に格納
-        calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
-        calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
-        calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
-        setDirection();//進行方向を設定(2回目以降は変更)
-        sendDatas();//IM920にデータを送る
+        getMpu(2);//MPU9250からのデータを取得->変数に格納
+        // calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+        // calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+        // calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
+        // //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
+        // setDirection();//進行方向を設定(2回目以降は変更)
+        // sendDatas();//IM920にデータを送る
 
         //if(stuckChecker()){//スタックしていたら
             //imSend("Stucked!!!");
@@ -247,8 +247,8 @@ int main(){
             obstacleAvoidance();//障害物を回避
         }
         */
-        times++;
-        wait(1);
+        // times++;
+        // wait(1);
     }
 
     //phase5
@@ -283,11 +283,11 @@ int main(){
 
 void calcDistance(){//距離計算用関数
     double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
-    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
+    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longitude-thisPos.longitude)*cos(centerLat);
     double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
     
     //another way
-    double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
+    double deltaX = radTargetPos.longitude - radThisPos.longitude;
     toTarget_another.radius = EARTH_RADIUS*acos(sin(radThisPos.latitude)*sin(radTargetPos.latitude) + cos(radThisPos.latitude)*cos(radTargetPos.latitude)*cos(deltaX));
 
     //previous way
@@ -297,12 +297,12 @@ void calcDistance(){//距離計算用関数
 
 void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90度
     //another way
-    double deltaX = radTargetPos.longtitude - radThisPos.longtitude;
+    double deltaX = radTargetPos.longitude - radThisPos.longitude;
     toTarget_another.angle = 90 - atan2(sin(deltaX), cos(radThisPos.latitude)*tan(radTargetPos.latitude) - sin(radThisPos.latitude)*cos(deltaX));
 
     //previous way
     double centerLat = (PI/180)*(thisPos.latitude+targetPos.latitude)/2;
-    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longtitude-thisPos.longtitude)*cos(centerLat);
+    double dx = (PI/180)*EARTH_RADIUS*(targetPos.longitude-thisPos.longitude)*cos(centerLat);
     double dy = (PI/180)*EARTH_RADIUS*(targetPos.latitude-thisPos.latitude);
     double forEastAngle;
     if(dx==0 && dy==0){
@@ -391,8 +391,11 @@ void getMpu(int mode){//9軸センサーの値を取得する関数
             break;
     }
     
-    //createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
-    //createDataArray(pGyro);
+    pc.printf("\n\n>acc\n");
+    createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
+    pc.printf("\n\n>gyro");
+    createDataArray(pGyro);
+    pc.printf("\n\n>mag");
     createDataArray(pMag);
 }
 
@@ -417,11 +420,11 @@ void createDataArray(MpuData* pData){//MPUのデータをMPU_SAMPLES個の配列
     pData->medY = calcMedian(pData->Y, MPU_SAMPLES);
     pData->medZ = calcMedian(pData->Z, MPU_SAMPLES);
 
-    // pc.printf("\n---Rawdata---\n");
-    // for(int i=0; i<MPU_SAMPLES; i++){
-    //     pc.printf(">> X[%d]:%f, Y[%d]:%f, Z[%d]:%f\n", i, pData->X[i], i, pData->Y[i], i, pData->Z[i]);
-    // }
-    // pc.printf(">> medX:%f, medY:%f, medZ:%f", pData->medX, pData->medY, pData->medZ);
+    pc.printf("\n---Rawdata---\n");
+    for(int i=0; i<MPU_SAMPLES; i++){
+        pc.printf(">> X[%d]:%f, Y[%d]:%f, Z[%d]:%f\n", i, pData->X[i], i, pData->Y[i], i, pData->Z[i]);
+    }
+    pc.printf(">> medX:%f, medY:%f, medZ:%f\n", pData->medX, pData->medY, pData->medZ);
 }
 
 
@@ -633,9 +636,9 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     gps.GetData();
     if(gps.readable){
         thisPos.latitude = gps.latitude;
-        thisPos.longtitude = gps.longtitude;
+        thisPos.longitude = gps.longitude;
         radThisPos.latitude = (PI*180)*thisPos.latitude;
-        radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+        radThisPos.longitude = (PI*180)*thisPos.longitude;
     }
 }
 
@@ -651,22 +654,22 @@ bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
 
     for(int i=(GPS_SAMPLES-1); i>0; i--){
         thisPos.Latitude[i] = thisPos.Latitude[i-1];
-        thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
+        thisPos.longitude[i] = thisPos.longitude[i-1];
     }
     thisPos.Latitude[0] = thisPos.latitude;
-    thisPos.Longtitude[0] = thisPos.longtitude;
+    thisPos.longitude[0] = thisPos.longitude;
 
     for(int i=0; i<GPS_SAMPLES; i++){
         if(thisPos.Latitude[i]>maxLat) maxLat = thisPos.Latitude[i];
         else if(thisPos.Latitude[i]<minLat) minLat = thisPos.Latitude[i];
-        else if(thisPos.Longtitude[i]>maxLng) maxLng = thisPos.Longtitude[i];
-        else if(thisPos.Longtitude[i]<maxLng) maxLng = thisPos.Longtitude[i];
+        else if(thisPos.longitude[i]>maxLng) maxLng = thisPos.longitude[i];
+        else if(thisPos.longitude[i]<maxLng) maxLng = thisPos.longitude[i];
     }
 
     difLat = (maxLat-minLat);
     difLng = (maxLng-minLng);
     
-    //pc.printf("lat=%f, lng=%f\n", thisPos.Latitude[0], thisPos.Longtitude[0]);
+    //pc.printf("lat=%f, lng=%f\n", thisPos.Latitude[0], thisPos.longitude[0]);
 
     if((difLat<accuracy)&&(difLng<accuracy)) return true;
     else return false;

@@ -97,9 +97,9 @@ float azimuth;//方位角
 void getGps();//GPS用関数
 struct Coordinate{//座標
     double latitude;//緯度
-    double longtitude;//経度
+    double longitude;//経度
     double Latitude[GPS_SAMPLES];//GPSの安定化をはかるための配列
-    double Longtitude[GPS_SAMPLES];
+    double longitude[GPS_SAMPLES];
 };
 Coordinate thisPos;//現在位置
 Coordinate targetPos;//ターゲットの位置
@@ -154,10 +154,10 @@ int main(){
 
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
-    targetPos.longtitude = TARGET_LNG;
+    targetPos.longitude = TARGET_LNG;
 
     thisPos.latitude = 38.1849248;//THISPOS_LAT;//テスト用
-    thisPos.longtitude = 140.8519829;//THISPOS_LNG;
+    thisPos.longitude = 140.8519829;//THISPOS_LNG;
 
 /*
     for(int i=0; i<MPU_SAMPLES; i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
@@ -247,7 +247,7 @@ int main(){
     imSend("gps got");
     while(!gpsChecker()){//GPSが安定したら次の処理へ
         wait(1);
-        pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+        pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longitude);
     }
     imSend("gps stable");
     */
@@ -299,9 +299,9 @@ int main(){
 
 void calcDistance(){//距離計算用関数
     float x1 = thisPos.latitude*PI/180;
-    float y1 = thisPos.longtitude*PI/180;
+    float y1 = thisPos.longitude*PI/180;
     float x2 = targetPos.latitude*(PI/180);
-    float y2 = targetPos.longtitude*(PI/180);
+    float y2 = targetPos.longitude*(PI/180);
     float sy = sin(y2-y1/2.0f);
     float sx = sin(x2-x1/2.0f);
     float sigma = sy*sy + cos(y1)*cos(y2)*sx*sx;
@@ -312,8 +312,8 @@ void calcDistance(){//距離計算用関数
 
 
 void calcAngle(){//角度計算用関数 :北0度西90度南180度東270度
-    float Y = (cos(targetPos.latitude))*sin(targetPos.longtitude - thisPos.longtitude);
-    float X = (cos(thisPos.longtitude))*sin(targetPos.longtitude) - (sin(thisPos.latitude))*(cos(targetPos.latitude))*(cos(thisPos.longtitude - targetPos.longtitude));
+    float Y = (cos(targetPos.latitude))*sin(targetPos.longitude - thisPos.longitude);
+    float X = (cos(thisPos.longitude))*sin(targetPos.longitude) - (sin(thisPos.latitude))*(cos(targetPos.latitude))*(cos(thisPos.longitude - targetPos.longitude));
     toTarget.angle = (180/PI)*atan(Y/X);
     if(toTarget.angle<0) toTarget.angle += 360;
 }
@@ -524,7 +524,7 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     gps.GetData();
     if(gps.readable){
         thisPos.latitude = gps.latitude;
-        thisPos.longtitude = gps.longtitude;
+        thisPos.longitude = gps.longitude;
     }
 }
 
@@ -540,22 +540,22 @@ bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
 
     for(int i=(GPS_SAMPLES-1); i>0; i--){
         thisPos.Latitude[i] = thisPos.Latitude[i-1];
-        thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
+        thisPos.longitude[i] = thisPos.longitude[i-1];
     }
     thisPos.Latitude[0] = thisPos.latitude;
-    thisPos.Longtitude[0] = thisPos.longtitude;
+    thisPos.longitude[0] = thisPos.longitude;
 
     for(int i=0; i<GPS_SAMPLES; i++){
         if(thisPos.Latitude[i]>maxLat) maxLat = thisPos.Latitude[i];
         else if(thisPos.Latitude[i]<minLat) minLat = thisPos.Latitude[i];
-        else if(thisPos.Longtitude[i]>maxLng) maxLng = thisPos.Longtitude[i];
-        else if(thisPos.Longtitude[i]<maxLng) maxLng = thisPos.Longtitude[i];
+        else if(thisPos.longitude[i]>maxLng) maxLng = thisPos.longitude[i];
+        else if(thisPos.longitude[i]<maxLng) maxLng = thisPos.longitude[i];
     }
 
     difLat = (maxLat-minLat);
     difLng = (maxLng-minLng);
     
-    //pc.printf("lat=%f, lng=%f\n", thisPos.Latitude[0], thisPos.Longtitude[0]);
+    //pc.printf("lat=%f, lng=%f\n", thisPos.Latitude[0], thisPos.longitude[0]);
 
     if((difLat<accuracy)&&(difLng<accuracy)) return true;
     else return false;

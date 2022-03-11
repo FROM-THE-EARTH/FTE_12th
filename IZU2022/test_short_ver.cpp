@@ -53,7 +53,7 @@ float maxAltitude;
 
 //GPS
 void getGps();
-float longtitude,latitude;
+float longitude,latitude;
 
 //SD
 void sdWrite();
@@ -231,7 +231,7 @@ void getBmp(){//tempと気圧を取得する関数
 void getGps(){//GPSの値を取得してsendDatesに値を入れる関数
     gps.GetData();
     if(gps.readable == true){
-        longtitude = gps.longtitude;
+        longitude = gps.longitude;
         latitude = gps.latitude;
     }
 
@@ -248,6 +248,6 @@ void imSend(char (*send)){//無線で送信する関数
     pc.printf("\r\n");
 }
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"%f,%f,%f,%f", gps.longtitude,gps.latitude,acc[2],altitude);
+        sprintf(sendData,"%f,%f,%f,%f", gps.longitude,gps.latitude,acc[2],altitude);
         imSend(sendData);
 }

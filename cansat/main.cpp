@@ -87,9 +87,9 @@ float azimuth;//方位角
 void getGps();//GPS用関数
 struct Coordinate{//座標
     double latitude;//緯度
-    double longtitude;//経度
+    double longitude;//経度
     double Latitude[GPS_SAMPLES];
-    double Longtitude[GPS_SAMPLES];
+    double longitude[GPS_SAMPLES];
 };
 struct Coordinate thisPos;//現在位置
 struct Coordinate targetPos;//ターゲットの位置
@@ -120,7 +120,7 @@ void motorStop(bool emergency=false);//cansatを停止させる関数:緊急で�
 
 //IM920
 void imSend(char *send);//無線用関数
-void sendDatas(float latitude, float longtitude, float altitude, float time);//データを文字列に変換してimSendを呼び出して送信する関数
+void sendDatas(float latitude, float longitude, float altitude, float time);//データを文字列に変換してimSendを呼び出して送信する関数
 char sendData[256];
 int dataNumber = 0;
 
@@ -131,7 +131,7 @@ int main(){
     //phase1
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
-    targetPos.longtitude = TARGET_LNG;
+    targetPos.longitude = TARGET_LNG;
 
     //phase2
     paraSeparation();//パラシュートを分離
@@ -175,12 +175,12 @@ int main(){
 
 
 void calcDistance(){//距離計算用関数
-    toTarget.radius = (EARTH_RADIUS)*acos(sin(thisPos.longtitude)*sin(targetPos.longtitude)+cos(thisPos.longtitude)*cos(targetPos.longtitude)*cos(targetPos.latitude-targetPos.longtitude));
+    toTarget.radius = (EARTH_RADIUS)*acos(sin(thisPos.longitude)*sin(targetPos.longitude)+cos(thisPos.longitude)*cos(targetPos.longitude)*cos(targetPos.latitude-targetPos.longitude));
 }
 
 
 void calcAngle(){//角度計算用関数
-    toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longtitude)*tan(targetPos.longtitude)-sin(thisPos.longtitude)*cos(targetPos.latitude-thisPos.latitude))));
+    toTarget.angle = 90 - atan(2*(sin(thisPos.latitude-targetPos.latitude))/((cos(thisPos.longitude)*tan(targetPos.longitude)-sin(thisPos.longitude)*cos(targetPos.latitude-thisPos.latitude))));
 }
 void servoWrite(int servoAngle){//サーボモーターを角度によって出力する関数
     int pulse = 500 + 10.5*servoAngle;
@@ -332,13 +332,13 @@ void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
     gps.GetData();
     if(gps.readable){
         thisPos.latitude = gps.latitude;
-        thisPos.longtitude = gps.longtitude;
+        thisPos.longitude = gps.longitude;
         for(int i=(GPS_SAMPLES-1); i>0; i--){
             thisPos.Latitude[i] = thisPos.Latitude[i-1];
-            thisPos.Longtitude[i] = thisPos.Longtitude[i-1];
+            thisPos.longitude[i] = thisPos.longitude[i-1];
         }
         thisPos.Latitude[0] = thisPos.latitude;
-        thisPos.Longtitude[0] = thisPos.longtitude;
+        thisPos.longitude[0] = thisPos.longitude;
     }
 }
 
@@ -355,8 +355,8 @@ bool gpsChecker(){//GPSが安定しているか判断する関数:安定->true
     for(int i=0; i<GPS_SAMPLES; i++){
         if(thisPos.Latitude[i]>maxLat) maxLat = thisPos.Latitude[i];
         else if(thisPos.Latitude[i]<minLat) minLat = thisPos.Latitude[i];
-        else if(thisPos.Longtitude[i]>maxLng) maxLng = thisPos.Longtitude[i];
-        else if(thisPos.Longtitude[i]<maxLng) maxLng = thisPos.Longtitude[i];
+        else if(thisPos.longitude[i]>maxLng) maxLng = thisPos.longitude[i];
+        else if(thisPos.longitude[i]<maxLng) maxLng = thisPos.longitude[i];
     }
 
     difLat = (maxLat-minLat);
@@ -492,7 +492,7 @@ void imSend(char *send){//無線で送信する関数
 }
 
 
-void sendDatas(float latitude, float longtitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longtitude, altitude, time);
+void sendDatas(float latitude, float longitude, float altitude, float time){//データを文字列に変換してimSendを呼び出して送信する関数
+        sprintf(sendData,"data1,%.3f,%.3f,%.3f,%.3f", latitude, longitude, altitude, time);
         imSend(sendData);
 }
