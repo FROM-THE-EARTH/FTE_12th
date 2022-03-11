@@ -149,17 +149,15 @@ void calcDirection();//進行方向を計算する関数
 float direction;//向かうべき角度:正->左,負->右
 void obstacleAvoidance();//障害物を回避する関数
 void handleStuck();//スタックを対処する関数
-void turn();//cansatを旋回させる関数
-void slowTurn();//cansatをゆっくり旋回させる関数
-void motorForward();//cansatを前進させる関数
-void motorRight();//cansatを右に進ませる関数
-//Timeout flipperR;//タイマー割り込み用
-void motorLeft();//cansatを左に進ませる関数
-//Timeout flipperL;//タイマー割り込み用
-void motorBack();//cansatを後退させる関数
-void motorStop(bool emergency=false);//cansatを停止させる関数:緊急でブレーキが必要なら引数にtrue
-void motorValidable_strait(float angleOut);
-void motorValodable_rotate(float angleOut);
+void turn();//cansatを旋回させる関数 --------------------------------------------------------- move=1
+void slowTurn();//cansatをゆっくり旋回させる関数 ---------------------------------------------- move=2
+void motorForward();//cansatを前進させる関数 ------------------------------------------------- move=3
+void motorRight();//cansatを右に進ませる関数 ------------------------------------------------- move=4
+void motorLeft();//cansatを左に進ませる関数 -------------------------------------------------- move=5
+void motorBack();//cansatを後退させる関数 ---------------------------------------------------- move=6
+void motorStop(bool emergency=false);//cansatを停止させる関数:緊急でブレーキが必要なら引数にtrue -- move=7
+void motorValidable_strait(float angleOut);// --------------------------------------------- move=8
+void motorValodable_rotate(float angleOut);// --------------------------------------------- move=9
 
 
 
@@ -171,8 +169,13 @@ int dataNumber = 0;//IM920に送るデータのデータナンバー
 
 
 
+//other constant
+int phase=0;
+int move=0;
+
 int main(){
     //phase1
+    phase++;
     pc.baud(19200);//シリアル通信のレートを設定
     pAcc = &acc;
     pGyro = &gyro;
@@ -199,6 +202,7 @@ int main(){
 
 
     //phase2
+    phase++;
     wait(1);//パラシュート分離までの待機時間
     //paraSeparation();//パラシュートを分離
     imSend("phase2 start");
@@ -215,6 +219,7 @@ int main(){
 
 
     //phase3
+    phase++;
     /*
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
@@ -232,6 +237,7 @@ int main(){
 
 
     //phase4
+    phase++;
     imSend("phase4 start");
     while(1){
         getMpu(0);//MPU9250からのデータを取得->変数に格納
@@ -257,6 +263,7 @@ int main(){
     }
 
     //phase5
+    phase++;
     //targetDecision();//目的地を判断し決定
     while(1){
         echo();
@@ -785,6 +792,7 @@ void handleStuck(){//スタックを対処する関数
 
 
 void turn(){//cansatを旋回させる関数
+    move = 1;
     FINR = 0.5;
     RINR = 0;
     FINL = 0;
@@ -792,6 +800,7 @@ void turn(){//cansatを旋回させる関数
 }
 
 void slowTurn(){//cansatをゆっくり旋回させる関数
+    move = 2;
     FINR = 0;
     RINR = 0.1;
     FINL = 0.5;
@@ -800,6 +809,7 @@ void slowTurn(){//cansatをゆっくり旋回させる関数
 
 
 void motorForward(){//cansatを前進させる関数
+    move = 3;
     FINR = 0.9;
     RINR = 0;
     FINL = 0.9;
@@ -808,6 +818,7 @@ void motorForward(){//cansatを前進させる関数
 
 
 void motorRight(){//cansatを右に進ませる関数
+    move = 4;
     FINR = 0.1;
     RINR = 0;
     FINL = 0.9;
@@ -817,6 +828,7 @@ void motorRight(){//cansatを右に進ませる関数
 
 
 void motorLeft(){//cansatを左に進ませる関数
+    move = 5;
     FINR = 0.9;
     RINR = 0;
     FINL = 0.1;
@@ -827,6 +839,7 @@ void motorLeft(){//cansatを左に進ませる関数
 
 
 void motorBack(){//cansatを後退させる関数
+    move = 6;
     FINR = 0;
     RINR = 0.9;
     FINL = 0;
@@ -835,6 +848,7 @@ void motorBack(){//cansatを後退させる関数
 
 
 void motorStop(bool emergency){//cansatを停止させる関数
+    move = 7
     if(emergency){
         FINR = 0.9;
         RINR = 0.9;
@@ -849,6 +863,7 @@ void motorStop(bool emergency){//cansatを停止させる関数
 }
 
 void motorValidable_strait(float angleOut){
+    move = 8;
     float diff=angleOut/180.0f;
     if(diff>0){
         FINR=1;
@@ -869,6 +884,7 @@ void motorValidable_strait(float angleOut){
 }
 
 void motorValodable_rotate(float angleOut){
+    move = 9;
     float diff=angleOut/180.0f;
     float f_bias=0.2f;
     float r_bias=0.2f;
@@ -901,9 +917,10 @@ void imSend(char *send){//無線で送信する関数
 
 
 void sendDatas(bool prt){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data%d,azi=%.2f,ang=%.2f,dir=%.2f,rad=%.2f,sol=%.2f,sor=%.2f,medx=%.2f,medy=%.2f",
-            dataNumber, azimuth, angle, direction, toTarget.radius, sonicL.distance, sonicR.distance, pMag->medX, pMag->medY);
-        wait_us(100);
-        imSend(sendData);
-        dataNumber++;
+    pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move");
+    sprintf(sendData,"%d,%d,%.2f,%f,%f,%.2f,%.2f,%d",
+        dataNumber, phase, azimuth, angle, direction, thisPos.latitude, thisPos.longtitude, sonicL.distance, sonicR.distance, move);
+    wait_us(100);
+    imSend(sendData);
+    dataNumber++;
 }
