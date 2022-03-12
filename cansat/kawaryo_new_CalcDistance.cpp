@@ -318,8 +318,8 @@ void calcDistance(){//距離計算用関数
 
     //toTarget.radius = sqrt(dx*dx+dy*dy);
 
-    radThisPos.latitude = (PI*180)*thisPos.latitude;
-    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    radThisPos.latitude = (PI/180)*thisPos.latitude;
+    radThisPos.longtitude = (PI/180)*thisPos.longtitude;
     double dx = radTargetPos.latitude - radThisPos.latitude;
     double dy = radTargetPos.longtitude - radThisPos.longtitude;
     double sy = sin(dy/2.0);
