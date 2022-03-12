@@ -50,8 +50,8 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.2614623 //目標の緯度
-#define TARGET_LNG 140.8531527 //目標の経度
+#define TARGET_LAT 38.266072 //目標の緯度
+#define TARGET_LNG 140.858480 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
@@ -186,114 +186,117 @@ int main(){
     targetPos.longtitude = TARGET_LNG;
     radTargetPos.latitude =(PI/180)*TARGET_LAT;
     radTargetPos.longtitude = (PI/180)*TARGET_LNG;
-    thisPos.latitude = 38.2614623;//目標を指定
-    thisPos.longtitude = 140.8531527;
+    thisPos.latitude = 38.266072;
+    thisPos.longtitude = 140.858480;
     radThisPos.latitude =(PI/180)*thisPos.latitude;
     radThisPos.longtitude = (PI/180)*thisPos.longtitude;
+    calcAngle();
+    calcDistance();
+    pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
 
-    //thisPos.latitude = THISPOS_LAT;//テスト用
-    //thisPos.longtitude = THISPOS_LNG;
+//     //thisPos.latitude = THISPOS_LAT;//テスト用
+//     //thisPos.longtitude = THISPOS_LNG;
 
-        /*補正値の初期化*/
-    for(int i=0; i<3; i++){
-        AC.bias[i]=0.0f;
-        GC.bias[i]=0.0f;
-        MC.bias[i]=0.0f;
-        AC.range[i]=1.0f;
-        GC.range[i]=1.0f;
-        MC.range[i]=1.0f;
-    }
-
-
-    //phase2
-    phase++;
-    wait(1);//パラシュート分離までの待機時間
-    //paraSeparation();//パラシュートを分離
-    imSend("phase2 start");
-    for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu(1);
-    }
-    for(int i=0; i<100; i++){
-        pc.printf("%d, ", i);
-        getMpu(0);
-        wait(0.01);
-    }
-    calibration(1);//地磁気補正
+//         /*補正値の初期化*/
+//     for(int i=0; i<3; i++){
+//         AC.bias[i]=0.0f;
+//         GC.bias[i]=0.0f;
+//         MC.bias[i]=0.0f;
+//         AC.range[i]=1.0f;
+//         GC.range[i]=1.0f;
+//         MC.range[i]=1.0f;
+//     }
 
 
-    //phase3
-    phase++;
+//     //phase2
+//     phase++;
+//     wait(1);//パラシュート分離までの待機時間
+//     //paraSeparation();//パラシュートを分離
+//     imSend("phase2 start");
+//     for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
+//         getMpu(1);
+//     }
+//     for(int i=0; i<100; i++){
+//         pc.printf("%d, ", i);
+//         getMpu(0);
+//         wait(0.01);
+//     }
+//     calibration(1);//地磁気補正
+
+
+//     //phase3
+//     phase++;
     
-    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
-    while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
-        imSend("gps waiting...");
-        wait(1);
-    }
-    imSend("gps got");
-    //while(!gpsChecker()){//GPSが安定したら次の処理へ
-     //   wait(1);
-     //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
-   // }
-    imSend("gps stable");
+//     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+//     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
+//         imSend("gps waiting...");
+//         wait(1);
+//     }
+//     imSend("gps got");
+//     //while(!gpsChecker()){//GPSが安定したら次の処理へ
+//      //   wait(1);
+//      //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+//    // }
+//     imSend("gps stable");
     
 
 
 
-    //phase4
-    phase++;
-    imSend("phase4 start");
-    while(1){
-        getMpu(0);//MPU9250からのデータを取得->変数に格納
-        calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
-        calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
-        calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        if(toTarget.radius<1.5) break;//目的地までの距離が1m以内ならば次のphaseへ
-        pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
-        setDirection();//進行方向を設定(2回目以降は変更)
-        //sendDatas();//IM920にデータを送る
+//     //phase4
+//     phase++;
+//     imSend("phase4 start");
+//     while(1){
+//         getMpu(0);//MPU9250からのデータを取得->変数に格納
+//         calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+//         calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+//         calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
+//         if(toTarget.radius<1.5) break;//目的地までの距離が1m以内ならば次のphaseへ
+//         pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
+//         setDirection();//進行方向を設定(2回目以降は変更)
+//         //sendDatas();//IM920にデータを送る
 
-        //if(stuckChecker()){//スタックしていたら
-            //imSend("Stucked!!!");
-            //handleStuck();
-        //}
-        //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
-        /*
-        if(obstacleChecker){//障害物を発見したら
-            imSend("faced obstacle!!");
-            obstacleAvoidance();//障害物を回避
-        }
-        */
-        times++;
-    }
+//         //if(stuckChecker()){//スタックしていたら
+//             //imSend("Stucked!!!");
+//             //handleStuck();
+//         //}
+//         //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+//         /*
+//         if(obstacleChecker){//障害物を発見したら
+//             imSend("faced obstacle!!");
+//             obstacleAvoidance();//障害物を回避
+//         }
+//         */
+//         times++;
+//     }
 
-    //phase5
-    phase++;
-    //targetDecision();//目的地を判断し決定
-    while(1){
-        echo();
-        while(1){
-            if(shorterDistance < 100 && shorterDistance > 10){
-                motorForward();
-            }else if(shorterDistance >= 100){
-                slowTurn();
-            }else{
-                wait(0.1);
-                if(shorterDistance < 5)break;
-                else slowTurn();
-            }
-        }
-        /*
-        if(sonicL.distance<0.1) break;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
-        else if(sonicR.distance<0.1) break;
-        else{
-            motorForward();//前進
-            wait(1);
-        }
-        */
-    }
-    motorStop(true);//目的地に到着したのでcansatを通常停止
-    wait(2);
-    motorStop();
+//     //phase5
+//     phase++;
+//     //targetDecision();//目的地を判断し決定
+//     while(1){
+//         echo();
+//         while(1){
+//             if(shorterDistance < 100 && shorterDistance > 10){
+//                 motorForward();
+//             }else if(shorterDistance >= 100){
+//                 slowTurn();
+//             }else{
+//                 wait(0.1);
+//                 if(shorterDistance < 5)break;
+//                 else slowTurn();
+//             }
+//         }
+//         /*
+//         if(sonicL.distance<0.1) break;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
+//         else if(sonicR.distance<0.1) break;
+//         else{
+//             motorForward();//前進
+//             wait(1);
+//         }
+//         */
+//     }
+//     motorStop(true);//目的地に到着したのでcansatを通常停止
+//     wait(2);
+//     motorStop();
 }
 
 
@@ -321,10 +324,10 @@ void calcDistance(){//距離計算用関数
     double dy = radTargetPos.longtitude - radThisPos.longtitude;
     double sy = sin(dy/2.0);
     double sx = sin(dx/2.0);
-    double sigma = sy*sy + cos(radThisPos.longtitude)*cos(y2)*sx*sx;
+    double sigma = sy*sy + cos(radThisPos.longtitude)*cos(radTargetPos.longtitude)*sx*sx;
     toTarget.radius = EARTH_RADIUS*2.0*asin(sqrt(sigma));
 
-    //pc.printf("previous=%f, another=%f\n", toTarget.radius, toTarget_another.radius);
+    pc.printf("radius=%f\n", toTarget.radius);
 }
 
 void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90度
@@ -356,11 +359,11 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.latitude))*(cos(radThisPos.latitude))*(cos(radTargetPos.longtitude - radThisPos.longtitude));
     //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
     toTarget.angle = (180/PI)*atan(Y/X);
-    if(X<0){
-        toTarget.angle += 90;
-    }else if(X>=0){
-        toTarget.angle -= 90;
-    }
+    //if(X<0){
+//        toTarget.angle += 90;
+//    }else if(X>=0){
+//        toTarget.angle -= 90;
+//    }
 
     // toTarget.angle = forEastAngle-90;
     // if(toTarget.angle<-180){
@@ -372,7 +375,7 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     // if(toTarget.angle<-180){
     //     toTarget.angle+=360;
     // }
-    //pc.printf("previous=%f, another=%f\n", toTarget.angle, toTarget_another.angle);
+    pc.printf("angle=%f\n", toTarget.angle);
 }
 
 
