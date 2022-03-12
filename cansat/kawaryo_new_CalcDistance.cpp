@@ -50,15 +50,15 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.261943 //目標の緯度
-#define TARGET_LNG 140.858775 //目標の経度
+#define TARGET_LAT 38.266072 //目標の緯度
+#define TARGET_LNG 140.858480 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
 #define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
 
-#define THISPOS_LAT 38.261625//テスト用
-#define THISPOS_LNG 140.859293
+#define THISPOS_LAT 38.264261//テスト用
+#define THISPOS_LNG 140.858781
 #define MAX_MAG_X 29.55
 #define MIN_MAG_X -17.25
 #define MAX_MAG_Y 48.90
@@ -192,9 +192,8 @@ int main(){
     radThisPos.longtitude = (PI/180)*thisPos.longtitude;
     calcAngle();
     calcDistance();
-    pc.printf("angThis : lat=%f, lng=%f\nangTarget : lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude, targetPos.latitude, targetPos.longtitude);
-    pc.printf("radThis : lat=%f, lng=%f\nradTarget : lat=%f, lng=%f\n\n\n", radThisPos.latitude, radThisPos.longtitude, radTargetPos.latitude, radTargetPos.longtitude);
-   
+    pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+
 //     //thisPos.latitude = THISPOS_LAT;//テスト用
 //     //thisPos.longtitude = THISPOS_LNG;
 
@@ -356,8 +355,8 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     //     forEastAngle += 90;
     // }
 
-    double Y = (cos(thisPos.latitude))*sin(targetPos.longtitude - thisPos.longtitude);
-    double X = (cos(thisPos.longtitude))*sin(targetPos.longtitude) - (sin(thisPos.latitude))*(cos(thisPos.latitude))*(cos(targetPos.longtitude - thisPos.longtitude));
+    double Y = (cos(radThisPos.latitude))*sin(radTargetPos.longtitude - radThisPos.longtitude);
+    double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.latitude))*(cos(radThisPos.latitude))*(cos(radTargetPos.longtitude - radThisPos.longtitude));
     //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
     toTarget.angle = (180/PI)*atan(Y/X);
     //if(X<0){
