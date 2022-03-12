@@ -50,15 +50,15 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.266072 //目標の緯度
-#define TARGET_LNG 140.858480 //目標の経度
+#define TARGET_LAT 38.264859 //目標の緯度
+#define TARGET_LNG 140.858455 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
 #define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
 
-#define THISPOS_LAT 38.264261//テスト用
-#define THISPOS_LNG 140.858781
+#define THISPOS_LAT 38.263847//テスト用
+#define THISPOS_LNG 140.858698
 #define MAX_MAG_X 29.55
 #define MIN_MAG_X -17.25
 #define MAX_MAG_Y 48.90
@@ -228,17 +228,25 @@ int main(){
 //     //phase3
 //     phase++;
     
-//     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
-//     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
-//         imSend("gps waiting...");
-//         wait(1);
-//     }
-//     imSend("gps got");
-//     //while(!gpsChecker()){//GPSが安定したら次の処理へ
-//      //   wait(1);
-//      //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
-//    // }
-//     imSend("gps stable");
+     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
+         imSend("gps waiting...");
+         wait(1);
+     }
+     imSend("gps got");
+     //while(!gpsChecker()){//GPSが安定したら次の処理へ
+      //   wait(1);
+      //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+    // }
+     imSend("gps stable");
+     
+     while(1){
+        calcAngle();
+        calcDistance();
+        pc.printf("angThis : lat=%f, lng=%f\nangTarget : lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude, targetPos.latitude, targetPos.longtitude);
+        pc.printf("radThis : lat=%f, lng=%f\nradTarget : lat=%f, lng=%f\n\n\n", radThisPos.latitude, radThisPos.longtitude, radTargetPos.latitude, radTargetPos.longtitude);
+        wait(1);
+    }
     
 
 
@@ -346,20 +354,30 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     radThisPos.latitude = (PI/180)*thisPos.latitude;
     radThisPos.longtitude = (PI/180)*thisPos.longtitude;
     
-    // double centerLat = (radThisPos.latitude+radTargetPos.latitude)/2;
-    // double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
-    // double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
-    // double forEastAngle = (180/PI)*atan2(dy,dx);
-    // if(dx>0){
-    //     forEastAngle -= 90;
-    // }else if(dx<0){
-    //     forEastAngle += 90;
-    // }
+    double centerLat = (radThisPos.latitude+radTargetPos.latitude)/2;
+    double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
+    double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
+    double forEastAngle = (180/PI)*atan(dy/dx);
 
-    double Y = (cos(radThisPos.latitude))*sin(radTargetPos.longtitude - radThisPos.longtitude);
-    double X = (cos(radThisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.latitude))*(cos(radThisPos.latitude))*(cos(radTargetPos.longtitude - radThisPos.longtitude));
-    //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
-    toTarget.angle = (180/PI)*atan(Y/X);
+    if(dx>0){
+        forEastAngle -= 90;
+    }else if(dx<0){
+        forEastAngle += 90;
+    }else{
+        if(dy>=0){
+            forEastAngle = 0;
+        }else{
+            forEastAngle =180;
+        }
+    }
+    toTarget.angle = forEastAngle;
+
+    pc.printf("dx:%f, dy:%f, dy/dx=%f\n", dx, dy, dy/dx);
+
+    // double Y = (cos(radTargetPos.longtitude))*sin(radTargetPos.latitude - radThisPos.latitude);
+    // double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.longtitude))*(cos(radTargetPos.longtitude))*(cos(radTargetPos.latitude - radThisPos.latitude));
+    // //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
+    // toTarget.angle = (180/PI)*atan(Y/X);
     //if(X<0){
 //        toTarget.angle += 90;
 //    }else if(X>=0){
