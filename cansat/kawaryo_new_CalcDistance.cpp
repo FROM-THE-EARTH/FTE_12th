@@ -356,8 +356,8 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     //     forEastAngle += 90;
     // }
 
-    double Y = (cos(radThisPos.latitude))*sin(radTargetPos.longtitude - radThisPos.longtitude);
-    double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.latitude))*(cos(radThisPos.latitude))*(cos(radTargetPos.longtitude - radThisPos.longtitude));
+    double Y = (cos(thisPos.latitude))*sin(targetPos.longtitude - thisPos.longtitude);
+    double X = (cos(thisPos.longtitude))*sin(targetPos.longtitude) - (sin(thisPos.latitude))*(cos(thisPos.latitude))*(cos(targetPos.longtitude - thisPos.longtitude));
     //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
     toTarget.angle = (180/PI)*atan(Y/X);
     //if(X<0){
