@@ -50,15 +50,15 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.266072 //目標の緯度
-#define TARGET_LNG 140.858480 //目標の経度
+#define TARGET_LAT 38.264859 //目標の緯度
+#define TARGET_LNG 140.858455 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
 #define TARGET_DECISION_ACCURACY 3 //超音波センサーで目的地を発見するときの精度・誤差(cm)
 
-#define THISPOS_LAT 38.264261//テスト用
-#define THISPOS_LNG 140.858781
+#define THISPOS_LAT 38.263847//テスト用
+#define THISPOS_LNG 140.858698
 #define MAX_MAG_X 29.55
 #define MIN_MAG_X -17.25
 #define MAX_MAG_Y 48.90
@@ -184,57 +184,55 @@ int main(){
     millisStart();//全体のタイマー開始
     targetPos.latitude = TARGET_LAT;//目標を指定
     targetPos.longtitude = TARGET_LNG;
-    radTargetPos.latitude =(PI/180)*TARGET_LAT;
-    radTargetPos.longtitude = (PI/180)*TARGET_LNG;
-    thisPos.latitude = 38.266072;
-    thisPos.longtitude = 140.858480;
-    radThisPos.latitude =(PI/180)*thisPos.latitude;
-    radThisPos.longtitude = (PI/180)*thisPos.longtitude;
+    radTargetPos.latitude =(PI/180)*targetPos.latitude;
+    radTargetPos.longtitude = (PI/180)*targetPos.longtitude;
+    thisPos.latitude = 0.0;
+    thisPos.longtitude = 0.0;
 
-    //thisPos.latitude = THISPOS_LAT;//テスト用
-    //thisPos.longtitude = THISPOS_LNG;
+//     //thisPos.latitude = THISPOS_LAT;//テスト用
+//     //thisPos.longtitude = THISPOS_LNG;
 
-        /*補正値の初期化*/
-    for(int i=0; i<3; i++){
-        AC.bias[i]=0.0f;
-        GC.bias[i]=0.0f;
-        MC.bias[i]=0.0f;
-        AC.range[i]=1.0f;
-        GC.range[i]=1.0f;
-        MC.range[i]=1.0f;
-    }
+//         /*補正値の初期化*/
+//     for(int i=0; i<3; i++){
+//         AC.bias[i]=0.0f;
+//         GC.bias[i]=0.0f;
+//         MC.bias[i]=0.0f;
+//         AC.range[i]=1.0f;
+//         GC.range[i]=1.0f;
+//         MC.range[i]=1.0f;
+//     }
 
 
-    //phase2
-    phase++;
-    wait(1);//パラシュート分離までの待機時間
-    //paraSeparation();//パラシュートを分離
-    imSend("phase2 start");
-    for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu(1);
-    }
-    for(int i=0; i<100; i++){
-        pc.printf("%d, ", i);
-        getMpu(0);
-        wait(0.01);
-    }
-    calibration(1);//地磁気補正
+//     //phase2
+//     phase++;
+//     wait(1);//パラシュート分離までの待機時間
+//     //paraSeparation();//パラシュートを分離
+//     imSend("phase2 start");
+//     for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
+//         getMpu(1);
+//     }
+//     for(int i=0; i<100; i++){
+//         pc.printf("%d, ", i);
+//         getMpu(0);
+//         wait(0.01);
+//     }
+//     calibration(1);//地磁気補正
 
 
-    //phase3
-    phase++;
+//     //phase3
+//     phase++;
     
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
-        imSend("gps waiting...");
-        wait(1);
-    }
-    imSend("gps got");
-    //while(!gpsChecker()){//GPSが安定したら次の処理へ
-     //   wait(1);
-     //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
-   // }
-    imSend("gps stable");
+        //  imSend("gps waiting...");
+         wait(1);
+     }
+    //  imSend("gps got");
+    // while(!gpsChecker()){//GPSが安定したら次の処理へ
+    //   //   wait(1);
+    //   //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+    // // }
+    //  imSend("gps stable");
     
 
 
@@ -315,8 +313,8 @@ void calcDistance(){//距離計算用関数
 
     //toTarget.radius = sqrt(dx*dx+dy*dy);
 
-    radThisPos.latitude = (PI*180)*thisPos.latitude;
-    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    radThisPos.latitude = (PI/180)*thisPos.latitude;
+    radThisPos.longtitude = (PI/180)*thisPos.longtitude;
     double dx = radTargetPos.latitude - radThisPos.latitude;
     double dy = radTargetPos.longtitude - radThisPos.longtitude;
     double sy = sin(dy/2.0);
@@ -324,7 +322,7 @@ void calcDistance(){//距離計算用関数
     double sigma = sy*sy + cos(radThisPos.longtitude)*cos(radTargetPos.longtitude)*sx*sx;
     toTarget.radius = EARTH_RADIUS*2.0*asin(sqrt(sigma));
 
-    //pc.printf("previous=%f, another=%f\n", toTarget.radius, toTarget_another.radius);
+    pc.printf("radius=%f\n", toTarget.radius);
 }
 
 void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90度
@@ -339,23 +337,33 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
 //    }
 
     //previous way
-    radThisPos.latitude = (PI*180)*thisPos.latitude;
-    radThisPos.longtitude = (PI*180)*thisPos.longtitude;
+    radThisPos.latitude = (PI/180)*thisPos.latitude;
+    radThisPos.longtitude = (PI/180)*thisPos.longtitude;
     
-    // double centerLat = (radThisPos.latitude+radTargetPos.latitude)/2;
-    // double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
-    // double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
-    // double forEastAngle = (180/PI)*atan2(dy,dx);
-    // if(dx>0){
-    //     forEastAngle -= 90;
-    // }else if(dx<0){
-    //     forEastAngle += 90;
-    // }
+    double centerLat = (radThisPos.latitude+radTargetPos.latitude)/2;
+    double dx = EARTH_RADIUS*(radTargetPos.longtitude-radThisPos.longtitude)*cos(centerLat);
+    double dy = EARTH_RADIUS*(radTargetPos.latitude-radThisPos.latitude);
+    double forEastAngle = (180/PI)*atan(dy/dx);
 
-    double Y = (cos(radThisPos.latitude))*sin(radTargetPos.longtitude - radThisPos.longtitude);
-    double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.latitude))*(cos(radThisPos.latitude))*(cos(radTargetPos.longtitude - radThisPos.longtitude));
-    //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
-    toTarget.angle = (180/PI)*atan(Y/X);
+    if(dx>0){
+        forEastAngle -= 90;
+    }else if(dx<0){
+        forEastAngle += 90;
+    }else{
+        if(dy>=0){
+            forEastAngle = 0;
+        }else{
+            forEastAngle =180;
+        }
+    }
+    toTarget.angle = forEastAngle;
+
+    pc.printf("dx:%f, dy:%f, dy/dx=%f\n", dx, dy, dy/dx);
+
+    // double Y = (cos(radTargetPos.longtitude))*sin(radTargetPos.latitude - radThisPos.latitude);
+    // double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.longtitude))*(cos(radTargetPos.longtitude))*(cos(radTargetPos.latitude - radThisPos.latitude));
+    // //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
+    // toTarget.angle = (180/PI)*atan(Y/X);
     //if(X<0){
 //        toTarget.angle += 90;
 //    }else if(X>=0){
@@ -372,7 +380,7 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     // if(toTarget.angle<-180){
     //     toTarget.angle+=360;
     // }
-    //pc.printf("previous=%f, another=%f\n", toTarget.angle, toTarget_another.angle);
+    pc.printf("angle=%f\n", toTarget.angle);
 }
 
 
