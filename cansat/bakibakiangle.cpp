@@ -190,10 +190,11 @@ int main(){
     thisPos.longtitude = 140.858480;
     radThisPos.latitude =(PI/180)*thisPos.latitude;
     radThisPos.longtitude = (PI/180)*thisPos.longtitude;
+    while(1){
     calcAngle();
     calcDistance();
     pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
-
+    }
 //     //thisPos.latitude = THISPOS_LAT;//テスト用
 //     //thisPos.longtitude = THISPOS_LNG;
 
@@ -354,11 +355,23 @@ void calcAngle(){//角度計算用関数 :北0度西90度南180・-180度東-90�
     // }else if(dx<0){
     //     forEastAngle += 90;
     // }
-
-    double Y = (cos(radTargetPos.longtitude))*sin(radTargetPos.latitude - radThisPos.latitude);
-    double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.longtitude))*(cos(radTargetPos.longtitude))*(cos(radTargetPos.latitude - radThisPos.latitude));
+    double Y = sin(radTargetPos.longtitude - radThisPos.longtitude);
+    double X = cos(radThisPos.latitude)*tan(radTargetPos.latitude) - sin(radThisPos.latitude)*cos(radTargetPos.longtitude-radThisPos.longtitude);
+    double psi = (180/PI)*atan(Y/X);
+    if(Y == 0){
+        psi = 0;
+        toTarget.angle = psi;
+    }else if(Y > 0){
+        psi = (180/PI)*atan(Y/X);
+        toTarget.angle = -180 + psi;
+    }else{
+        psi = (180/PI)*atan(Y/X);
+        toTarget.angle = psi  + 180;
+    }
+    //double Y = (cos(radTargetPos.longtitude))*sin(radTargetPos.latitude - radThisPos.latitude);
+    //double X = (cos(thisPos.longtitude))*sin(radTargetPos.longtitude) - (sin(radThisPos.longtitude))*(cos(radTargetPos.longtitude))*(cos(radTargetPos.latitude - radThisPos.latitude));
     //angle = 90 - (180/pi)*atan((sin(x1-goal_longtitude))/((cos(y1)*tan(goal_latitude)-sin(y1)*cos(goal_latitude-x1))));
-    toTarget.angle = (180/PI)*atan(Y/X);
+    
     //if(X<0){
 //        toTarget.angle += 90;
 //    }else if(X>=0){
