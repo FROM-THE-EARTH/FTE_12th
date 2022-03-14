@@ -51,8 +51,8 @@ bool stuckChecker();//スタックしているかどうか判断する関数:ス
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.261081 //目標の緯度
-#define TARGET_LNG 140.854755 //目標の経度
+#define TARGET_LAT 38.261108 //目標の緯度
+#define TARGET_LNG 140.854809 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
@@ -188,24 +188,24 @@ int main(){
         //sendDatas();
     }
     */
-    wait(10);
+    // wait(10);
     
     
     
-    /*
-    while(1){
-        echo();
-        if(shorterDistance < 150){
-            motorStop();
-            motorForward();
-            wait(2);
-        }else{
-            slowTurn();
-        }
-    }
-    */
+    // /*
+    // while(1){
+    //     echo();
+    //     if(shorterDistance < 150){
+    //         motorStop();
+    //         motorForward();
+    //         wait(2);
+    //     }else{
+    //         slowTurn();
+    //     }
+    // }
+    // */
             
-    phase++;
+    // phase++;
     pc.baud(19200);//シリアル通信のレートを設定
     /*
     while(1){
@@ -237,77 +237,78 @@ int main(){
     }
 
 
-    //phase2
-    phase++;
-    wait(1);//パラシュート分離までの待機時間
-    //paraSeparation();//パラシュートを分離
-    imSend("phase2 start");
-    for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
-        getMpu(1);
-    }
-    for(int i=0; i<100; i++){
-        pc.printf("%d, ", i);
-        getMpu(0);
-        wait(0.01);
-    }
-    calibration(1);//地磁気補正
+//     //phase2
+//     phase++;
+//     wait(1);//パラシュート分離までの待機時間
+//     //paraSeparation();//パラシュートを分離
+//     imSend("phase2 start");
+//     for(int i=0; i<(MPU_SAMPLES); i++){//MPUセンサーの配列を一旦埋めるためgetMpu()をMPU_SAMPLE回実行する
+//         getMpu(1);
+//     }
+//     for(int i=0; i<100; i++){
+//         pc.printf("%d, ", i);
+//         getMpu(0);
+//         wait(0.01);
+//     }
+//     calibration(1);//地磁気補正
 
 
-    //phase3
-    phase++;
+//     //phase3
+//     phase++;
     
-    imSend("phase2 start");
+//     imSend("phase3 start");
     
-    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
-    while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
-        imSend("gps waiting...");
-        wait(1);
-    }
-    imSend("gps got");
-    //while(!gpsChecker()){//GPSが安定したら次の処理へ
-     //   wait(1);
-     //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
-   // }
-    imSend("gps stable");
+//     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
+//     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
+//         imSend("gps waiting...");
+//         wait(1);
+//     }
+//     imSend("gps got");
+//     //while(!gpsChecker()){//GPSが安定したら次の処理へ
+//      //   wait(1);
+//      //   pc.printf("lat=%f, lng=%f\n", thisPos.latitude, thisPos.longtitude);
+//    // }
+//     imSend("gps stable");
     
 
 
 
-    //phase4
-    phase++;
-    imSend("phase4 start");
-    while(close_to_the_goal == false){
+    // //phase4
+    // phase++;
+    // imSend("phase4 start");
+    // while(close_to_the_goal == false){
         
-        getMpu(0);//MPU9250からのデータを取得->変数に格納
-        calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
-        calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
-        calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        //sendDatas();
+    //     getMpu(0);//MPU9250からのデータを取得->変数に格納
+    //     calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+    //     calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+    //     calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
+    //     //sendDatas();
         
-        if(toTarget.radius<0.5){
-            close_to_the_goal = true;//目的地までの距離が1m以内ならば次のphaseへ
-        }else{
-            close_to_the_goal = false;
-        } 
-        //pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
-        setDirection();//進行方向を設定(2回目以降は変更)
-        //sendDatas();//IM920にデータを送る
+    //     if(toTarget.radius<0.5){
+    //         close_to_the_goal = true;//目的地までの距離が1m以内ならば次のphaseへ
+    //     }else{
+    //         close_to_the_goal = false;
+    //     } 
+    //     //pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
+    //     setDirection();//進行方向を設定(2回目以降は変更)
+    //     //sendDatas();//IM920にデータを送る
 
-        //if(stuckChecker()){//スタックしていたら
-            //imSend("Stucked!!!");
-            //handleStuck();
-        //}
-        //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
-        /*
-        if(obstacleChecker){//障害物を発見したら
-            imSend("faced obstacle!!");
-            obstacleAvoidance();//障害物を回避
-        }
-        */
-        times++;
-    }
+    //     //if(stuckChecker()){//スタックしていたら
+    //         //imSend("Stucked!!!");
+    //         //handleStuck();
+    //     //}
+    //     //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+    //     /*
+    //     if(obstacleChecker){//障害物を発見したら
+    //         imSend("faced obstacle!!");
+    //         obstacleAvoidance();//障害物を回避
+    //     }
+    //     */
+    //     times++;
+    // }
 
     //phase5
+    close_to_the_goal = true;
     phase++;
     imSend("phase5 start");
     
@@ -320,18 +321,27 @@ int main(){
             sendDatas();
         }
         
-        if(toTarget.radius > 0.5){
-            close_to_the_goal = false;
-        }else{
-            close_to_the_goal = true;
-        }
+        // if(toTarget.radius > 0.2){
+        //     close_to_the_goal = false;
+        // }else{
+        //     close_to_the_goal = true;
+        // }
         
         echo();
         if(shorterDistance < 200){
             motorForward();
+            sendDatas();
             wait(2);
+            times++;
         }else if(shorterDistance >= 200){
-            slowTurn();
+            if(times%1000==0){
+                motorStop(true);
+                sendDatas();
+                times++;
+            }else{
+                slowTurn();
+                times++;
+            }
         }
         
         /*
