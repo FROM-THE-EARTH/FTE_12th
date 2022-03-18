@@ -100,19 +100,19 @@ function dataUpdate(strings) { console.log("start_dataUpdate");
     let dataArray = strings.split(",");
 
     //無線から送られてくる値:00,D33D,C9,number,val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude
-    data.number = dataArray[4] -0;//-0はdata.latが数値であることの確認
-    data.value = dataArray[5] -0;
-    data.accX = dataArray[6] -0;
-    data.accY = dataArray[7] -0;
-    data.accZ = dataArray[8] -0;
+    data.number = dataArray[3] -0;//-0はdata.latが数値であることの確認
+    data.value = dataArray[4] -0;
+    data.accX = dataArray[5] -0;
+    data.accY = dataArray[6] -0;
+    data.accZ = dataArray[7] -0;
+    if(dataArray[8]-0 != 0){
+        data.lat = dataArray[8] -0;
+    }
     if(dataArray[9]-0 != 0){
-        data.lat = dataArray[6] -0;
+        data.lng = dataArray[9] -0;
     }
-    if(dataArray[10]-0 != 0){
-        data.lng = dataArray[7] -0;
-    }
-    data.altitude = dataArray[11] -0;
-    data.maxAltitude = dataArray[12] -0;
+    data.altitude = dataArray[10] -0;
+    data.maxAltitude = dataArray[11] -0;
     console.log(`${data.lat},${data.lng}`);
     return true;
 }
