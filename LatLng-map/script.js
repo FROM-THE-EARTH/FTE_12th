@@ -143,14 +143,15 @@ function mapUpdate() { console.log("start_mapUpdate");
     document.getElementById('icon').style.left = `${x-25}px`;
     document.getElementById('icon').style.top = `${y-25}px`;
     console.log(`${x},${y}`);
-    document.getElementById('data0').innerHTML = `<p>Message: ${data.message}</p>`;
-    document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
-    document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
-    document.getElementById('data3').innerHTML = `<p>Latitude: ${data.lat}</p>`;
-    document.getElementById('data4').innerHTML = `<p>longitude: ${data.lng}</p>`;
-    document.getElementById('data5').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
-    document.getElementById('data6').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
-    document.getElementById('data7').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;
+    document.getElementById('data0').innerHTML = `<p>DataNumber: ${data.number}</p>`;
+    document.getElementById('data1').innerHTML = `<p>Value: ${data.value}</p>`;
+    document.getElementById('data2').innerHTML = `<p>AccX: ${data.accX}</p>`;
+    document.getElementById('data3').innerHTML = `<p>AccY: ${data.accY}</p>`;
+    document.getElementById('data4').innerHTML = `<p>AccZ: ${data.accZ}</p>`;
+    document.getElementById('data5').innerHTML = `<p>Latitude: ${data.lat}</p>`;
+    document.getElementById('data6').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
+    document.getElementById('data7').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
+    document.getElementById('data8').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
 }
 
 
