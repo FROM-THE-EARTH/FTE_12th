@@ -2,11 +2,11 @@
 const BAUD_RATE = 19200;     //シリアル通信のボードレート
 const INTERVAL = 100;       //map更新の頻度(ms)
 const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
-    TOP_LAT: 38.261363,       //地図画像左上端の緯度
-    TOP_LNG: 140.851152,      //地図画像左上端の経度
-    BOTTOM_LAT: 38.259848,    //地図画像右下端の緯度
-    BOTTOM_LNG: 140.855029,   //地図画像左上端の経度
-    IMG_WIDTH: 1200,         //地図画像の横幅(htmlで表示している横幅のこと)
+    TOP_LAT: 34.74081616,       //地図画像左上端の緯度
+    TOP_LNG: 139.4169496,      //地図画像左上端の経度
+    BOTTOM_LAT: 34.73149347,    //地図画像右下端の緯度
+    BOTTOM_LNG: 139.42808494,   //地図画像左上端の経度
+    IMG_WIDTH: 600,         //地図画像の横幅(htmlで表示している横幅のこと)
     IMG_HEIGHT: 600
 });
 
@@ -15,14 +15,15 @@ let port;
 let x_px = 0;
 let y_px = 0;
 let data = {//シリアルから何を受信するか
-    message: "",
-    time: 0,
-    phase: 0,
-    lat: 38.26000,
-    lng: 140.85000,
+    number: 0,
+    value: 0,
+    lat: 34.736139,
+    lng: 139.421333,
+    accX: 0,
+    accY: 0,
+    accZ: 0,
     altitude: 0,
     maxAltitude: 0,
-    deadTime: 0
 }
 let lastdata;
 
@@ -97,25 +98,23 @@ function splitByLine() { console.log("start_splitByLine");
 function dataUpdate(strings) { console.log("start_dataUpdate");
     console.log(strings);
     let dataArray = strings.split(",");
-    if(dataArray[3]=="message"){
-        data.message = dataArray[4];
-        return false;
-    }else{
-        //無線から送られてくる値:00,D33D,C9,data1,time,phase,lat,tng,altitude,maxAltitude,deadTime
-        data.time = dataArray[4] -0;//-0はdata.latが数値であることの確認
-        data.phase = dataArray[5] -0;
-        if(dataArray[6]-0 != 0){
-            data.lat = dataArray[6] -0;
-        }
-        if(dataArray[7]-0 != 0){
-            data.lng = dataArray[7] -0;
-        }
-        data.altitude = dataArray[8] -0;
-        data.maxAltitude = dataArray[9] -0;
-        data.deadTime = dataArray[10] -0;
-        console.log(`${data.lat},${data.lng}`);
-        return true;
+
+    //無線から送られてくる値:00,D33D,C9,number,val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude
+    data.number = dataArray[4] -0;//-0はdata.latが数値であることの確認
+    data.value = dataArray[5] -0;
+    data.accX = dataArray[6] -0;
+    data.accY = dataArray[7] -0;
+    data.accZ = dataArray[8] -0;
+    if(dataArray[9]-0 != 0){
+        data.lat = dataArray[6] -0;
     }
+    if(dataArray[10]-0 != 0){
+        data.lng = dataArray[7] -0;
+    }
+    data.altitude = dataArray[11] -0;
+    data.maxAltitude = dataArray[12] -0;
+    console.log(`${data.lat},${data.lng}`);
+    return true;
 }
 
 //座標変換(lat, lng)->(x_px, y_px)する関数
@@ -139,23 +138,28 @@ function mapUpdate() { console.log("start_mapUpdate");
         console.log(targetLine);
         targetLine--;
     }
-    x = transCoordinateX(data.lng);
-    y = transCoordinateY(data.lat);
-    document.getElementById('icon').style.left = `${x-25}px`;
-    document.getElementById('icon').style.top = `${y-25}px`;
-    console.log(`${x},${y}`);
-    document.getElementById('data0').innerHTML = `<p>Message: ${data.message}</p>`;
-    document.getElementById('data1').innerHTML = `<p>Time: ${data.time}</p>`;
-    document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
-    document.getElementById('data3').innerHTML = `<p>Latitude: ${data.lat}</p>`;
-    document.getElementById('data4').innerHTML = `<p>longitude: ${data.lng}</p>`;
-    document.getElementById('data5').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
-    document.getElementById('data6').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
-    document.getElementById('data7').innerHTML = `<p>Deadtime: ${data.deadTime}</p>`;
+    x_px = transCoordinateX(data.lng);
+    y_px = transCoordinateY(data.lat);
+    document.getElementById('icon').style.left = `${x_px-25}px`;
+    document.getElementById('icon').style.top = `${y_px-25}px`;
+    console.log(`${x_px},${y_px}`);
+    document.getElementById('data0').innerHTML = `<p>DataNumber: ${data.number}</p>`;
+    document.getElementById('data1').innerHTML = `<p>Value: ${data.value}</p>`;
+    document.getElementById('data2').innerHTML = `<p>AccX: ${data.accX}</p>`;
+    document.getElementById('data3').innerHTML = `<p>AccY: ${data.accY}</p>`;
+    document.getElementById('data4').innerHTML = `<p>AccZ: ${data.accZ}</p>`;
+    document.getElementById('data5').innerHTML = `<p>Latitude: ${data.lat}</p>`;
+    document.getElementById('data6').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
+    document.getElementById('data7').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
+    document.getElementById('data8').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
 }
 
 
 //window.onloadはページが読み込まれたら実行される
 window.onload = function(){
+    x_px = transCoordinateX(data.lng);
+    y_px = transCoordinateY(data.lat);
+    document.getElementById('icon').style.left = `${x_px-25}px`;
+    document.getElementById('icon').style.top = `${y_px-25}px`;
     timer1 = setInterval('mapUpdate()',INTERVAL);//INTERVAL(ms)毎にmapUpdate()を実行
 }
