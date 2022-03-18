@@ -128,7 +128,7 @@ function transCoordinateY(lat_y) { console.log("start_transCoordinateY");
 //map上にiconを設置する関数:メイン関数
 function mapUpdate() { console.log("start_mapUpdate");
     let boolean = false;
-    var targetLine = -1;
+    var targetLine = -2;//空の行を除く下から二行目
     while(!boolean){//最後の行からメッセージをのぞいて、データの最後の行を見つける
         lastdata = splitByLine().slice(targetLine)[0];//配列の最後の要素を取得:sliceは配列の要素を引数の数だけ取り出して新しい配列にする。引数が負の時は配列の最後から取得。また、配列を[0]でスカラーにしている。
         if(dataUpdate(lastdata)){
