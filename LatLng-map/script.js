@@ -16,6 +16,8 @@ let x_px = 0;
 let y_px = 0;
 let data = {//シリアルから何を受信するか
     number: 0,
+    mode: "",
+    phase: 0,
     value: 0,
     lat: 34.736139,
     lng: 139.421333,
@@ -101,18 +103,24 @@ function dataUpdate(strings) { console.log("start_dataUpdate");
 
     //無線から送られてくる値:00,D33D,C9,number,val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude
     data.number = dataArray[3] -0;//-0はdata.latが数値であることの確認
-    data.value = dataArray[4] -0;
-    data.accX = dataArray[5] -0;
-    data.accY = dataArray[6] -0;
-    data.accZ = dataArray[7] -0;
-    if(dataArray[8]-0 != 0){
-        data.lat = dataArray[8] -0;
+    if(dataArray[4]-0 == 0){
+        data.mode = "STAND MODE"
+    }else{
+        data.mode = "FLIGHT MODE"
     }
-    if(dataArray[9]-0 != 0){
-        data.lng = dataArray[9] -0;
+    data.phase = dataArray[5] -0;
+    data.value = dataArray[6] -0;
+    data.accX = dataArray[7] -0;
+    data.accY = dataArray[8] -0;
+    data.accZ = dataArray[9] -0;
+    if(dataArray[10]-0 != 0){
+        data.lat = dataArray[10] -0;
     }
-    data.altitude = dataArray[10] -0;
-    data.maxAltitude = dataArray[11] -0;
+    if(dataArray[11]-0 != 0){
+        data.lng = dataArray[11] -0;
+    }
+    data.altitude = dataArray[12] -0;
+    data.maxAltitude = dataArray[13] -0;
     console.log(`${data.lat},${data.lng}`);
     return true;
 }
@@ -144,14 +152,16 @@ function mapUpdate() { console.log("start_mapUpdate");
     document.getElementById('icon').style.top = `${y_px-25}px`;
     console.log(`${x_px},${y_px}`);
     document.getElementById('data0').innerHTML = `<p>DataNumber: ${data.number}</p>`;
-    document.getElementById('data1').innerHTML = `<p>Value: ${data.value}</p>`;
-    document.getElementById('data2').innerHTML = `<p>AccX: ${data.accX}</p>`;
-    document.getElementById('data3').innerHTML = `<p>AccY: ${data.accY}</p>`;
-    document.getElementById('data4').innerHTML = `<p>AccZ: ${data.accZ}</p>`;
-    document.getElementById('data5').innerHTML = `<p>Latitude: ${data.lat}</p>`;
-    document.getElementById('data6').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
-    document.getElementById('data7').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
-    document.getElementById('data8').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
+    document.getElementById('data1').innerHTML = `<p>Mode: ${data.mode}</p>`;
+    document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
+    document.getElementById('data3').innerHTML = `<p>Value: ${data.value}</p>`;
+    document.getElementById('data4').innerHTML = `<p>AccX: ${data.accX}</p>`;
+    document.getElementById('data5').innerHTML = `<p>AccY: ${data.accY}</p>`;
+    document.getElementById('data6').innerHTML = `<p>AccZ: ${data.accZ}</p>`;
+    document.getElementById('data7').innerHTML = `<p>Latitude: ${data.lat}</p>`;
+    document.getElementById('data8').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
+    document.getElementById('data9').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
+    document.getElementById('data10').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
 }
 
 
