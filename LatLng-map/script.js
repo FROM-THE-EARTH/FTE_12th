@@ -138,11 +138,11 @@ function mapUpdate() { console.log("start_mapUpdate");
         console.log(targetLine);
         targetLine--;
     }
-    x = transCoordinateX(data.lng);
-    y = transCoordinateY(data.lat);
-    document.getElementById('icon').style.left = `${x-25}px`;
-    document.getElementById('icon').style.top = `${y-25}px`;
-    console.log(`${x},${y}`);
+    x_px = transCoordinateX(data.lng);
+    y_px = transCoordinateY(data.lat);
+    document.getElementById('icon').style.left = `${x_px-25}px`;
+    document.getElementById('icon').style.top = `${y_px-25}px`;
+    console.log(`${x_px},${y_px}`);
     document.getElementById('data0').innerHTML = `<p>DataNumber: ${data.number}</p>`;
     document.getElementById('data1').innerHTML = `<p>Value: ${data.value}</p>`;
     document.getElementById('data2').innerHTML = `<p>AccX: ${data.accX}</p>`;
@@ -157,5 +157,9 @@ function mapUpdate() { console.log("start_mapUpdate");
 
 //window.onloadはページが読み込まれたら実行される
 window.onload = function(){
+    x_px = transCoordinateX(data.lng);
+    y_px = transCoordinateY(data.lat);
+    document.getElementById('icon').style.left = `${x_px-25}px`;
+    document.getElementById('icon').style.top = `${y_px-25}px`;
     timer1 = setInterval('mapUpdate()',INTERVAL);//INTERVAL(ms)毎にmapUpdate()を実行
 }
