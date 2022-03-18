@@ -21,7 +21,7 @@ let data = {//シリアルから何を受信するか
     lng: 139.421333,
     accX: 0,
     accY: 0,
-    accZ 0,
+    accZ: 0,
     altitude: 0,
     maxAltitude: 0,
 }
