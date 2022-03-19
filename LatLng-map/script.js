@@ -25,6 +25,7 @@ let data = {//シリアルから何を受信するか
     accY: 0,
     accZ: 0,
     altitude: 0,
+    minAltitude: 10000,
     maxAltitude: 0,
 }
 let lastdata;
@@ -104,24 +105,28 @@ function dataUpdate(strings) { console.log("start_dataUpdate");
     //無線から送られてくる値:00,D33D,C9,number,val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude
     data.number = dataArray[3] -0;//-0はdata.latが数値であることの確認
     if(dataArray[4]-0 == 0){
-        data.mode = "STAND MODE"
+        data.mode = "NORMAL"
     }else{
-        data.mode = "FLIGHT MODE"
+        data.mode = "FLIGHT"
     }
-    data.phase = dataArray[5] -0;
-    data.value = dataArray[6] -0;
-    data.accX = dataArray[7] -0;
-    data.accY = dataArray[8] -0;
-    data.accZ = dataArray[9] -0;
-    if(dataArray[10]-0 != 0){
-        data.lat = dataArray[10] -0;
+    data.phase = dataArray[5];
+    data.value = dataArray[6];
+    data.accX = dataArray[7];
+    data.accY = dataArray[8];
+    data.accZ = dataArray[9];
+    if(dataArray[10] != 0){
+        data.lat = dataArray[10];
     }
-    if(dataArray[11]-0 != 0){
-        data.lng = dataArray[11] -0;
+    if(dataArray[11] != 0){
+        data.lng = dataArray[11];
     }
-    data.altitude = dataArray[12] -0;
-    data.maxAltitude = dataArray[13] -0;
+    data.altitude = dataArray[12];
+    if(data.minAltitude>data.altitude){
+        data.minAltitude = data.altitude;
+    }
+    data.maxAltitude = dataArray[13];
     console.log(`${data.lat},${data.lng}`);
+    console.log(`12-13:${dataArray[12]},${dataArray[13]},${data.maxAltitude}`);
     return true;
 }
 
@@ -135,6 +140,7 @@ function transCoordinateY(lat_y) { console.log("start_transCoordinateY");
 
 //map上にiconを設置する関数:メイン関数
 function mapUpdate() { console.log("start_mapUpdate");
+    
     let boolean = false;
     var targetLine = -2;//空の行を除く下から二行目
     while(!boolean){//最後の行からメッセージをのぞいて、データの最後の行を見つける
@@ -146,22 +152,29 @@ function mapUpdate() { console.log("start_mapUpdate");
         console.log(targetLine);
         targetLine--;
     }
+    
     x_px = transCoordinateX(data.lng);
     y_px = transCoordinateY(data.lat);
     document.getElementById('icon').style.left = `${x_px-25}px`;
     document.getElementById('icon').style.top = `${y_px-25}px`;
     console.log(`${x_px},${y_px}`);
+    
+    var rocketHeight = parseInt(data.maxAltitude)-parseInt(data.minAltitude);
+    console.log(`max${data.maxAltitude},min${data.minAltitude},height${rocketHeight}`);
+    
     document.getElementById('data0').innerHTML = `<p>DataNumber: ${data.number}</p>`;
     document.getElementById('data1').innerHTML = `<p>Mode: ${data.mode}</p>`;
     document.getElementById('data2').innerHTML = `<p>Phase: ${data.phase}</p>`;
     document.getElementById('data3').innerHTML = `<p>Value: ${data.value}</p>`;
-    document.getElementById('data4').innerHTML = `<p>AccX: ${data.accX}</p>`;
-    document.getElementById('data5').innerHTML = `<p>AccY: ${data.accY}</p>`;
-    document.getElementById('data6').innerHTML = `<p>AccZ: ${data.accZ}</p>`;
+    document.getElementById('data4').innerHTML = `<p>AccX: ${data.accX}G</p>`;
+    document.getElementById('data5').innerHTML = `<p>AccY: ${data.accY}G</p>`;
+    document.getElementById('data6').innerHTML = `<p>AccZ: ${data.accZ}G</p>`;
     document.getElementById('data7').innerHTML = `<p>Latitude: ${data.lat}</p>`;
     document.getElementById('data8').innerHTML = `<p>Longtitude: ${data.lng}</p>`;
-    document.getElementById('data9').innerHTML = `<p>Altitude: ${data.altitude}</p>`;
-    document.getElementById('data10').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}</p>`;
+    document.getElementById('data9').innerHTML = `<p>Altitude: ${data.altitude}m</p>`;
+    document.getElementById('data10').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}m</p>`;
+    document.getElementById('data11').innerHTML = `<p>Height: ${rocketHeight}m</p>`;
+    
 }
 
 
