@@ -83,6 +83,8 @@ double preTime;
 bool safetyChecker();
 double launchedTime;
 
+int dataNumber;
+
 //*****************************************************************************************************************************************************************************
 void imSend(char *send){//無線で送信する関数
     im920.send(send,strlen(send)+1);
@@ -91,7 +93,7 @@ void imSend(char *send){//無線で送信する関数
 }
 
 void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-        sprintf(sendData,"data1,%d,%.3f,%.3f,%.3f,%f,%f,%f,%f", val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude);//データを文字列に変換
+        sprintf(sendData,"%d,%d,%.3f,%.3f,%.3f,%f,%f,%f,%f", dataNumber,val,acc[0],acc[1],acc[2],latitude,longtitude,altitude,maxAltitude);//データを文字列に変換
         imSend(sendData);//送る
 }
 
@@ -391,6 +393,7 @@ int main(){
      while(phase!=4){
          getDatas();//GPS以外のデータを取得
          sendDatas();
+         dataNumber++;
         
          switch (phase){
             case 0:
@@ -462,6 +465,7 @@ int main(){
             getGPS();
             phase = 3;
             sendDatas();
+            dataNumber++;
         }
         
         imSend("End");
