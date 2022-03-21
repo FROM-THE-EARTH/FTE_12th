@@ -186,7 +186,6 @@ function mapUpdate() { console.log("start_mapUpdate");
     document.getElementById('data9').innerHTML = `<p>Altitude: ${data.altitude}m</p>`;
     document.getElementById('data10').innerHTML = `<p>MaxAltitude: ${data.maxAltitude}m</p>`;
     document.getElementById('data11').innerHTML = `<p>Height: ${rocketHeight}m</p>`;
-    
 }
 
 
