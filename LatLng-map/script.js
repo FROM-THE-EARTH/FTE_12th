@@ -1,3 +1,15 @@
+/* 
+ * @file main.cpp
+ * @author Hiroto ABE
+ * @brief code for IZU2020_ISE20th
+ * @version 2.0
+ * @date 2022-03-20
+ * 
+ * @copyright Copyright (c) 2022
+ * Ver.2.0 ロケットの飛行高度(Height)を追加しました。
+ */
+
+
 //必要な定数の定義
 const BAUD_RATE = 19200;     //シリアル通信のボードレート
 const INTERVAL = 100;       //map更新の頻度(ms)
