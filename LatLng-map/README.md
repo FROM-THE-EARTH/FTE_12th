@@ -18,7 +18,7 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
   
 上記は一例です。以下にあるURLでは、上記のコードではなく、別の値で初期化されています。
 ## 無線で送るデータ型
-* 無線から送られてくる値:
+* 無線から送られてくる値(インタープラン製IM290)
 ```
 00,D33D,C9:,number,val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude
 ```
