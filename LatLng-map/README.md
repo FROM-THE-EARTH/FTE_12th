@@ -17,6 +17,12 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 `script.js`のこの部分をコメントの通りに変更します。
   
 上記は一例です。以下にあるURLでは、上記のコードではなく、別の値で初期化されています。
+## 無線で送るデータ型
+* 無線から送られてくる値:
+```
+00,D33D,C9:,number,val,acc[0],acc[1],acc[2],longitude,latitude,altitude,maxAltitude
+```
+変更するときは、軽いJavaScriptの知識が必要です。`script.js`を読んで変更してみてください。
 ## 使い方
 * URLは[https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html](https://from-the-earth.github.io/FTE_12th/LatLng-map/index.html)にあります。
 * "Connect"ボタンを押し、適当なUSBポートを選択するとシリアルポートからのデータを取得し始めます。
@@ -70,4 +76,28 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
             <img id="map" src="clubroom.png" alt="googleMap" width="1200px" height="600px">
             <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
         </div>
+```
+* `izu.png`
+```
+    TOP_LAT: 34.74081616,       //地図画像左上端の緯度
+    TOP_LNG: 139.4169496,      //地図画像左上端の経度
+    BOTTOM_LAT: 34.73149347,    //地図画像右下端の緯度
+    BOTTOM_LNG: 139.42808494,   //地図画像左上端の経度
+    IMG_WIDTH: 600,         //地図画像の横幅(htmlで表示している横幅のこと)
+    IMG_HEIGHT: 600
+```
+```
+        <div class="wrapper">
+            <img id="map" src="izu.png" alt="googleMap" width="600px" height="600px">
+            <img id="icon" src="rocket_icon.png" alt="icon" width="50px" height="50px">
+            <img id="logo-icon" src="rec12.png" alt="logo-icon" width="100px" height="100px">
+        </div>
+```
+  CSSにも下記を追加してください。
+```
+#logo-icon{
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
 ```
