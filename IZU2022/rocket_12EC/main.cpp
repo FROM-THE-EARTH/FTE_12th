@@ -1,243 +1,191 @@
-/**
- * @file main.cpp
- * @author Hiroto ABE
- * @brief code for IZU
- * @version 1.3
- * @date 2022-02-12
- * 
- * @copyright Copyright (c) 2022
- * 
- * ver1.0 飛翔中に再起動した際を考慮
- */
-
 #include "mbed.h"
+#include "GPS.h"
+#include "IM920.h"
+#include <stdio.h>
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
-#include "millis.h"
-#include "IM920.h"
-#include "GPS.h"
-#include "math.h"
+//#include "millis.h"
 //#include "ff.h"
-#include<stdio.h>
 
+#define SAMPLES 10
 
-//Pinの設定
-I2C i2c(PB_7, PB_6);
-BMP180 bmp180(&i2c);
-I2C i2cBus(PB_7, PB_6);//i2cBus(mpu_SDA, mpu_SCL)
-mpu9250 mpu(i2cBus, AD0_HIGH);
-DigitalIn flightPin(PF_0);//フライトピン
-PwmOut pwm1(PB_0);
-PwmOut pwm2(PB_1);
-//SDFileSystem sd(PA_7, PA_6, PA_5, PA_4, "sd");
-IM920 im920(PA_2, PA_3, PF_0, PB_3);
-GPS gps(PA_9, PA_10);
 Serial pc(USBTX, USBRX);
 
+I2C i2cBus(D4, D5);
+mpu9250 mpu(i2cBus, AD0_HIGH);
+I2C i2c(D4, D5);
+BMP180 bmp180(&i2c);
+GPS gps(D1,D0); //GPSの初期化(tx,rx)mbed:D1,D0
+//IM920 im920(A7,A2,4,A5); 
+IM920 im920(A7,A2,D7,D9); //IM920の初期化(tx,rx,busy,reset)mbed:A7,A2,D7,D13 arduinoシールド:D9,D8,D10,- *resetは使用しなかった*
+PwmOut servoU(D3);
+PwmOut servoD(D6);
+DigitalIn FlightPin(D8);
+Timer millis;
+Timer mpucheck;
 
-//全体で使う関数や変数などの定義
-void setUp();//各モジュールの確認やサーボモータの初期化をする関数
-bool setUpErrorFlag = false;
-bool flighting = false;
-void getDatas();//各種センサーのデータを統括する関数
-int function;//int型関数を使うために使用する
-bool launchDetection();//飛翔検出の関数:打ち上げられたらtrueを返す
-bool flightPinErrorFlag = false;
-int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
-void timerStart();//interval()のスタート地点
-int interval();//timeStart()からの時間を返す関数
-int deadTime;//センサーモジュールの実行時間
-int phase = 0;//ロケットの状態段階
-float calcMedian(float *array, int n);//配列の値の中央値を出す関数
-
-
-//定数の定義
-#define SAMPLES 3 //medianの標本数
-#define CHECKER 50 //飛翔中か判断する際の気圧測定回数
-#define PARA_OPEN_TIME 15000 //パラシュートが開くまでの最大時間(ms)
-#define PARA_OPEN_DROP 10 //パラシュートが開くまでの最大落下距離(m)
-#define END_TIME 300000 //データを取得し終わる時間(ms)
-
-
-//以下各モジュールの関数や変数などの定義
-//MPU9250
 int getMpu();//9軸センサーの値を取得する関数
 float acc[3] = {};//ここに加速度がx,y,zの順で格納される
-float gyro[3] = {};
-float mag[3] = {};
-float accArrayX[SAMPLES];
+float gyro[3] = {};//ここに角速度がx,y,zの順で格納される
+float mag[3] = {};//ここに地磁気がx,y,zの順で格納される
+float accArrayX[SAMPLES];//中央値をとるために使う配列
 float accArrayY[SAMPLES];
 float accArrayZ[SAMPLES];
 
-//BMP180
-int getBmp();//気温と気圧を取得する関数
+int getBmp();//tempと気圧を取得する関数
 bool bmpErrorFlag = false;
-int pressure;
-float temp;
-float altitude;
-float altArray[SAMPLES];
-float maxAltitude = -10000.0;//高度の最大値はとても小さい値で初期化
-float minAltitude = 10000.0;//高度の最小値はとても大きい値で初期化
+int pressure;//気圧
+float temp;//温度
+float altitude;//高度
+float altArray[SAMPLES];//中央値を取るための配列
+float maxAltitude;//最高高度
 
-//GPS
+void setUp();//各モジュールの確認やサーボモータの初期化をする関数
+bool setUpErrorFlag = false;
+bool takeoff = false;
+
+void getDatas();//各種センサーのデータを統括する関数
+int function;//int型関数を使うために使用する
+
+bool launchDetection();//飛翔検出の関数:打ち上げられたらtrueを返す
+bool flightPinErrorFlag = false;
+bool paraOpen = false;
+int val;
+void sequenceJudge();
+
+void timerStart();//interval()のスタート地点
+int timer[4] = {};//1,2番目はdeadTime用、3,4番目はinterval用
+int interval();//timeStart()からの時間を返す関数
+int deadTime;//センサーモジュールの実行時間
+int phase = 0;
+
+float calcMedian(float *array, int n);//配列の値の中央値を出す関数
+
+char sendData[256];
+void imSend(char *send);
+void sendDatas();
+
 void getGps();//GPSの値を取得する関数:gps.attachで割り込む
-double latitude;
-double longitude;
+float latitude;//緯度
+float longitude;//経度
 
-//SD
-void sdWrite();//SDカードにデータを書き込む関数
+int results;
+//char log[800];
+int times=0;
 
-//IM920
-void imSend(char *send,int num);//無線で送信する関数:data->num=1,message->num=0
-void sendDatas();//データを文字列に変換してimSendを呼び出して送信する関数
-char sendData[256];//送るデータのchar型配列(im920はchar型でしか送れない)
-int dataNumber = 0;
+void createDatas();
+
+void servoWriteU(int servoAngle);
+void servoWriteD(int servoAngle);
+
+double preTime;
+
+bool safetyChecker();
+double launchedTime;
+
+int dataNumber;
+int mode = 0;
+int sendNumber = 0;
+
+//*****************************************************************************************************************************************************************************
+void imSend(char *send){//無線で送信する関数
+    im920.send(send,strlen(send)+1);
+    pc.printf(send);//無線で送った情報をPC側にも送る
+    pc.printf("\r\n");
+}
+
+void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
+        sprintf(sendData,",%d,%d,%d,%d,%.3f,%.3f,%.3f,%f,%f,%.3f,%.3f", dataNumber,mode,phase,val,acc[0],acc[1],acc[2],latitude,longitude,altitude,maxAltitude);//データを文字列に変換
+        imSend(sendData);//送る
+        dataNumber++;
+}
 
 
+void createDatas(){
+    //sprintf(log,"%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",phase,acc[0],acc[1],acc[2],mag[0],mag[1],mag[2],gyro[0],gyro[1],gyro[2],temp,altitude,longitude,latitude);
+}
 
+void getGPS(){//GPSの値を取得してsendDatesに値を入れる関数
+    //NVIC_SetPriority(UART2_IRQn,0); //割り込み優先順位(必要に応じて)
+    gps.GetData();//取得開始
+    if(gps.readable == true){//受信したら
+       longitude = gps.longtitude;//longitudeに緯度のデータを格納
+       latitude = gps.latitude;
+       //sendDatas(gps.latitude, gps.longitude, gps.altitude, gps.time);
+    }
+}
 
-int main(){
-    gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
-    setUp();
-    while(phase!=3){
-        getDatas();//GPS以外のデータを取得
-        sendDatas();
-        sdWrite();
-        switch (phase){
-            case 0:
-                if(launchDetection()){//飛翔を検出したら
-                    imSend("Launched!!",0);
-                    phase++;
-                    imSend("Phase1 Start",0);
-                    timerStart();
-                }
-                break;
-            case 1:
-                if(interval()>PARA_OPEN_TIME || (maxAltitude-calcMedian(altArray, SAMPLES)>PARA_OPEN_DROP)){//打ち上がってから'PARA_OPEN_TIME'秒後、もしくは'PARA_OPEN_DROP'm落下すれば
-                    pwm1.pulsewidth_us(1800);//サーボモータを動かす
-                    pwm2.pulsewidth_us(1800);
-                    imSend("Para Open!",0);
-                    phase++;
-                    imSend("Phase2 Start",0);
-                }
-                break;
-            case 2:
-                if(interval()>END_TIME){//打ち上がってから'END_TIME'秒経てば
-                    imSend("End!",0);
-                    phase++;
-                }
-                break;
+void servoWriteU(int servoAngle){//サーボモーターを角度によって出力する関数
+    int pulse = 500 + 10.5*servoAngle;
+    servoU.pulsewidth_us(pulse);
+}
+void servoWriteD(int servoAngle){//サーボモーターを角度によって出力する関数
+    int pulse = 500 + 10.5*servoAngle;
+    servoD.pulsewidth_us(pulse);
+}
+
+int getMpu(){//9軸センサーの値を取得する関数
+    mpu.setAccLPF(NO_USE);
+    mpu.setAcc(_16G);
+    mpu.getAcc(acc);//加速度をacc[]に格納: acc[0]=ax, acc[1]=ay, acc[2]=az;
+    mpu.getGyro(gyro);//同上
+    mpu.getMag(mag);
+    //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
+    accArrayX[0] = acc[0];
+    accArrayY[0] = acc[1];
+    accArrayZ[0] = acc[2];
+    for(int i=(SAMPLES-1); i>0; i--){
+        accArrayX[i] = accArrayX[i-1];
+        accArrayY[i] = accArrayY[i-1];
+        accArrayZ[i] = accArrayZ[i-1];
+    }
+    return 0;
+}
+
+int getBmp(){//tempと気圧を取得する関数
+    if(bmp180.init() != 0){
+        //imSend("Error! BMP180 has some problems.");
+        bmpErrorFlag = true;
+    }
+
+    if(!bmpErrorFlag){
+        bmp180.startTemperature();
+        wait_ms(5);
+        if(bmp180.getTemperature(&temp) != 0) {
+            //imSend("Error! BMP180 cannot read temp.");
+            bmpErrorFlag = true;
+        }
+
+        bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
+        wait_ms(10);
+        if(bmp180.getPressure(&pressure) != 0) {
+            //imSend("Error! BMP180 cannot read pressure.");
+            bmpErrorFlag = true;
         }
     }
-    //sd.unmount();
-    //f_close(&fp);
-}
+    //ここでは気圧と温度から高度を計算している
+    if(!bmpErrorFlag){//BMPにエラーがなければ、
+        //変換式
+        double t_press = float(pressure)/100;
+        double ratio = (1012.25 / t_press );
+        altitude = (pow(ratio, double(1 / 5.257)) - 1) * double(temp+273.15) / 0.0065;
 
-
-
-
-void setUp(){//各モジュールの確認やサーボモータの初期化をする関数
-    pc.baud(19200);
-    imSend("Program Start!",0);
-    millisStart();//millis(タイマー)をスタート
-
-    //サーボモータの初期位置
-    pwm1.period_us(20000);
-    pwm1.pulsewidth_us(500);
-    pwm2.period_us(20000);
-    pwm2.pulsewidth_us(500);
-
-    //SDカードの初期化
-    /*sd.mount();
-    FATFS fs;
-    f_mount(&fs,"",0);
-    FIL fp;
-    f_open(&fp,"TEST.TXT",FA_CREATE_ALWAYS | FA_WRITE);
-    */
-
-    flightPin.mode(PullDown);//フライトピンに電圧をかける
-    wait_ms(1000);
-    if(!flightPin){//この段階でピンが抜けていればエラーを出力
-        imSend("Error! Pin is out.",0);
-        flightPinErrorFlag = true;
-        setUpErrorFlag = true;
-    }else{
-        imSend("FlightPin OK",0);
-    }
-
-    if(getMpu()==0){//mpu9250の動作確認
-        imSend("MPU9250 OK",0);
-    }else{
-        imSend("Error! MPU9250 has some problems",0);
-        setUpErrorFlag = true;
-    }
-
-    if(getBmp()==0){//bmp180の動作確認
-        imSend("BMP180 OK",0);
-    }else{
-        setUpErrorFlag = true;
-    }
-
-    for(int i=0;i<SAMPLES; i++){//calcMedian()を使うために、配列の値をデータで一度満たしておく必要がある:広い意味での初期化
-        getDatas();
-    }
-
-    for(int i=0; i<CHECKER; i++){//気圧のデータを50回取得
-        function = getBmp();
-        if(maxAltitude-calcMedian(altArray, SAMPLES)>3 || calcMedian(altArray, SAMPLES)-minAltitude>3){//高度差が3m以上ならば
-            flighting = true;//飛翔中と判断
-            setUpErrorFlag = true;
+        //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
+        altArray[0] = altitude;
+        for(int i=(SAMPLES-1); i>0; i--){
+            altArray[i] = altArray[i-1];
         }
-    }
-
-    if(!setUpErrorFlag){
-        imSend("Setup Complete!",0);
-    }else{
-        imSend("Setup Finish.",0);
-    }
-}
-
-
-void getDatas(){//各種センサーのデータを統括する関数
-    timer[0] = millis();//deadTimeを測るため
-    function = getMpu();
-    function = getBmp();
-    timer[1] = millis();
-    deadTime = timer[1]-timer[0];
-}
-
-
-bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
-    if(flighting){
-        return true;
-    }else{
-        if(!flightPinErrorFlag){
-            if(flightPin || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            if((acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが元から抜けていた場合、2G以上であれば
-                return true;
-            }else{
-                return false;
-            }
+        
+        if(maxAltitude < calcMedian(altArray, SAMPLES)){//最高高度の更新
+            maxAltitude = calcMedian(altArray, SAMPLES);
         }
+        return 0;
+    }else{//BMPにエラーがあれば、
+        altitude = -100;//BMPにエラーがあるとaltitudeの値がinfになってしまうため
+        maxAltitude = -100;
+        return -1;
     }
 }
-
-
-void timerStart(){//interval()のスタート地点
-    timer[2] = millis();
-}
-
-
-int interval(){//timeStart()からの時間を返す関数
-    timer[3] = millis();
-    return timer[3]-timer[2];
-}
-
 
 float calcMedian(float *array, int n){//配列の値の中央値を出す関数
     for(int i=0; i<n; i++) {//昇順にソート
@@ -256,121 +204,289 @@ float calcMedian(float *array, int n){//配列の値の中央値を出す関数
     }
 }
 
+void setUp(){//各モジュールの確認やサーボモータの初期化をする関数
+    //pc.baud(19200);
+    imSend("Program Start!");
+    //millisStart();//millis(タイマー)をスタート
+    millis.start();
+    imSend("Waiting...");
+    /*while(1){
+        if(latitude!=0){
+            imSend("GPS OK");
+            break;
+            }
+        if(millis.read()>0.1*1000){//この時間経過してもGPSが受信していなかったらエラーを出力して次のステップへ
+            imSend("Error! GPS cannot read");
+            setUpErrorFlag = true;
+            break;
+            }
+    }*/
 
-int getMpu(){//9軸センサーの値を取得する関数
-    mpu.setAccLPF(NO_USE);
-    mpu.setAcc(_16G);
-    mpu.getAcc(acc);//加速度をacc[]に格納: acc[0]=ax, acc[1]=ay, acc[2]=az;
-    mpu.getGyro(gyro);
-    mpu.getMag(mag);
-
-    //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
-    for(int i=(SAMPLES-1); i>0; i--){
-        accArrayX[i] = accArrayX[i-1];
-        accArrayY[i] = accArrayY[i-1];
-        accArrayZ[i] = accArrayZ[i-1];
-    }
-    accArrayX[0] = acc[0];
-    accArrayY[0] = acc[1];
-    accArrayZ[0] = acc[2];
-    return 0;
-}
-
-
-int getBmp(){//tempと気圧を取得する関数
-    if(bmp180.init() != 0){
-        imSend("Error! BMP180 has some problems.",0);
-        bmpErrorFlag = true;
-    }
-
-    if(!bmpErrorFlag){
-        bmp180.startTemperature();
-        wait_ms(5);
-        if(bmp180.getTemperature(&temp) != 0) {
-            imSend("Error! BMP180 cannot read temp.",0);
-            bmpErrorFlag = true;
-        }
-
-        bmp180.startPressure(BMP180::ULTRA_LOW_POWER);
-        wait_ms(10);
-        if(bmp180.getPressure(&pressure) != 0) {
-            imSend("Error! BMP180 cannot read pressure.",0);
-            bmpErrorFlag = true;
-        }
-    }
-
-    if(!bmpErrorFlag){//BMPにエラーがなければ、
-        //変換式
-        double t_press = float(pressure)/100;
-        double ratio = (1012.25 / t_press );
-        altitude = (pow(ratio, double(1 / 5.257)) - 1) * double(temp+273.15) / 0.0065;
-
-        //calcMedian()に入れる配列を作成:直近SAMPLES個のデータの配列
-        for(int i=(SAMPLES-1); i>0; i--){
-            altArray[i] = altArray[i-1];
-        }
-        altArray[0] = altitude;
-        
-        if(maxAltitude < calcMedian(altArray, SAMPLES)){//最高高度の更新
-            maxAltitude = calcMedian(altArray, SAMPLES);
-        }
-        if(minAltitude > calcMedian(altArray, SAMPLES)){//最低高度の更新
-            minAltitude = calcMedian(altArray, SAMPLES);
-        }
-        return 0;
-    }else{//BMPにエラーがあれば、
-        altitude = -1;//BMPにエラーがあるとaltitudeの値がinfになってしまうため
-        maxAltitude = -1;
-        return -1;
-    }
-}
-
-
-void getGps(){//GPSの値を取得する関数:gps.attachで割り込む
-    gps.GetData();
-    if(gps.readable){
-        latitude = gps.latitude;
-        longitude = gps.longitude;
-    }
-}
-
-
-void sdWrite(){//SDカードにデータを書き込む関数
+    FlightPin.mode(PullDown);//フライトピンに電圧をかける
+    wait(0.1);
+    val = FlightPin;
     /*
-    f_printf(&fp,"%d,%d,%d,%f,%f,%.3f,%.3f,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\n",
-        dataNumber, interval(), phase, latitude, longitude, altitude, maxAltitude, deadTime,
-        acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2], mag[0], mag[1], mag[2]);
-    */
-}
-
-
-void imSend(char *send, int num){//無線で送信する関数:data->num=1,message->num=0
-    /*IM用*/
-    char sendChar[256];
-    if(num==0){
-        sprintf(sendChar,"s,message,%s",send);//受信ソフト(LatLng-map)がmessageとdataを区別するため
-    }else if(num==1){
-        sprintf(sendChar,"s,data%s",send);
+    if(val==0){//この段階でピンが抜けていればエラーを出力
+        imSend("Error! Pin is out.");
+        flightPinErrorFlag = true;
+        setUpErrorFlag = true;
+    }else{
+        imSend("FlightPin OK");
     }
-    im920.send(sendChar,strlen(sendChar)+1);
-    pc.printf("00,D33D,C9:%s\n",sendChar);
-
-    /*Serial用:デバッグに使う
-    char sendChar[256];
-    if(num==1){
-        sprintf(sendChar,"s,message,%s",send);
-    }else if(num==0){
-        sprintf(sendChar,"s,data%s",send);
-    }
-    pc.printf("00,D33D,C9:");
-    pc.printf(sendChar);
-    pc.printf("\r\n");
     */
+    if(getMpu()==0){//mpu9250の動作確認
+        imSend("MPU9250 OK");
+    }else{
+        imSend("Error! MPU9250 has some problems");
+        setUpErrorFlag = true;
+    }
+
+    if(getBmp()==0){//bmp180の動作確認
+        imSend("BMP180 OK");
+    }else{
+        setUpErrorFlag = true;
+    }
+    
+    for(int i=0;i<SAMPLES; i++){//calcMedian()を使うために、配列の値をデータで一度満たしておく必要がある:広い意味での初期化
+        getDatas();
+    }
+
+    if(!setUpErrorFlag){
+        imSend("Setup Complete!");
+    }else{
+        imSend("Setup Finish.");
+    }
 }
 
 
-void sendDatas(){//データを文字列に変換してimSendを呼び出して送信する関数
-    dataNumber++;
-    sprintf(sendData,"%d,%d,%d,%.6f,%.6f,%.3f,%.3f,%d", dataNumber, interval(), phase, latitude, longitude, calcMedian(altArray, SAMPLES), maxAltitude, deadTime);
-    imSend(sendData,1);
+void getDatas(){//各種センサーのデータを統括する関数
+    //timer[0] = millis();//deadTimeを測るため
+    function = getMpu();//getMpuはint型なのでこのように記載
+    function = getBmp();
+    val = FlightPin;
+    //timer[1] = millis();
+    //deadTime = timer[1]-timer[0];
 }
+
+void timerStart(){//interval()のスタート地点
+    timer[2] = millis.read();
+}
+
+
+int interval(){//timeStart()からの時間を返す関数
+    timer[3] = millis.read();
+    return timer[3]-timer[2];
+}
+
+void sequenceJudge(){//状況判断関数
+    wait(0.01);//起動直後の待機時間
+    val = FlightPin;
+    if(val==1){//フライトピンが刺さっているならば
+        takeoff = false;//待機中
+        mode = 0;
+        //imSend("start general mode");
+    }else{
+        wait(0.01);//電圧の安定化を待ってもう一度判断
+        val = FlightPin;
+        if(val == 0){//この時も抜けているならば飛翔中と判断
+            takeoff = true;
+            mode = 0;
+            //imSend("start flight mode");
+        }else{
+            takeoff = false;//二度目の判断でフライトピンが刺さっているならば待機中と判断
+            imSend("start general mode");
+            mode = 1;
+        }
+    }
+}
+
+/*
+bool launchDetection(){//飛翔検出の関数:打ち上げられたらtrueを返す
+    if(!flightPinErrorFlag){
+        if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが抜ける、もしくは2G以上であれば
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        if((acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2])>=2*2){//フライトピンが元から抜けていた場合、2G以上であれば
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+*/
+
+bool safetyChecker(){
+    if(preTime - launchedTime > 5 && maxAltitude-calcMedian(altArray, SAMPLES)>10){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+int main(){
+    
+    /*
+    pc.baud(115200);
+    while(1){
+        getDatas();
+        pc.printf("%f,%f\n",maxAltitude,calcMedian(altArray, SAMPLES));
+    }
+    */
+/*
+    servoU.period_us(20000);
+    servoWriteU(50);
+    servoD.period_us(20000);
+    servoWriteD(90);
+    
+    while(1){
+        servoWriteU(50);
+        servoWriteD(90);
+        wait(5);
+        servoWriteU(160);
+        servoWriteD(40);
+        wait(5);
+        
+    }
+*/
+        
+        
+    //wait(1);
+    //mSend("start");
+    
+    gps.attach(getGPS);
+    //getDatas();
+    //sendDatas();
+
+    sequenceJudge();//フライトピンの情報から、待機中か飛翔中かを判断。
+    //待機中ならば通常モードで開始
+    //飛翔中ならば10ｍ降下のみで減速機構を作動させる
+    mpucheck.start();
+    
+    while(1){
+        
+        getDatas();
+        
+        if(maxAltitude,calcMedian(altArray, SAMPLES) != 0){
+            break;
+        }
+        
+        if(mpucheck.read() > 0.2){
+            wait(1);
+            imSend("zerodesu");
+            break;
+        }
+    }
+    
+    
+    
+    //サーボモーターの初期化
+    servoU.period_us(20000);
+    servoWriteU(55);
+    servoD.period_us(20000);
+    servoWriteD(90);
+      
+    if(takeoff == false){
+     //imSend("takeoffFALSE");
+     millis.start();
+     getGPS();
+     //imSend("afterGPS");
+     getDatas();
+     //imSend("aftergetDatas");
+     //setUp();
+     //imSend("afterSetup");
+    
+     while(phase!=4){
+         getDatas();//GPS以外のデータを取得
+         sendDatas();
+         //dataNumber++;
+        
+         switch (phase){
+            case 0:
+                if(val==0 || (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) > 7*7){
+                    timerStart();
+                    imSend("Launched!!");
+                    phase++;
+                    //imSend("Phase1 Start",0);
+                }
+                break;
+            case 1:
+                if(interval()>10.2 || safetyChecker()){//打ち上がってから11秒後、もしくは10m落下すれば
+                    servoWriteU(170);//サーボモータを動かす
+                    servoWriteD(40);
+                    
+                    imSend("Para Open!");
+                    phase++;
+                }
+                break;
+            case 2:
+                if(interval()>60){//打ち上がってから60秒経てば
+                    imSend("End!");
+                    phase++;
+                }
+                break;
+            case 3:
+                if(interval()>360){//さらに50分経てば
+                    //f_close(&fp);
+                    phase++;
+                }
+                break;
+         }
+       }
+
+     }else{
+        //imSend("takeoffTRUE");
+        millis.start();
+        //imSend("launched");
+        
+        launchedTime = millis.read();
+        phase = 1;
+        while(paraOpen!=true){
+            getDatas();
+            sendDatas();
+            double preTime = millis.read();//|| maxAltitude-calcMedian(altArray, SAMPLES)>10
+            if((preTime - launchedTime > 11) || safetyChecker()){//時間は実測による
+                servoWriteU(170);
+                servoWriteD(40);
+                phase = 2;
+                imSend("paraOpen");
+                paraOpen = true;
+            }else{
+                paraOpen = false;
+                phase = 1;
+            }
+            //dataNumber++;
+            /*
+            if(times % 500 == 0){
+                sendDatas();
+            }
+            times++;
+            */
+        }
+        
+        float paraOpenTime = millis.read();
+        
+        while(paraOpenTime - millis.read() > 60){
+            getDatas();
+            getGPS();
+            phase = 3;
+            sendDatas();
+            //dataNumber++;
+        }
+        
+        imSend("End");
+        
+        while(1){
+            phase = 4;
+            getGPS();
+            getDatas();
+            sendDatas();
+            //imSend("have ended");
+        }
+    }
+}
+
+
+//****************************************************************************************************************************************************
