@@ -2,17 +2,17 @@
 #include "mpu9250_i2c.h"
 #include "BMP180.h"
 #include "millis.h"
-//#include "IM920.h"
+#include "IM920.h"
 #include "GPS.h"
 #include "math.h"
 #include<stdio.h>
-#include "ff.h"
+//#include "ff.h"
 
 
 //Pinの定義
 I2C i2cBus(D4, D5);
 mpu9250 mpu(i2cBus, AD0_HIGH);
-//IM920 im920(A7, A2, A4, A5);
+IM920 im920(A7, A2, A0, A5);
 GPS gps(D1, D0);
 DigitalIn pra_recognition(A0);
 DigitalOut triggerR(D8);
@@ -42,17 +42,17 @@ void paraSeparation();//パラシュート分離関数
 void targetDecision();//目的地を決定する関数
 bool stuckChecker();//スタックしているかどうか判断する関数:スタック->true
 
-
+//34.731088,139.421445
 //定数の定義
-#define EARTH_RADIUS 6378.137 //地球の半径(km)
+#define EARTH_RADIUS 6378136.59 //地球の半径(km)
 #define PI 3.14159265358979 //円周率
 #define MPU_SAMPLES 5 //MPUのデータを何個の中の中央値を用いるか
 #define CALIBRATION_TIME 10000 //地磁気補正のために旋回する時間(ms)
 #define MAG_CONST 8.53 //地磁気の補正のための偏角(度)
 #define GPS_SAMPLES 5 //GPSの安定化を判断するための配偏角要素数GPSのデータは1秒に一回であることに注意
 #define GPS_ACCURACY 20000 //GPSの安定を判断する際の精度(cm)
-#define TARGET_LAT 38.265856 //目標の緯度
-#define TARGET_LNG 140.854089 //目標の経度
+#define TARGET_LAT 34.731088 //目標の緯度
+#define TARGET_LNG 139.421445 //目標の経度
 #define OBSTACLE_DISTANCE 20 //障害物を検知する距離(cm)
 #define MOTOR_RESET_TIME 1000 //左右に方向を変えた後に前進し直すまでの時間(ms)
 #define TARGET_DECISION_TIME 10000 //超音波センサーで目的地を発見するために旋回する時間(ms)
@@ -177,28 +177,25 @@ int move=0;
 Timer mytimer;
 char LOG[200];
 
+bool far_from_goal = true;
+bool in_way = true;
+
 int main(){
     //phase1
-    
+    phase = 1;
     wait(10);
-    
-    
-    
-    /*
-    while(1){
-        echo();
-        if(shorterDistance < 150){
-            motorStop();
-            motorForward();
-            wait(2);
-        }else{
-            slowTurn();
-        }
-    }
-    */
             
     phase++;
     pc.baud(19200);//シリアル通信のレートを設定
+    
+    /*
+    while(1){
+        gps.attach(getGps);
+        sendDatas();
+    }
+    */
+    
+    
     pAcc = &acc;
     pGyro = &gyro;
     pMag = &mag;
@@ -224,7 +221,7 @@ int main(){
 
 
     //phase2
-    phase++;
+    phase = 2;
     wait(1);//パラシュート分離までの待機時間
     //paraSeparation();//パラシュートを分離
     imSend("phase2 start");
@@ -240,7 +237,9 @@ int main(){
 
 
     //phase3
-    phase++;
+    phase = 3;
+    
+    imSend("phase3 start");
     
     gps.attach(getGps);//GPSは送られてきた瞬間割り込んでデータを取得(全ての処理を一度止めることに注意)
     while(thisPos.latitude==0.0){//GPSを取得したら次の処理へ
@@ -258,60 +257,82 @@ int main(){
 
 
     //phase4
-    phase++;
+    phase = 4;
     imSend("phase4 start");
-    while(1){
-        getMpu(0);//MPU9250からのデータを取得->変数に格納
-        calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
-        calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
-        calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
-        //if(toTarget.radius<1.0) break;//目的地までの距離が1m以内ならば次のphaseへ
-        pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
-        setDirection();//進行方向を設定(2回目以降は変更)
-        //sendDatas();//IM920にデータを送る
-
-        //if(stuckChecker()){//スタックしていたら
-            //imSend("Stucked!!!");
-            //handleStuck();
-        //}
-        //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
-        /*
-        if(obstacleChecker){//障害物を発見したら
-            imSend("faced obstacle!!");
-            obstacleAvoidance();//障害物を回避
-        }
-        */
-        times++;
-    }
-
-    //phase5
-    phase++;
-    //targetDecision();//目的地を判断し決定
-    while(1){
-        echo();
-        while(1){
-            if(shorterDistance < 100 && shorterDistance > 10){
-                motorForward();
-            }else if(shorterDistance >= 100){
-                slowTurn();
-            }else{
-                wait(0.1);
-                if(shorterDistance < 5)break;
-                else slowTurn();
+    while(in_way){
+        if(far_from_goal){
+            getMpu(0);//MPU9250からのデータを取得->変数に格納
+            calcDistance();//GPSの値から目的地への距離を算出->変数に格納:toTarget.radius
+            calcAngle();//GPSの値から目的地への角度を算出->変数に格納:toTarget.angle
+            calcAzimuth();//cansatの向いている方角を算出->変数に格納:azimuth
+            //sendDatas();
+            
+            if(toTarget.radius<=0.5){
+                far_from_goal = false;//目的地までの距離が1m以内ならば次のphaseへ
+                phase = 5;
+                imSend("phase5 start");
             }
+            //pc.printf("azimuth:%f, radius:%f, angle:%f, direction:%f\n", azimuth, toTarget.radius, toTarget.angle, direction); 
+            setDirection();//進行方向を設定(2回目以降は変更)
+            //sendDatas();//IM920にデータを送る
+
+            //if(stuckChecker()){//スタックしていたら
+                //imSend("Stucked!!!");
+                //handleStuck();
+            //}
+            //echo();//超音波センサーからデータを取得->変数に格納:sonicR/L.distance
+            /*
+            if(obstacleChecker){//障害物を発見したら
+                imSend("faced obstacle!!");
+                obstacleAvoidance();//障害物を回避
+            }
+            */
+            times++;
+        }else{
+            calcDistance();
+            
+            if(times % 200==0){
+                motorStop(true);
+                sendDatas();
+            }
+            
+            if(toTarget.radius > 0.5){
+                far_from_goal = true;
+                phase = 4;
+                imSend("back to phase4");
+            }
+            
+            echo();
+            if(shorterDistance < 200 && shorterDistance > 40){
+                motorForward();
+                //sendDatas();
+                wait(1);
+                times++;
+            }else if(shorterDistance >= 200){
+                slowTurn();
+                times++;
+            }else{
+                imSend("goal");
+                while(1){
+                motorStop();
+                }
+            }
+            
+            /*
+            if(sonicL.distance<0.1) in_way=false;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
+            else if(sonicR.distance<0.1) break;
+            else{
+                motorForward();//前進
+                wait(1);
+            }
+            */
+            times++;
         }
-        /*
-        if(sonicL.distance<0.1) break;//左右どちらかの超音波センサーの値が10cm以下ならば、while脱出->次の処理へ
-        else if(sonicR.distance<0.1) break;
-        else{
-            motorForward();//前進
-            wait(1);
-        }
-        */
     }
-    motorStop(true);//目的地に到着したのでcansatを通常停止
-    wait(2);
-    motorStop();
+
+    //motorStop(true);//目的地に到着したのでcansatを通常停止
+    //wait(2);
+    //motorStop();
 }
 
 
@@ -398,11 +419,12 @@ void targetDecision(){//目的地を決定する関数
     motorStop();
 }
 
-
+/*
 bool stuckChecker(){//スタックしているかどうか判断する関数:スタック->true
     if(acc.medX*acc.medY<0.1f) return true;
     else return false;
 }
+*/
 
 void getMpu(int mode){//9軸センサーの値を取得する関数
     /*〇表示モードについて
@@ -420,7 +442,8 @@ void getMpu(int mode){//9軸センサーの値を取得する関数
         gyro.datas[i]=(gyro.datas[i]-GC.bias[i])/GC.range[i];
         mag.datas[i]=(mag.datas[i]-MC.bias[i])/MC.range[i];
     }
-
+    
+    /*
     switch(mode){
         case 0://表示無し
             break;
@@ -431,6 +454,7 @@ void getMpu(int mode){//9軸センサーの値を取得する関数
         default:
             break;
     }
+    */
     
     //createDataArray(pAcc);//加速度の各成分をMPU_SAMPLES個の配列に順番に格納
     //createDataArray(pGyro);
@@ -596,8 +620,8 @@ void calibration(int mode){//地磁気補正用関数
         while((after-before)<CALIBRATION_TIME){
             getMpu(false);
 
-            sendDatas(false);
-
+            //sendDatas(false);
+            /*
             switch (mode){
                 case 0://表示無し
                     break;
@@ -608,14 +632,17 @@ void calibration(int mode){//地磁気補正用関数
                 default:
                     break;
             }
+            */
             
             if(maxMag.x < mag.medX) maxMag.x = mag.medX;
             else if(minMag.x > mag.medX) minMag.x = mag.medX;
             else if(maxMag.y < mag.medY) maxMag.y = mag.medY;
             else if(minMag.y > mag.y) minMag.y = mag.medY;
             after = millis();
+            
+            
         }
-
+        
         if(((maxMag.x-minMag.x)>20) && ((maxMag.y-minMag.y)>20)){
             imSend("calibration complete!");
             wait(1);
@@ -628,6 +655,8 @@ void calibration(int mode){//地磁気補正用関数
             complete_calibration = false;
         }
     }
+    
+    
     motorStop();
     wait(1);
     MC.bias[0] = (maxMag.x+minMag.x)/2;
@@ -636,6 +665,7 @@ void calibration(int mode){//地磁気補正用関数
     MC.range[0] = (maxMag.x-minMag.x)/2;
     MC.range[1] = (maxMag.y-minMag.y)/2;
 
+    /*
     switch (mode){
         case 0://表示無し
             break;
@@ -647,7 +677,8 @@ void calibration(int mode){//地磁気補正用関数
         default:
             break;
     }
-    //
+    */
+    
 }
 
 
@@ -774,9 +805,17 @@ void setDirection(){//進行方向を変更する関数
     }else{
         calcDirection();
         //motorValidable_strait(direction);
-        if(direction>0) motorLeft();
-        else if(direction<0) motorRight();
-    }
+        
+        if(times % 600 == 0){
+            motorForward();
+            sendDatas();
+            times++;
+        }else{
+             
+            if(direction>0) motorLeft();
+            else if(direction<0) motorRight();
+         }
+         }
 }
 
 void calcDirection(){//進行方向を計算する関数
@@ -937,17 +976,17 @@ void motorValodable_rotate(float angleOut){
 }
 
 void imSend(char *send){//無線で送信する関数
-    //im920.send(send,strlen(send)+1);
+    im920.send(send,strlen(send)+1);
     //pc.printf(send);
     pc.printf("\r\n");
 }
 
 
 void sendDatas(bool prt){//データを文字列に変換してimSendを呼び出して送信する関数
-    pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move\n");
-    //sprintf(sendData,"%d,%d,%.2f,%f,%f,%.2f,%.2f,%d",
-    //    dataNumber, phase, azimuth, angle, direction, thisPos.latitude, thisPos.longtitude, sonicL.distance, sonicR.distance, move);
+    //pc.printf("1.datanum, 2.phase, 3.azimuth, 4.latitude, 5.longtitude, 6.distance_sonL, 7.distance_sonicR, 8.move\n");
+    sprintf(sendData,"%d,%d,%.2f,%.2f,%.2f,%f,%f,%.2f,%.2f,%d",
+        times, phase, toTarget.radius, angle, direction, thisPos.latitude, thisPos.longtitude, sonicL.distance, sonicR.distance, move);
     wait_us(100);
-    //imSend(sendData);
+    imSend(sendData);
     dataNumber++;
 }
