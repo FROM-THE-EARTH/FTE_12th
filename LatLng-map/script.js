@@ -23,6 +23,7 @@ const STATUS = Object.freeze({    //Object.freezeは書き換え不可にする
 });
 
 //グローバル変数を定義
+
 let port;
 let x_px = 0;
 let y_px = 0;
