@@ -5,14 +5,90 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="bluejelly.js"></script>
+
 </head>
 <body>
-    <form name="js">
-        <input type="button" value="接続" onclick="connect();"/> 
-        <input type="button" value="切断" onclick="disconnect();" /> 
-        <input type="text" name="x" value="" />
-        <input type="text" name="y" value="" />
-        <input type="text" name="z" value="" />
-    </form>
+    <div class="container">
+        <div class="title margin">
+            <p id="title">Web Bluetooth API Sample</p>
+            <p id="subtitle">#01 BatteryLevelの読み込み</p>
+        </div>
+        <div class="contents margin">
+            <input id="write_value" class="button" size="20">
+            <button id="write" class="button">Write</button>
+            <button id="readData" class="button">Read</button>
+            <button id="reset" class="button">Reset</button>
+            <hr>
+            <div id="device_name">xxxx</div>
+            <div id="status">xxxx</div>
+            <div id="data_text">xxxx</div>
+        </div>
+    </div>
+    <script>
+        //BlueJellyのインスタンス生成
+        var ble = new BlueJelly();
+
+        //ボタンが押された時のイベント登録
+        document.getElementById('write').addEventListener('click', function() {
+            //フォーマットに従って値を変換
+            const textEncoder = new TextEncoder();
+            const text_data = document.getElementById('write_value').value;
+            const text_data_encoded = textEncoder.encode(text_data);
+            //write
+            ble.write('UUID1', text_data_encoded);
+        });
+        document.getElementById('readData').addEventListener('click', function() {
+            ble.read('UUID1');
+        });
+        document.getElementById('reset').addEventListener('click', function() {
+            ble.reset(); //reset is disconnect & clear
+        });
+
+        //ロード時の処理
+        window.onload = function() {
+            //初期の文字列表示
+            document.getElementById('device_name').innerHTML = "No Device";
+            document.getElementById('status').innerHTML = "No Status";
+            document.getElementById('data_text').innerHTML = "No Data";
+
+            //UUIDの設定
+            ble.setUUID("UUID1", "0000180f-0000-1000-8000-00805f9b34fb", "00002a19-0000-1000-8000-00805f9b34fb");
+        }
+
+        //Scan後の処理
+        ble.onScan = function(deviceName) {
+            //HTMLに表示
+            document.getElementById('device_name').innerHTML = deviceName;
+            document.getElementById('status').innerHTML = "Scaned device";
+        }
+
+        //Write後の処理
+            ble.onWrite = function(){
+            document.getElementById('status').innerHTML = "written data"
+        }
+
+        //Read後の処理：得られたデータの表示など行う
+        ble.onRead = function(data, uuid) {
+            //フォーマットに従って値を取得
+            value = data.getUint8(0); //1Byteの場合のフォーマット
+
+            //HTMLに値を表示
+            document.getElementById('data_text').innerHTML = value;
+            document.getElementById('status').innerHTML = "Read data";
+
+            //再びRead
+            ble.read('UUID1');
+        }
+
+        //Reset後の処理
+        ble.onReset = function() {
+            //HTMLに表示
+            document.getElementById('device_name').innerHTML = "No Device";
+            document.getElementById('status').innerHTML = "Reset";
+        }
+    </script>
 </body>
 </html>
