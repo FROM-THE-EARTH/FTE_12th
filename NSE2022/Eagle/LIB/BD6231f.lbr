@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="5" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="10" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -60,15 +60,15 @@
 <library>
 <packages>
 <package name="BD6231F">
-<smd name="GND" x="0.6" y="-0.595" dx="0.6096" dy="0.3048" layer="1" roundness="1"/>
-<smd name="OUT2" x="0.6" y="-1.865" dx="0.6096" dy="0.3048" layer="1"/>
-<smd name="VREF" x="0.6" y="-3.135" dx="0.6096" dy="0.3048" layer="1"/>
-<smd name="RIN" x="0.595" y="-4.405" dx="0.6096" dy="0.3048" layer="1"/>
+<smd name="GND" x="0.6" y="-0.595" dx="0.35" dy="0.45" layer="1" roundness="1"/>
+<smd name="OUT2" x="0.6" y="-1.865" dx="0.35" dy="0.45" layer="1"/>
+<smd name="VREF" x="0.6" y="-3.135" dx="0.35" dy="0.45" layer="1"/>
+<smd name="RIN" x="0.595" y="-4.405" dx="0.35" dy="0.45" layer="1"/>
 <wire x1="0" y1="0" x2="0" y2="-5" width="0.127" layer="21"/>
-<smd name="OUT1" x="-5" y="-0.595" dx="0.6096" dy="0.3048" layer="1"/>
-<smd name="VCC_1" x="-5" y="-1.865" dx="0.6096" dy="0.3048" layer="1"/>
-<smd name="VCC_2" x="-5" y="-3.135" dx="0.6096" dy="0.3048" layer="1"/>
-<smd name="FIN" x="-5" y="-4.405" dx="0.6096" dy="0.3048" layer="1"/>
+<smd name="OUT1" x="-5" y="-0.595" dx="0.35" dy="0.45" layer="1"/>
+<smd name="VCC_1" x="-5" y="-1.865" dx="0.35" dy="0.45" layer="1"/>
+<smd name="VCC_2" x="-5" y="-3.135" dx="0.35" dy="0.45" layer="1"/>
+<smd name="FIN" x="-5" y="-4.405" dx="0.35" dy="0.45" layer="1"/>
 <wire x1="0" y1="0" x2="-4.4" y2="0" width="0.127" layer="21"/>
 <wire x1="-4.4" y1="0" x2="-4.4" y2="-5" width="0.127" layer="21"/>
 <wire x1="-4.4" y1="-5" x2="0" y2="-5" width="0.127" layer="21"/>
