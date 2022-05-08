@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="10" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -38,7 +38,7 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
@@ -60,19 +60,22 @@
 <library>
 <packages>
 <package name="BD6231F">
-<smd name="GND" x="0.6" y="-0.595" dx="0.35" dy="0.45" layer="1" roundness="1"/>
-<smd name="OUT2" x="0.6" y="-1.865" dx="0.35" dy="0.45" layer="1"/>
-<smd name="VREF" x="0.6" y="-3.135" dx="0.35" dy="0.45" layer="1"/>
-<smd name="RIN" x="0.595" y="-4.405" dx="0.35" dy="0.45" layer="1"/>
-<wire x1="0" y1="0" x2="0" y2="-5" width="0.127" layer="21"/>
-<smd name="OUT1" x="-5" y="-0.595" dx="0.35" dy="0.45" layer="1"/>
-<smd name="VCC_1" x="-5" y="-1.865" dx="0.35" dy="0.45" layer="1"/>
-<smd name="VCC_2" x="-5" y="-3.135" dx="0.35" dy="0.45" layer="1"/>
-<smd name="FIN" x="-5" y="-4.405" dx="0.35" dy="0.45" layer="1"/>
-<wire x1="0" y1="0" x2="-4.4" y2="0" width="0.127" layer="21"/>
-<wire x1="-4.4" y1="0" x2="-4.4" y2="-5" width="0.127" layer="21"/>
-<wire x1="-4.4" y1="-5" x2="0" y2="-5" width="0.127" layer="21"/>
-<text x="-3.81" y="1.27" size="1.778" layer="21">BD6231f</text>
+<text x="-5.08" y="3.81" size="1.778" layer="21">BD6231f</text>
+<smd name="GND" x="2.54" y="1.905" dx="3.81" dy="0.635" layer="1"/>
+<smd name="OUT2" x="2.54" y="0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="VREF" x="2.54" y="-0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="RIN" x="2.54" y="-1.905" dx="3.81" dy="0.635" layer="1"/>
+<smd name="OUT1" x="-2.54" y="1.905" dx="3.81" dy="0.635" layer="1"/>
+<smd name="VCC1" x="-2.54" y="0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="VCC2" x="-2.54" y="-0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="FIN" x="-2.54" y="-1.905" dx="3.81" dy="0.635" layer="1"/>
+<wire x1="2.2" y1="-2.5" x2="-2.2" y2="-2.5" width="0.127" layer="21"/>
+<wire x1="-2.2" y1="-2.5" x2="-2.2" y2="2.5" width="0.127" layer="21"/>
+<wire x1="2.2" y1="2.5" x2="2.2" y2="-2.5" width="0.127" layer="21"/>
+<wire x1="-0.5" y1="2.5" x2="0.5" y2="2.5" width="0.127" layer="21" curve="180"/>
+<wire x1="-2.2" y1="2.5" x2="-0.5" y2="2.5" width="0.127" layer="21"/>
+<wire x1="2.2" y1="2.5" x2="0.5" y2="2.5" width="0.127" layer="21"/>
+<circle x="-1.143" y="1.397" radius="0.762" width="0.127" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -93,9 +96,9 @@
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="BD6231F">
+<deviceset name="BD6231F" prefix="MD" uservalue="yes">
 <gates>
-<gate name="G$1" symbol="BD6231F" x="-2.54" y="5.08"/>
+<gate name="G$1" symbol="BD6231F" x="10.16" y="10.16"/>
 </gates>
 <devices>
 <device name="" package="BD6231F">
@@ -105,8 +108,8 @@
 <connect gate="G$1" pin="OUT1" pad="OUT1"/>
 <connect gate="G$1" pin="OUT2" pad="OUT2"/>
 <connect gate="G$1" pin="RIN" pad="RIN"/>
-<connect gate="G$1" pin="VCC_1" pad="VCC_1"/>
-<connect gate="G$1" pin="VCC_2" pad="VCC_2"/>
+<connect gate="G$1" pin="VCC_1" pad="VCC1"/>
+<connect gate="G$1" pin="VCC_2" pad="VCC2"/>
 <connect gate="G$1" pin="VREF" pad="VREF"/>
 </connects>
 <technologies>
