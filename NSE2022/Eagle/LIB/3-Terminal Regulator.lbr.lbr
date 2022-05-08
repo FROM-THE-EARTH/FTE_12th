@@ -59,7 +59,7 @@
 </layers>
 <library>
 <packages>
-<package name="AZ117CH-3.3TRG1">
+<package name="TA48M05F">
 <wire x1="0" y1="0" x2="0" y2="-6.8" width="0.127" layer="21"/>
 <wire x1="0" y1="-6.8" x2="-2.5" y2="-6.8" width="0.127" layer="21"/>
 <wire x1="-2.5" y1="-6.8" x2="-2.5" y2="0" width="0.127" layer="21"/>
@@ -67,14 +67,15 @@
 <pad name="GND" x="-1.1" y="-3.4" drill="0.6" shape="square"/>
 <pad name="OUTPUT" x="-1.1" y="-1.1" drill="0.6" shape="square"/>
 <pad name="INPUT" x="-1.1" y="-5.7" drill="0.6" shape="square"/>
+<text x="-3.81" y="1.27" size="1.778" layer="21">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
-<symbol name="AZ117CH-3.3TRG1">
+<symbol name="TA48M05F">
 <pin name="OUTPUT" x="2.54" y="-5.08" length="middle" rot="R180"/>
 <pin name="GND" x="2.54" y="-10.16" length="middle" rot="R180"/>
 <pin name="INPUT" x="2.54" y="-15.24" length="middle" rot="R180"/>
-<text x="-15.24" y="0" size="1.778" layer="94">AZ117CH-3.3TRG1</text>
+<text x="-15.24" y="0" size="1.778" layer="94">TA48M05F</text>
 <wire x1="0" y1="-17.78" x2="0" y2="-2.54" width="0.254" layer="94"/>
 <wire x1="0" y1="-2.54" x2="-17.78" y2="-2.54" width="0.254" layer="94"/>
 <wire x1="-17.78" y1="-2.54" x2="-17.78" y2="-17.78" width="0.254" layer="94"/>
@@ -82,12 +83,12 @@
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="AZ117CH-3.3TRG1">
+<deviceset name="TA48M05F">
 <gates>
-<gate name="G$1" symbol="AZ117CH-3.3TRG1" x="-15.24" y="7.62"/>
+<gate name="G$1" symbol="TA48M05F" x="-15.24" y="7.62"/>
 </gates>
 <devices>
-<device name="" package="AZ117CH-3.3TRG1">
+<device name="" package="TA48M05F">
 <connects>
 <connect gate="G$1" pin="GND" pad="GND"/>
 <connect gate="G$1" pin="INPUT" pad="INPUT"/>
