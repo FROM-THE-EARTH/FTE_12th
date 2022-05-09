@@ -74,48 +74,48 @@
 <library>
 <packages>
 <package name="19_2.54">
-<pad name="P$1" x="0" y="12.7" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$2" x="0" y="10.16" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$3" x="0" y="7.62" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$4" x="0" y="5.08" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$5" x="0" y="2.54" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$6" x="0" y="0" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$7" x="0" y="-2.54" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$8" x="0" y="-5.08" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$9" x="0" y="-7.62" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$10" x="0" y="-10.16" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$11" x="0" y="-12.7" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$12" x="0" y="-15.24" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$13" x="0" y="-17.78" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$14" x="0" y="-20.32" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$15" x="0" y="-22.86" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$16" x="0" y="-25.4" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$17" x="0" y="-27.94" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$18" x="0" y="-30.48" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$19" x="0" y="-33.02" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="1" x="0" y="12.7" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="2" x="0" y="10.16" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="3" x="0" y="7.62" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="4" x="0" y="5.08" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="5" x="0" y="2.54" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="6" x="0" y="0" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="7" x="0" y="-2.54" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="8" x="0" y="-5.08" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="9" x="0" y="-7.62" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="10" x="0" y="-10.16" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="11" x="0" y="-12.7" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="12" x="0" y="-15.24" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="13" x="0" y="-17.78" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="14" x="0" y="-20.32" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="15" x="0" y="-22.86" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="16" x="0" y="-25.4" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="17" x="0" y="-27.94" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="18" x="0" y="-30.48" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="19" x="0" y="-33.02" drill="0.6" diameter="1.27" shape="square"/>
 </package>
 </packages>
 <symbols>
 <symbol name="19_2.54">
-<pin name="P$1" x="-15.24" y="25.4" length="middle"/>
-<pin name="P$2" x="-15.24" y="22.86" length="middle"/>
-<pin name="P$3" x="-15.24" y="20.32" length="middle"/>
-<pin name="P$4" x="-15.24" y="17.78" length="middle"/>
-<pin name="P$5" x="-15.24" y="15.24" length="middle"/>
-<pin name="P$6" x="-15.24" y="12.7" length="middle"/>
-<pin name="P$7" x="-15.24" y="10.16" length="middle"/>
-<pin name="P$8" x="-15.24" y="7.62" length="middle"/>
-<pin name="P$9" x="-15.24" y="5.08" length="middle"/>
-<pin name="P$10" x="-15.24" y="2.54" length="middle"/>
-<pin name="P$11" x="-15.24" y="0" length="middle"/>
-<pin name="P$12" x="-15.24" y="-2.54" length="middle"/>
-<pin name="P$13" x="-15.24" y="-5.08" length="middle"/>
-<pin name="P$14" x="-15.24" y="-7.62" length="middle"/>
-<pin name="P$15" x="-15.24" y="-10.16" length="middle"/>
-<pin name="P$16" x="-15.24" y="-12.7" length="middle"/>
-<pin name="P$17" x="-15.24" y="-15.24" length="middle"/>
-<pin name="P$18" x="-15.24" y="-17.78" length="middle"/>
-<pin name="P$19" x="-15.24" y="-20.32" length="middle"/>
+<pin name="1" x="-15.24" y="25.4" length="middle"/>
+<pin name="2" x="-15.24" y="22.86" length="middle"/>
+<pin name="3" x="-15.24" y="20.32" length="middle"/>
+<pin name="4" x="-15.24" y="17.78" length="middle"/>
+<pin name="5" x="-15.24" y="15.24" length="middle"/>
+<pin name="6" x="-15.24" y="12.7" length="middle"/>
+<pin name="7" x="-15.24" y="10.16" length="middle"/>
+<pin name="8" x="-15.24" y="7.62" length="middle"/>
+<pin name="9" x="-15.24" y="5.08" length="middle"/>
+<pin name="10" x="-15.24" y="2.54" length="middle"/>
+<pin name="11" x="-15.24" y="0" length="middle"/>
+<pin name="12" x="-15.24" y="-2.54" length="middle"/>
+<pin name="13" x="-15.24" y="-5.08" length="middle"/>
+<pin name="14" x="-15.24" y="-7.62" length="middle"/>
+<pin name="15" x="-15.24" y="-10.16" length="middle"/>
+<pin name="16" x="-15.24" y="-12.7" length="middle"/>
+<pin name="17" x="-15.24" y="-15.24" length="middle"/>
+<pin name="18" x="-15.24" y="-17.78" length="middle"/>
+<pin name="19" x="-15.24" y="-20.32" length="middle"/>
 <wire x1="-12.7" y1="27.94" x2="-12.7" y2="-22.86" width="0.254" layer="94"/>
 <wire x1="-12.7" y1="-22.86" x2="0" y2="-22.86" width="0.254" layer="94"/>
 <wire x1="0" y1="-22.86" x2="0" y2="27.94" width="0.254" layer="94"/>
@@ -130,25 +130,25 @@
 <devices>
 <device name="" package="19_2.54">
 <connects>
-<connect gate="G$1" pin="P$1" pad="P$1"/>
-<connect gate="G$1" pin="P$10" pad="P$10"/>
-<connect gate="G$1" pin="P$11" pad="P$11"/>
-<connect gate="G$1" pin="P$12" pad="P$12"/>
-<connect gate="G$1" pin="P$13" pad="P$13"/>
-<connect gate="G$1" pin="P$14" pad="P$14"/>
-<connect gate="G$1" pin="P$15" pad="P$15"/>
-<connect gate="G$1" pin="P$16" pad="P$16"/>
-<connect gate="G$1" pin="P$17" pad="P$17"/>
-<connect gate="G$1" pin="P$18" pad="P$18"/>
-<connect gate="G$1" pin="P$19" pad="P$19"/>
-<connect gate="G$1" pin="P$2" pad="P$2"/>
-<connect gate="G$1" pin="P$3" pad="P$3"/>
-<connect gate="G$1" pin="P$4" pad="P$4"/>
-<connect gate="G$1" pin="P$5" pad="P$5"/>
-<connect gate="G$1" pin="P$6" pad="P$6"/>
-<connect gate="G$1" pin="P$7" pad="P$7"/>
-<connect gate="G$1" pin="P$8" pad="P$8"/>
-<connect gate="G$1" pin="P$9" pad="P$9"/>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="15" pad="15"/>
+<connect gate="G$1" pin="16" pad="16"/>
+<connect gate="G$1" pin="17" pad="17"/>
+<connect gate="G$1" pin="18" pad="18"/>
+<connect gate="G$1" pin="19" pad="19"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
 </connects>
 <technologies>
 <technology name=""/>
