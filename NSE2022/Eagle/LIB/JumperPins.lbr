@@ -94,6 +94,10 @@
 <pad name="18" x="0" y="-30.48" drill="0.6" diameter="1.27" shape="square"/>
 <pad name="19" x="0" y="-33.02" drill="0.6" diameter="1.27" shape="square"/>
 </package>
+<package name="2_2.54">
+<pad name="1" x="-1.27" y="0" drill="0.7" diameter="1.27" shape="square"/>
+<pad name="2" x="1.27" y="0" drill="0.7" diameter="1.27" shape="square"/>
+</package>
 </packages>
 <symbols>
 <symbol name="19_2.54">
@@ -121,9 +125,17 @@
 <wire x1="0" y1="-22.86" x2="0" y2="27.94" width="0.254" layer="94"/>
 <wire x1="0" y1="27.94" x2="-12.7" y2="27.94" width="0.254" layer="94"/>
 </symbol>
+<symbol name="2_2.54">
+<pin name="1" x="-2.54" y="2.54" length="middle"/>
+<pin name="2" x="-2.54" y="-2.54" length="middle"/>
+<wire x1="0" y1="5.08" x2="0" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-5.08" x2="7.62" y2="5.08" width="0.254" layer="94"/>
+<wire x1="7.62" y1="5.08" x2="0" y2="5.08" width="0.254" layer="94"/>
+</symbol>
 </symbols>
 <devicesets>
-<deviceset name="19_2.54">
+<deviceset name="19_2.54" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="19_2.54" x="2.54" y="2.54"/>
 </gates>
@@ -149,6 +161,22 @@
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="2_2.54" uservalue="yes">
+<gates>
+<gate name="G$1" symbol="2_2.54" x="-2.54" y="0"/>
+</gates>
+<devices>
+<device name="" package="2_2.54">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>
