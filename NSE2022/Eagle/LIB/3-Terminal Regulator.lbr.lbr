@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="10" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -59,55 +59,40 @@
 </layers>
 <library>
 <packages>
-<package name="BD6231F">
-<smd name="GND" x="0.6" y="-0.595" dx="0.35" dy="0.45" layer="1" roundness="1"/>
-<smd name="OUT2" x="0.6" y="-1.865" dx="0.35" dy="0.45" layer="1"/>
-<smd name="VREF" x="0.6" y="-3.135" dx="0.35" dy="0.45" layer="1"/>
-<smd name="RIN" x="0.595" y="-4.405" dx="0.35" dy="0.45" layer="1"/>
-<wire x1="0" y1="0" x2="0" y2="-5" width="0.127" layer="21"/>
-<smd name="OUT1" x="-5" y="-0.595" dx="0.35" dy="0.45" layer="1"/>
-<smd name="VCC_1" x="-5" y="-1.865" dx="0.35" dy="0.45" layer="1"/>
-<smd name="VCC_2" x="-5" y="-3.135" dx="0.35" dy="0.45" layer="1"/>
-<smd name="FIN" x="-5" y="-4.405" dx="0.35" dy="0.45" layer="1"/>
-<wire x1="0" y1="0" x2="-4.4" y2="0" width="0.127" layer="21"/>
-<wire x1="-4.4" y1="0" x2="-4.4" y2="-5" width="0.127" layer="21"/>
-<wire x1="-4.4" y1="-5" x2="0" y2="-5" width="0.127" layer="21"/>
-<text x="-3.81" y="1.27" size="1.778" layer="21">BD6231f</text>
+<package name="TA48M05F">
+<wire x1="0" y1="0" x2="0" y2="-6.8" width="0.127" layer="21"/>
+<wire x1="0" y1="-6.8" x2="-2.5" y2="-6.8" width="0.127" layer="21"/>
+<wire x1="-2.5" y1="-6.8" x2="-2.5" y2="0" width="0.127" layer="21"/>
+<wire x1="-2.5" y1="0" x2="0" y2="0" width="0.127" layer="21"/>
+<pad name="GND" x="-1.1" y="-3.4" drill="0.6" shape="square"/>
+<pad name="OUTPUT" x="-1.1" y="-1.1" drill="0.6" shape="square"/>
+<pad name="INPUT" x="-1.1" y="-5.7" drill="0.6" shape="square"/>
+<text x="-3.81" y="1.27" size="1.778" layer="21">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
-<symbol name="BD6231F">
-<pin name="GND" x="2.54" y="-2.54" length="middle" rot="R180"/>
-<pin name="OUT2" x="2.54" y="-7.62" length="middle" rot="R180"/>
-<pin name="VREF" x="2.54" y="-12.7" length="middle" rot="R180"/>
-<pin name="OUT1" x="-25.4" y="-2.54" length="middle"/>
-<pin name="VCC_1" x="-25.4" y="-7.62" length="middle"/>
-<pin name="VCC_2" x="-25.4" y="-12.7" length="middle"/>
-<pin name="RIN" x="2.54" y="-17.78" length="middle" rot="R180"/>
-<pin name="FIN" x="-25.4" y="-17.78" length="middle"/>
-<wire x1="-22.86" y1="0" x2="-22.86" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="-22.86" y1="-20.32" x2="0" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="0" y1="-20.32" x2="0" y2="0" width="0.254" layer="94"/>
-<wire x1="0" y1="0" x2="-22.86" y2="0" width="0.254" layer="94"/>
-<text x="-20.32" y="2.54" size="1.778" layer="94">BD6231f</text>
+<symbol name="TA48M05F">
+<pin name="OUTPUT" x="2.54" y="-5.08" length="middle" rot="R180"/>
+<pin name="GND" x="2.54" y="-10.16" length="middle" rot="R180"/>
+<pin name="INPUT" x="2.54" y="-15.24" length="middle" rot="R180"/>
+<text x="-15.24" y="0" size="1.778" layer="94">TA48M05F</text>
+<wire x1="0" y1="-17.78" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-17.78" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-2.54" x2="-17.78" y2="-17.78" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-17.78" x2="0" y2="-17.78" width="0.254" layer="94"/>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="BD6231F">
+<deviceset name="TA48M05F">
 <gates>
-<gate name="G$1" symbol="BD6231F" x="-2.54" y="5.08"/>
+<gate name="G$1" symbol="TA48M05F" x="-15.24" y="7.62"/>
 </gates>
 <devices>
-<device name="" package="BD6231F">
+<device name="" package="TA48M05F">
 <connects>
-<connect gate="G$1" pin="FIN" pad="FIN"/>
 <connect gate="G$1" pin="GND" pad="GND"/>
-<connect gate="G$1" pin="OUT1" pad="OUT1"/>
-<connect gate="G$1" pin="OUT2" pad="OUT2"/>
-<connect gate="G$1" pin="RIN" pad="RIN"/>
-<connect gate="G$1" pin="VCC_1" pad="VCC_1"/>
-<connect gate="G$1" pin="VCC_2" pad="VCC_2"/>
-<connect gate="G$1" pin="VREF" pad="VREF"/>
+<connect gate="G$1" pin="INPUT" pad="INPUT"/>
+<connect gate="G$1" pin="OUTPUT" pad="OUTPUT"/>
 </connects>
 <technologies>
 <technology name=""/>

@@ -6,23 +6,9 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="2" name="Route2" color="16" fill="1" visible="no" active="yes"/>
-<layer number="3" name="Route3" color="17" fill="1" visible="no" active="yes"/>
-<layer number="4" name="Route4" color="18" fill="1" visible="no" active="yes"/>
-<layer number="5" name="Route5" color="19" fill="1" visible="no" active="yes"/>
-<layer number="6" name="Route6" color="25" fill="1" visible="no" active="yes"/>
-<layer number="7" name="Route7" color="26" fill="1" visible="no" active="yes"/>
-<layer number="8" name="Route8" color="27" fill="1" visible="no" active="yes"/>
-<layer number="9" name="Route9" color="28" fill="1" visible="no" active="yes"/>
-<layer number="10" name="Route10" color="29" fill="1" visible="no" active="yes"/>
-<layer number="11" name="Route11" color="30" fill="1" visible="no" active="yes"/>
-<layer number="12" name="Route12" color="20" fill="1" visible="no" active="yes"/>
-<layer number="13" name="Route13" color="21" fill="1" visible="no" active="yes"/>
-<layer number="14" name="Route14" color="22" fill="1" visible="no" active="yes"/>
-<layer number="15" name="Route15" color="23" fill="1" visible="no" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
@@ -52,7 +38,7 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
@@ -73,49 +59,58 @@
 </layers>
 <library>
 <packages>
-<package name="OSXX1608C1A">
-<smd name="CT" x="0.75" y="0" dx="0.8" dy="0.8" layer="1"/>
-<smd name="AN" x="-0.75" y="0" dx="0.8" dy="0.8" layer="1"/>
-<text x="-0.8" y="0.47" size="0.3048" layer="25">&gt;NAME</text>
-<wire x1="-0.2" y1="0.4" x2="-0.2" y2="-0.4" width="0.0762" layer="21"/>
-<wire x1="-0.2" y1="-0.4" x2="0.2" y2="0" width="0.0762" layer="21"/>
-<wire x1="0.2" y1="0" x2="-0.2" y2="0.4" width="0.0762" layer="21"/>
-<wire x1="0.2" y1="0.4" x2="0.2" y2="-0.4" width="0.0762" layer="21"/>
-<wire x1="-0.8" y1="0" x2="0.8" y2="0" width="0.0762" layer="21"/>
+<package name="BD6231F">
+<text x="-5.08" y="3.81" size="1.778" layer="21">BD6231f</text>
+<smd name="GND" x="2.54" y="1.905" dx="3.81" dy="0.635" layer="1"/>
+<smd name="OUT2" x="2.54" y="0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="VREF" x="2.54" y="-0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="RIN" x="2.54" y="-1.905" dx="3.81" dy="0.635" layer="1"/>
+<smd name="OUT1" x="-2.54" y="1.905" dx="3.81" dy="0.635" layer="1"/>
+<smd name="VCC1" x="-2.54" y="0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="VCC2" x="-2.54" y="-0.635" dx="3.81" dy="0.635" layer="1"/>
+<smd name="FIN" x="-2.54" y="-1.905" dx="3.81" dy="0.635" layer="1"/>
+<wire x1="2.2" y1="-2.5" x2="-2.2" y2="-2.5" width="0.127" layer="21"/>
+<wire x1="-2.2" y1="-2.5" x2="-2.2" y2="2.5" width="0.127" layer="21"/>
+<wire x1="2.2" y1="2.5" x2="2.2" y2="-2.5" width="0.127" layer="21"/>
+<wire x1="-0.5" y1="2.5" x2="0.5" y2="2.5" width="0.127" layer="21" curve="180"/>
+<wire x1="-2.2" y1="2.5" x2="-0.5" y2="2.5" width="0.127" layer="21"/>
+<wire x1="2.2" y1="2.5" x2="0.5" y2="2.5" width="0.127" layer="21"/>
+<circle x="-1.143" y="1.397" radius="0.762" width="0.127" layer="21"/>
 </package>
 </packages>
 <symbols>
-<symbol name="OSXX1608C1A">
-<pin name="CT" x="2.54" y="0" visible="off" length="point"/>
-<pin name="AN" x="-2.54" y="0" visible="off" length="point" rot="R180"/>
-<wire x1="-0.635" y1="1.27" x2="-0.635" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-0.635" y1="-1.27" x2="0.635" y2="0" width="0.254" layer="94"/>
-<wire x1="0.635" y1="0" x2="-0.635" y2="1.27" width="0.254" layer="94"/>
-<wire x1="0.635" y1="1.27" x2="0.635" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
-<text x="-3.048" y="-3.048" size="1.27" layer="95">&gt;NAME</text>
-<text x="-5.334" y="2.54" size="1.27" layer="96">&gt;VALUE</text>
-<wire x1="1.27" y1="1.27" x2="1.524" y2="2.032" width="0.254" layer="94"/>
-<wire x1="1.524" y1="2.032" x2="1.778" y2="1.524" width="0.254" layer="94"/>
-<wire x1="1.778" y1="1.524" x2="2.032" y2="2.286" width="0.254" layer="94"/>
-<wire x1="2.032" y1="2.286" x2="2.286" y2="1.778" width="0.254" layer="94"/>
-<wire x1="2.286" y1="1.778" x2="2.54" y2="2.54" width="0.254" layer="94"/>
-<wire x1="2.54" y1="2.54" x2="2.794" y2="2.032" width="0.254" layer="94"/>
-<wire x1="2.794" y1="2.032" x2="3.302" y2="3.302" width="0.254" layer="94"/>
-<wire x1="2.794" y1="3.048" x2="3.302" y2="3.302" width="0.254" layer="94"/>
-<wire x1="3.302" y1="3.302" x2="3.556" y2="2.794" width="0.254" layer="94"/>
+<symbol name="BD6231F">
+<pin name="GND" x="2.54" y="-2.54" length="middle" rot="R180"/>
+<pin name="OUT2" x="2.54" y="-7.62" length="middle" rot="R180"/>
+<pin name="VREF" x="2.54" y="-12.7" length="middle" rot="R180"/>
+<pin name="OUT1" x="-25.4" y="-2.54" length="middle"/>
+<pin name="VCC_1" x="-25.4" y="-7.62" length="middle"/>
+<pin name="VCC_2" x="-25.4" y="-12.7" length="middle"/>
+<pin name="RIN" x="2.54" y="-17.78" length="middle" rot="R180"/>
+<pin name="FIN" x="-25.4" y="-17.78" length="middle"/>
+<wire x1="-22.86" y1="0" x2="-22.86" y2="-20.32" width="0.254" layer="94"/>
+<wire x1="-22.86" y1="-20.32" x2="0" y2="-20.32" width="0.254" layer="94"/>
+<wire x1="0" y1="-20.32" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-22.86" y2="0" width="0.254" layer="94"/>
+<text x="-20.32" y="2.54" size="1.778" layer="94">BD6231f</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="OSXX1608C1A">
+<deviceset name="BD6231F" prefix="MD" uservalue="yes">
 <gates>
-<gate name="G$1" symbol="OSXX1608C1A" x="0" y="0"/>
+<gate name="G$1" symbol="BD6231F" x="10.16" y="10.16"/>
 </gates>
 <devices>
-<device name="" package="OSXX1608C1A">
+<device name="" package="BD6231F">
 <connects>
-<connect gate="G$1" pin="AN" pad="AN"/>
-<connect gate="G$1" pin="CT" pad="CT"/>
+<connect gate="G$1" pin="FIN" pad="FIN"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="OUT1" pad="OUT1"/>
+<connect gate="G$1" pin="OUT2" pad="OUT2"/>
+<connect gate="G$1" pin="RIN" pad="RIN"/>
+<connect gate="G$1" pin="VCC_1" pad="VCC1"/>
+<connect gate="G$1" pin="VCC_2" pad="VCC2"/>
+<connect gate="G$1" pin="VREF" pad="VREF"/>
 </connects>
 <technologies>
 <technology name=""/>
