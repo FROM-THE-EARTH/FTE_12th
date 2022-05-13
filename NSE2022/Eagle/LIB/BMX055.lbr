@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -60,10 +60,8 @@
 <library>
 <packages>
 <package name="BMX055">
-<wire x1="0" y1="-14" x2="0" y2="-9.53" width="0.127" layer="21"/>
-<wire x1="0" y1="-9.53" x2="0" y2="0" width="0.127" layer="21"/>
-<wire x1="0" y1="0" x2="1.19" y2="0" width="0.127" layer="21"/>
-<wire x1="1.19" y1="0" x2="10" y2="0" width="0.127" layer="21"/>
+<wire x1="0" y1="-14" x2="0" y2="0" width="0.127" layer="21"/>
+<wire x1="0" y1="0" x2="10" y2="0" width="0.127" layer="21"/>
 <wire x1="10" y1="0" x2="10" y2="-14" width="0.127" layer="21"/>
 <wire x1="10" y1="-14" x2="0" y2="-14" width="0.127" layer="21"/>
 <pad name="GND" x="1.19" y="-4.46" drill="0.65" diameter="1.5" shape="square"/>
@@ -72,21 +70,24 @@
 <pad name="VCC" x="8.81" y="-4.46" drill="0.65" diameter="1.5" shape="square"/>
 <pad name="VCCIO" x="8.81" y="-7" drill="0.65" diameter="1.5" shape="square"/>
 <pad name="3V3" x="8.81" y="-9.53" drill="0.65" diameter="1.5" shape="square"/>
+<text x="0" y="0.635" size="1.27" layer="25">&gt;NAME</text>
+<text x="0" y="-15.494" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 <symbols>
 <symbol name="BMX055">
-<text x="-1" y="1" size="1.778" layer="95">BMX055</text>
-<pin name="GND" x="-8.66" y="-1.92" length="middle" direction="pwr"/>
-<pin name="VCC" x="18.66" y="-1.92" length="middle" direction="pwr" rot="R180"/>
-<pin name="SDA" x="-8.66" y="-4.46" length="middle"/>
-<pin name="VCCIO" x="18.66" y="-4.46" length="middle" direction="pwr" rot="R180"/>
-<pin name="SCL" x="-8.66" y="-6.99" length="middle"/>
-<pin name="3V3" x="18.66" y="-6.99" length="middle" direction="pwr" rot="R180"/>
-<wire x1="-5.08" y1="0" x2="15.24" y2="0" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="0" x2="-5.08" y2="-10.16" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-10.16" x2="15.24" y2="-10.16" width="0.254" layer="94"/>
-<wire x1="15.24" y1="-10.16" x2="15.24" y2="0" width="0.254" layer="94"/>
+<text x="-6.08" y="6.08" size="1.778" layer="95">&gt;NAME</text>
+<pin name="GND" x="-12.7" y="2.54" length="middle" direction="pwr"/>
+<pin name="VCC" x="15.24" y="2.54" length="middle" direction="pwr" rot="R180"/>
+<pin name="SDA" x="-12.7" y="0" length="middle"/>
+<pin name="VCCIO" x="15.24" y="0" length="middle" direction="pwr" rot="R180"/>
+<pin name="SCL" x="-12.7" y="-2.54" length="middle"/>
+<pin name="3V3" x="15.24" y="-2.54" length="middle" direction="pwr" rot="R180"/>
+<wire x1="-7.62" y1="5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="5.08" x2="-7.62" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-5.08" x2="10.16" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
+<text x="-7.62" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
