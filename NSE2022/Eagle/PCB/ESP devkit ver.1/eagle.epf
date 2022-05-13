@@ -270,7 +270,6 @@ UsedLibraryUrn="urn:adsk.eagle:library:199"
 UsedLibrary="C:/Users/川島　凌太朗/Documents/EAGLE/libraries/InUse_NSE2022/ESP32.lbr"
 UsedLibrary="C:/Users/川島　凌太朗/Documents/EAGLE/libraries/InUse_NSE2022/AS5600.lbr"
 UsedLibrary="C:/Users/川島　凌太朗/Documents/EAGLE/libraries/InUse_NSE2022/BMP280.lbr"
-UsedLibrary="C:/Users/川島　凌太朗/Documents/EAGLE/libraries/InUse_NSE2022/RASPBERRYPI4B.lbr"
 
 [Win_1]
 Type="Control Panel"

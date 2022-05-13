@@ -128,9 +128,8 @@
 <wire x1="-8" y1="8.69" x2="-8" y2="14.99" width="0.127" layer="22"/>
 <wire x1="-8" y1="14.99" x2="10" y2="14.99" width="0.127" layer="22"/>
 <wire x1="10" y1="14.99" x2="10" y2="8.7" width="0.127" layer="22"/>
-<text x="-7.62" y="-15.24" size="1.27" layer="21">ESP32
-WROOM-32D</text>
-<text x="-7.62" y="15.24" size="1.27" layer="21">&gt;NAME</text>
+<text x="3.81" y="-12.7" size="1.27" layer="27">&gt;VALUE</text>
+<text x="-7.62" y="-12.7" size="1.27" layer="25">&gt;NAME</text>
 </package>
 <package name="ESP32-WROOM-32U">
 <smd name="GND@5" x="0" y="0" dx="1.33" dy="1.33" layer="1"/>
@@ -184,9 +183,8 @@ WROOM-32D</text>
 <wire x1="-8" y1="8.69" x2="10.01" y2="8.69" width="0.127" layer="22"/>
 <wire x1="10.01" y1="8.69" x2="10.01" y2="-10.51" width="0.127" layer="22"/>
 <wire x1="10.01" y1="-10.51" x2="-8" y2="-10.51" width="0.127" layer="22"/>
-<text x="-7.62" y="8.89" size="1.27" layer="21">&gt;NAME</text>
-<text x="-7.62" y="-15.24" size="1.27" layer="21">ESP32
-WROOM-32U</text>
+<text x="-7.62" y="-12.7" size="1.27" layer="25">&gt;NAME</text>
+<text x="3.81" y="-12.7" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 <package name="ESP32-WROVER-B">
 <smd name="39_GND" x="0" y="0" dx="5" dy="5" layer="1"/>
@@ -235,9 +233,8 @@ WROOM-32U</text>
 <wire x1="-7.5" y1="8.64" x2="-7.5" y2="-16.46" width="0.127" layer="21"/>
 <wire x1="-7.5" y1="-16.46" x2="9.5" y2="-16.46" width="0.127" layer="21"/>
 <wire x1="9.5" y1="-16.46" x2="9.5" y2="8.64" width="0.127" layer="21"/>
-<text x="-7.81" y="-20.53" size="1.27" layer="21">ESP32
-WROVER-B</text>
-<text x="-7.7" y="15.4" size="1.27" layer="21">&gt;NAME</text>
+<text x="3.62" y="-17.99" size="1.27" layer="27">&gt;VALUE</text>
+<text x="-7.446" y="-18.001" size="1.27" layer="25">&gt;NAME</text>
 </package>
 <package name="ESP32-WROVER&amp;WROOM">
 <smd name="39_GND" x="0" y="0" dx="5" dy="5" layer="1"/>
@@ -286,8 +283,8 @@ WROVER-B</text>
 <wire x1="-8" y1="8.64" x2="-8" y2="-16.46" width="0.127" layer="21"/>
 <wire x1="-8" y1="-16.46" x2="10" y2="-16.46" width="0.127" layer="21"/>
 <wire x1="10" y1="-16.46" x2="10" y2="8.64" width="0.127" layer="21"/>
-<text x="-7.81" y="-19.26" size="1.27" layer="21">ESP32</text>
-<text x="-7.7" y="15.4" size="1.27" layer="21">&gt;NAME</text>
+<text x="3.62" y="-17.99" size="1.27" layer="27">&gt;VALUE</text>
+<text x="-7.573" y="-18.255" size="1.27" layer="25">&gt;NAME</text>
 <smd name="19_CMD@2" x="0.365" y="-10.1" dx="2" dy="0.9" layer="1" rot="R90"/>
 <smd name="18_SD3@2" x="-0.905" y="-10.1" dx="2" dy="0.9" layer="1" rot="R90"/>
 <smd name="17_SD2@2" x="-2.175" y="-10.1" dx="2" dy="0.9" layer="1" rot="R90"/>
@@ -349,6 +346,7 @@ WROVER-B</text>
 <text x="-22.86" y="20.32" size="1.27" layer="95">&gt;NAME</text>
 <text x="-7.62" y="-5.08" size="1.778" layer="95">STM32
 WROOM-32D</text>
+<text x="-22.86" y="18.542" size="1.27" layer="96">&gt;VALUE</text>
 </symbol>
 <symbol name="ESP32-WROOM-32U">
 <pin name="1_GND" x="-27.94" y="15.24" length="middle"/>
@@ -397,6 +395,7 @@ WROOM-32D</text>
 <text x="-22.86" y="20.32" size="1.27" layer="95">&gt;NAME</text>
 <text x="-7.62" y="-5.08" size="1.778" layer="95">STM32
 WROOM-32U</text>
+<text x="-22.86" y="18.288" size="1.27" layer="96">&gt;VALUE</text>
 </symbol>
 <symbol name="ESP32-WROVER-B">
 <pin name="1_GND" x="-27.94" y="15.24" length="middle"/>
@@ -445,6 +444,7 @@ WROOM-32U</text>
 <text x="-22.86" y="20.32" size="1.27" layer="95">&gt;NAME</text>
 <text x="-7.62" y="-5.08" size="1.778" layer="95">STM32
 WROVER-B</text>
+<text x="-22.86" y="18.288" size="1.27" layer="95">&gt;VALUE</text>
 </symbol>
 <symbol name="ESP32-WROVER&amp;WROOM">
 <pin name="1_GND" x="-27.94" y="15.24" length="middle"/>
@@ -492,10 +492,11 @@ WROVER-B</text>
 <pin name="39_GND" x="0" y="22.86" length="middle" rot="R270"/>
 <text x="-22.86" y="20.32" size="1.778" layer="95">&gt;NAME</text>
 <text x="-5.08" y="-2.54" size="1.778" layer="95">STM32</text>
+<text x="-22.86" y="18.034" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="ESP32-WROOM-32D">
+<deviceset name="ESP32-WROOM-32D" prefix="U" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="ESP32-WROOM-32D" x="0" y="0"/>
 </gates>
@@ -548,7 +549,7 @@ WROVER-B</text>
 </device>
 </devices>
 </deviceset>
-<deviceset name="ESP32-WROOM-32U">
+<deviceset name="ESP32-WROOM-32U" prefix="U" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="ESP32-WROOM-32U" x="0" y="0"/>
 </gates>
@@ -601,7 +602,7 @@ WROVER-B</text>
 </device>
 </devices>
 </deviceset>
-<deviceset name="ESP32-WROVER-B">
+<deviceset name="ESP32-WROVER-B" prefix="U" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="ESP32-WROVER-B" x="0" y="0"/>
 </gates>
@@ -654,7 +655,7 @@ WROVER-B</text>
 </device>
 </devices>
 </deviceset>
-<deviceset name="ESP32-WROOM&amp;WROVER">
+<deviceset name="ESP32-WROOM&amp;WROVER" prefix="U" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="ESP32-WROVER&amp;WROOM" x="0" y="0"/>
 </gates>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.6.0">
+<eagle version="9.6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -87,9 +87,10 @@
 <circle x="-2.3" y="-2.3" radius="0.65" width="0.127" layer="21"/>
 <circle x="-2.3" y="2.3" radius="0.65" width="0.127" layer="21"/>
 <circle x="0" y="0" radius="1.75" width="0.127" layer="21"/>
-<text x="3.048" y="6.858" size="1.27" layer="21" rot="R180">&gt;NAME</text>
+<text x="3.048" y="6.858" size="1.27" layer="25" rot="R180">&gt;NAME</text>
+<text x="3.048" y="-5.842" size="1.27" layer="27" rot="R180">&gt;VALUE</text>
 </package>
-<package name="SRIDE_SWITCH" urn="urn:adsk.eagle:footprint:27212889/1">
+<package name="SRIDE_SWITCH" urn="urn:adsk.eagle:footprint:27212889/1" locally_modified="yes">
 <pad name="LR" x="0" y="0" drill="1"/>
 <pad name="R" x="2.5" y="0" drill="1"/>
 <pad name="L" x="-2.5" y="0" drill="1"/>
@@ -97,6 +98,8 @@
 <wire x1="4.25" y1="-1.75" x2="-4.25" y2="-1.75" width="0.127" layer="1"/>
 <wire x1="-4.25" y1="-1.75" x2="-4.25" y2="1.75" width="0.127" layer="1"/>
 <wire x1="-4.25" y1="1.75" x2="4.25" y2="1.75" width="0.127" layer="1"/>
+<text x="-3.81" y="3.81" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="2.54" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 <packages3d>
@@ -142,10 +145,12 @@
 <wire x1="-7.62" y1="7.62" x2="7.62" y2="7.62" width="0.254" layer="94"/>
 <wire x1="7.62" y1="7.62" x2="7.62" y2="0" width="0.254" layer="94"/>
 <wire x1="7.62" y1="0" x2="-7.62" y2="0" width="0.254" layer="94"/>
+<text x="-7.62" y="10.922" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="8.382" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="TS-06104">
+<deviceset name="TS-06104" prefix="SW" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="TS-06104" x="0" y="0"/>
 </gates>
@@ -163,7 +168,7 @@
 </device>
 </devices>
 </deviceset>
-<deviceset name="SRIDE_SWITCH" prefix="SRIDE_SWTCH">
+<deviceset name="SRIDE_SWITCH" prefix="SW" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="SRIDE_SWITCH" x="0" y="0"/>
 </gates>
