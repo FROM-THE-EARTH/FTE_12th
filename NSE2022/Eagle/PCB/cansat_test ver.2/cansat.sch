@@ -70,6 +70,7 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="yes" active="yes"/>
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
@@ -19906,21 +19907,19 @@ WROOM-32D</text>
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="150R"/>
 <part name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="150R"/>
 <part name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="150R"/>
-<part name="U$1" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
-<part name="U$2" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
-<part name="U$3" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
-<part name="U$4" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
-<part name="U$5" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
-<part name="U$6" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
+<part name="ESP_LED1" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
+<part name="ESP_LED2" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
+<part name="IMCHECK" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
+<part name="RAS_LED1" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
+<part name="RAS_LED2" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
+<part name="RAS_LED3" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="DCDC1" library="DC-DC" deviceset="3.3V0.5A_M78AR05-0.5" device="" value="5-3.3"/>
 <part name="R12" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2"/>
 <part name="SW1" library="Switches" deviceset="SRIDE_SWITCH" device="" package3d_urn="urn:adsk.eagle:package:27212891/1"/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="C21" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="4.7uF"/>
 <part name="C22" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="4.7uF"/>
-<part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="C6" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="4.7uF"/>
 <part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="4.7uF"/>
@@ -19958,6 +19957,8 @@ WROOM-32D</text>
 <part name="C7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="100uf"/>
 <part name="C8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="0.1uf"/>
 <part name="C9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-7" package3d_urn="urn:adsk.eagle:package:23345/1" value="0.1uF"/>
+<part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -20191,20 +20192,18 @@ WROOM-32D</text>
 <attribute name="NAME" x="388.62" y="62.23" size="1.27" layer="95" rot="R270"/>
 <attribute name="VALUE" x="382.778" y="65.786" size="1.27" layer="96" rot="R270"/>
 </instance>
-<instance part="R19" gate="G$1" x="403.86" y="27.94" smashed="yes">
-<attribute name="NAME" x="400.05" y="29.4386" size="1.778" layer="95"/>
-<attribute name="VALUE" x="400.05" y="24.638" size="1.778" layer="96"/>
+<instance part="R19" gate="G$1" x="424.18" y="27.94" smashed="yes">
+<attribute name="NAME" x="420.37" y="29.4386" size="1.778" layer="95"/>
+<attribute name="VALUE" x="420.37" y="24.638" size="1.778" layer="96"/>
 </instance>
-<instance part="R20" gate="G$1" x="411.48" y="20.32" smashed="yes" rot="R90">
-<attribute name="NAME" x="412.75" y="21.8186" size="1.778" layer="95"/>
-<attribute name="VALUE" x="412.75" y="19.558" size="1.778" layer="96"/>
+<instance part="R20" gate="G$1" x="431.8" y="20.32" smashed="yes" rot="R90">
+<attribute name="NAME" x="433.07" y="21.8186" size="1.778" layer="95"/>
+<attribute name="VALUE" x="433.07" y="19.558" size="1.778" layer="96"/>
 </instance>
-<instance part="GND34" gate="1" x="411.48" y="10.16" smashed="yes">
-<attribute name="VALUE" x="408.94" y="7.62" size="1.778" layer="96"/>
+<instance part="GND34" gate="1" x="431.8" y="10.16" smashed="yes">
+<attribute name="VALUE" x="429.26" y="7.62" size="1.778" layer="96"/>
 </instance>
-<instance part="P+15" gate="1" x="396.24" y="33.02" smashed="yes">
-<attribute name="VALUE" x="393.7" y="27.94" size="1.778" layer="96" rot="R90"/>
-</instance>
+<instance part="P+15" gate="1" x="416.56" y="33.02" smashed="yes"/>
 <instance part="R21" gate="G$1" x="167.64" y="33.02" smashed="yes" rot="R90">
 <attribute name="NAME" x="166.1414" y="29.21" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="170.942" y="29.21" size="1.778" layer="96" rot="R90"/>
@@ -20303,27 +20302,27 @@ WROOM-32D</text>
 <attribute name="NAME" x="257.81" y="138.6586" size="1.778" layer="95"/>
 <attribute name="VALUE" x="257.81" y="133.858" size="1.778" layer="96"/>
 </instance>
-<instance part="U$1" gate="G$1" x="271.78" y="175.26" smashed="yes">
+<instance part="ESP_LED1" gate="G$1" x="271.78" y="175.26" smashed="yes">
 <attribute name="NAME" x="268.732" y="172.212" size="1.27" layer="95"/>
 <attribute name="VALUE" x="268.732" y="177.038" size="1.27" layer="96"/>
 </instance>
-<instance part="U$2" gate="G$1" x="271.78" y="167.64" smashed="yes">
+<instance part="ESP_LED2" gate="G$1" x="271.78" y="167.64" smashed="yes">
 <attribute name="NAME" x="268.732" y="164.592" size="1.27" layer="95"/>
 <attribute name="VALUE" x="268.732" y="169.418" size="1.27" layer="96"/>
 </instance>
-<instance part="U$3" gate="G$1" x="271.78" y="160.02" smashed="yes">
+<instance part="IMCHECK" gate="G$1" x="271.78" y="160.02" smashed="yes">
 <attribute name="NAME" x="268.732" y="156.972" size="1.27" layer="95"/>
 <attribute name="VALUE" x="268.732" y="161.798" size="1.27" layer="96"/>
 </instance>
-<instance part="U$4" gate="G$1" x="271.78" y="152.4" smashed="yes">
+<instance part="RAS_LED1" gate="G$1" x="271.78" y="152.4" smashed="yes">
 <attribute name="NAME" x="268.732" y="149.352" size="1.27" layer="95"/>
 <attribute name="VALUE" x="268.732" y="154.178" size="1.27" layer="96"/>
 </instance>
-<instance part="U$5" gate="G$1" x="271.78" y="144.78" smashed="yes">
+<instance part="RAS_LED2" gate="G$1" x="271.78" y="144.78" smashed="yes">
 <attribute name="NAME" x="268.732" y="141.732" size="1.27" layer="95"/>
 <attribute name="VALUE" x="268.732" y="146.558" size="1.27" layer="96"/>
 </instance>
-<instance part="U$6" gate="G$1" x="271.78" y="137.16" smashed="yes">
+<instance part="RAS_LED3" gate="G$1" x="271.78" y="137.16" smashed="yes">
 <attribute name="NAME" x="268.732" y="134.112" size="1.27" layer="95"/>
 <attribute name="VALUE" x="268.732" y="138.938" size="1.27" layer="96"/>
 </instance>
@@ -20345,9 +20344,6 @@ WROOM-32D</text>
 <instance part="GND2" gate="1" x="25.4" y="-109.22" smashed="yes">
 <attribute name="VALUE" x="22.86" y="-111.76" size="1.778" layer="96"/>
 </instance>
-<instance part="P+9" gate="1" x="71.12" y="-88.9" smashed="yes">
-<attribute name="VALUE" x="68.58" y="-93.98" size="1.778" layer="96" rot="R90"/>
-</instance>
 <instance part="C21" gate="G$1" x="81.28" y="-99.06" smashed="yes">
 <attribute name="NAME" x="82.423" y="-98.5774" size="1.778" layer="95"/>
 <attribute name="VALUE" x="82.423" y="-103.6574" size="1.778" layer="96"/>
@@ -20355,9 +20351,6 @@ WROOM-32D</text>
 <instance part="C22" gate="G$1" x="88.9" y="-99.06" smashed="yes">
 <attribute name="NAME" x="90.043" y="-98.5774" size="1.778" layer="95"/>
 <attribute name="VALUE" x="90.043" y="-103.6574" size="1.778" layer="96"/>
-</instance>
-<instance part="GND14" gate="1" x="96.52" y="-111.76" smashed="yes">
-<attribute name="VALUE" x="93.98" y="-114.3" size="1.778" layer="96"/>
 </instance>
 <instance part="+3V2" gate="G$1" x="111.76" y="-86.36" smashed="yes">
 <attribute name="VALUE" x="109.22" y="-91.44" size="1.778" layer="96" rot="R90"/>
@@ -20470,6 +20463,12 @@ WROOM-32D</text>
 <instance part="C9" gate="G$1" x="190.5" y="-88.9" smashed="yes">
 <attribute name="NAME" x="191.643" y="-88.4174" size="1.778" layer="95"/>
 <attribute name="VALUE" x="191.643" y="-93.4974" size="1.778" layer="96"/>
+</instance>
+<instance part="GND14" gate="1" x="96.52" y="-111.76" smashed="yes">
+<attribute name="VALUE" x="93.98" y="-114.3" size="1.778" layer="96"/>
+</instance>
+<instance part="P+9" gate="1" x="71.12" y="-88.9" smashed="yes">
+<attribute name="VALUE" x="68.58" y="-93.98" size="1.778" layer="96" rot="R90"/>
 </instance>
 </instances>
 <busses>
@@ -20996,7 +20995,7 @@ WROOM-32D</text>
 </segment>
 <segment>
 <pinref part="R20" gate="G$1" pin="1"/>
-<wire x1="411.48" y1="15.24" x2="411.48" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="431.8" y1="15.24" x2="431.8" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="GND34" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -21034,10 +21033,10 @@ WROOM-32D</text>
 <pinref part="GND1" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="CT"/>
+<pinref part="RAS_LED3" gate="G$1" pin="CT"/>
 <wire x1="274.32" y1="137.16" x2="276.86" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="276.86" y1="137.16" x2="276.86" y2="144.78" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="CT"/>
+<pinref part="ESP_LED1" gate="G$1" pin="CT"/>
 <wire x1="276.86" y1="144.78" x2="276.86" y2="152.4" width="0.1524" layer="91"/>
 <wire x1="276.86" y1="152.4" x2="276.86" y2="160.02" width="0.1524" layer="91"/>
 <wire x1="276.86" y1="160.02" x2="276.86" y2="167.64" width="0.1524" layer="91"/>
@@ -21045,16 +21044,16 @@ WROOM-32D</text>
 <wire x1="276.86" y1="175.26" x2="276.86" y2="177.8" width="0.1524" layer="91"/>
 <wire x1="274.32" y1="175.26" x2="276.86" y2="175.26" width="0.1524" layer="91"/>
 <junction x="276.86" y="175.26"/>
-<pinref part="U$2" gate="G$1" pin="CT"/>
+<pinref part="ESP_LED2" gate="G$1" pin="CT"/>
 <wire x1="274.32" y1="167.64" x2="276.86" y2="167.64" width="0.1524" layer="91"/>
 <junction x="276.86" y="167.64"/>
-<pinref part="U$3" gate="G$1" pin="CT"/>
+<pinref part="IMCHECK" gate="G$1" pin="CT"/>
 <wire x1="274.32" y1="160.02" x2="276.86" y2="160.02" width="0.1524" layer="91"/>
 <junction x="276.86" y="160.02"/>
-<pinref part="U$4" gate="G$1" pin="CT"/>
+<pinref part="RAS_LED1" gate="G$1" pin="CT"/>
 <wire x1="274.32" y1="152.4" x2="276.86" y2="152.4" width="0.1524" layer="91"/>
 <junction x="276.86" y="152.4"/>
-<pinref part="U$5" gate="G$1" pin="CT"/>
+<pinref part="RAS_LED2" gate="G$1" pin="CT"/>
 <wire x1="274.32" y1="144.78" x2="276.86" y2="144.78" width="0.1524" layer="91"/>
 <junction x="276.86" y="144.78"/>
 <pinref part="GND5" gate="1" pin="GND"/>
@@ -21182,6 +21181,27 @@ WROOM-32D</text>
 <pinref part="MD_R" gate="G$1" pin="GND"/>
 <wire x1="365.76" y1="-38.1" x2="368.3" y2="-38.1" width="0.1524" layer="91"/>
 <label x="368.3" y="-38.1" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="C1" gate="G$1" pin="-"/>
+<wire x1="73.66" y1="-104.14" x2="73.66" y2="-106.68" width="0.1524" layer="91"/>
+<pinref part="DCDC1" gate="G$1" pin="GND"/>
+<wire x1="96.52" y1="-91.44" x2="96.52" y2="-106.68" width="0.1524" layer="91"/>
+<pinref part="C22" gate="G$1" pin="-"/>
+<wire x1="96.52" y1="-106.68" x2="96.52" y2="-109.22" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="-104.14" x2="88.9" y2="-106.68" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="-106.68" x2="96.52" y2="-106.68" width="0.1524" layer="91"/>
+<junction x="96.52" y="-106.68"/>
+<pinref part="C21" gate="G$1" pin="-"/>
+<wire x1="81.28" y1="-104.14" x2="81.28" y2="-106.68" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="-106.68" x2="88.9" y2="-106.68" width="0.1524" layer="91"/>
+<junction x="88.9" y="-106.68"/>
+<wire x1="73.66" y1="-106.68" x2="81.28" y2="-106.68" width="0.1524" layer="91"/>
+<junction x="81.28" y="-106.68"/>
+<pinref part="C6" gate="G$1" pin="-"/>
+<wire x1="104.14" y1="-104.14" x2="104.14" y2="-106.68" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="-106.68" x2="104.14" y2="-106.68" width="0.1524" layer="91"/>
+<pinref part="GND14" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -21323,21 +21343,6 @@ WROOM-32D</text>
 <junction x="345.44" y="76.2"/>
 </segment>
 <segment>
-<pinref part="P+9" gate="1" pin="+5V"/>
-<wire x1="71.12" y1="-91.44" x2="71.12" y2="-93.98" width="0.1524" layer="91"/>
-<pinref part="DCDC1" gate="G$1" pin="VIN"/>
-<wire x1="71.12" y1="-93.98" x2="81.28" y2="-93.98" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="-93.98" x2="88.9" y2="-93.98" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="-93.98" x2="91.44" y2="-93.98" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="-93.98" x2="91.44" y2="-91.44" width="0.1524" layer="91"/>
-<pinref part="C22" gate="G$1" pin="+"/>
-<wire x1="88.9" y1="-96.52" x2="88.9" y2="-93.98" width="0.1524" layer="91"/>
-<junction x="88.9" y="-93.98"/>
-<pinref part="C21" gate="G$1" pin="+"/>
-<wire x1="81.28" y1="-96.52" x2="81.28" y2="-93.98" width="0.1524" layer="91"/>
-<junction x="81.28" y="-93.98"/>
-</segment>
-<segment>
 <pinref part="U$8" gate="G$1" pin="VOUT2"/>
 <wire x1="152.4" y1="-81.28" x2="152.4" y2="-83.82" width="0.1524" layer="91"/>
 <wire x1="152.4" y1="-83.82" x2="134.62" y2="-83.82" width="0.1524" layer="91"/>
@@ -21368,8 +21373,8 @@ WROOM-32D</text>
 <segment>
 <pinref part="P+15" gate="1" pin="+5V"/>
 <pinref part="R19" gate="G$1" pin="1"/>
-<wire x1="396.24" y1="30.48" x2="396.24" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="396.24" y1="27.94" x2="398.78" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="416.56" y1="30.48" x2="416.56" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="416.56" y1="27.94" x2="419.1" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="CON2" gate="G$1" pin="2"/>
@@ -21398,6 +21403,25 @@ WROOM-32D</text>
 <wire x1="106.68" y1="-27.94" x2="101.6" y2="-27.94" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="-27.94" x2="101.6" y2="-25.4" width="0.1524" layer="91"/>
 <pinref part="P+1" gate="1" pin="+5V"/>
+</segment>
+<segment>
+<pinref part="C1" gate="G$1" pin="+"/>
+<wire x1="73.66" y1="-96.52" x2="73.66" y2="-93.98" width="0.1524" layer="91"/>
+<pinref part="P+9" gate="1" pin="+5V"/>
+<wire x1="73.66" y1="-93.98" x2="71.12" y2="-93.98" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="-93.98" x2="71.12" y2="-91.44" width="0.1524" layer="91"/>
+<pinref part="DCDC1" gate="G$1" pin="VIN"/>
+<wire x1="91.44" y1="-91.44" x2="91.44" y2="-93.98" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="-93.98" x2="88.9" y2="-93.98" width="0.1524" layer="91"/>
+<junction x="73.66" y="-93.98"/>
+<pinref part="C21" gate="G$1" pin="+"/>
+<wire x1="88.9" y1="-93.98" x2="81.28" y2="-93.98" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="-93.98" x2="73.66" y2="-93.98" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="-96.52" x2="81.28" y2="-93.98" width="0.1524" layer="91"/>
+<junction x="81.28" y="-93.98"/>
+<pinref part="C22" gate="G$1" pin="+"/>
+<wire x1="88.9" y1="-96.52" x2="88.9" y2="-93.98" width="0.1524" layer="91"/>
+<junction x="88.9" y="-93.98"/>
 </segment>
 </net>
 <net name="GPS_RX" class="0">
@@ -21804,11 +21828,11 @@ WROOM-32D</text>
 <segment>
 <pinref part="R19" gate="G$1" pin="2"/>
 <pinref part="R20" gate="G$1" pin="2"/>
-<wire x1="408.94" y1="27.94" x2="411.48" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="411.48" y1="27.94" x2="411.48" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="411.48" y1="27.94" x2="414.02" y2="27.94" width="0.1524" layer="91"/>
-<junction x="411.48" y="27.94"/>
-<label x="414.02" y="27.94" size="1.778" layer="95" xref="yes"/>
+<wire x1="429.26" y1="27.94" x2="431.8" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="431.8" y1="27.94" x2="431.8" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="431.8" y1="27.94" x2="434.34" y2="27.94" width="0.1524" layer="91"/>
+<junction x="431.8" y="27.94"/>
+<label x="434.34" y="27.94" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="DTR" class="0">
@@ -21889,42 +21913,42 @@ WROOM-32D</text>
 <net name="N$1" class="0">
 <segment>
 <pinref part="R1" gate="G$1" pin="2"/>
-<pinref part="U$1" gate="G$1" pin="AN"/>
+<pinref part="ESP_LED1" gate="G$1" pin="AN"/>
 <wire x1="266.7" y1="175.26" x2="269.24" y2="175.26" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="R2" gate="G$1" pin="2"/>
-<pinref part="U$2" gate="G$1" pin="AN"/>
+<pinref part="ESP_LED2" gate="G$1" pin="AN"/>
 <wire x1="266.7" y1="167.64" x2="269.24" y2="167.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
-<pinref part="U$3" gate="G$1" pin="AN"/>
+<pinref part="IMCHECK" gate="G$1" pin="AN"/>
 <wire x1="266.7" y1="160.02" x2="269.24" y2="160.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
 <pinref part="R4" gate="G$1" pin="2"/>
-<pinref part="U$4" gate="G$1" pin="AN"/>
+<pinref part="RAS_LED1" gate="G$1" pin="AN"/>
 <wire x1="266.7" y1="152.4" x2="269.24" y2="152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$5" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="2"/>
-<pinref part="U$5" gate="G$1" pin="AN"/>
+<pinref part="RAS_LED2" gate="G$1" pin="AN"/>
 <wire x1="266.7" y1="144.78" x2="269.24" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="R6" gate="G$1" pin="2"/>
-<pinref part="U$6" gate="G$1" pin="AN"/>
+<pinref part="RAS_LED3" gate="G$1" pin="AN"/>
 <wire x1="266.7" y1="137.16" x2="269.24" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -21950,35 +21974,6 @@ WROOM-32D</text>
 <wire x1="45.72" y1="-99.06" x2="45.72" y2="-96.52" width="0.1524" layer="91"/>
 <junction x="40.64" y="-99.06"/>
 <pinref part="U$10" gate="G$1" pin="GATE"/>
-</segment>
-</net>
-<net name="GND2" class="2">
-<segment>
-<pinref part="C1" gate="G$1" pin="-"/>
-<wire x1="73.66" y1="-104.14" x2="73.66" y2="-106.68" width="0.1524" layer="91"/>
-<pinref part="DCDC1" gate="G$1" pin="GND"/>
-<wire x1="96.52" y1="-91.44" x2="96.52" y2="-106.68" width="0.1524" layer="91"/>
-<pinref part="C22" gate="G$1" pin="-"/>
-<wire x1="96.52" y1="-106.68" x2="96.52" y2="-109.22" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="-104.14" x2="88.9" y2="-106.68" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="-106.68" x2="96.52" y2="-106.68" width="0.1524" layer="91"/>
-<junction x="96.52" y="-106.68"/>
-<pinref part="C21" gate="G$1" pin="-"/>
-<wire x1="81.28" y1="-104.14" x2="81.28" y2="-106.68" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="-106.68" x2="88.9" y2="-106.68" width="0.1524" layer="91"/>
-<junction x="88.9" y="-106.68"/>
-<wire x1="73.66" y1="-106.68" x2="81.28" y2="-106.68" width="0.1524" layer="91"/>
-<junction x="81.28" y="-106.68"/>
-<pinref part="GND14" gate="1" pin="GND"/>
-<pinref part="C6" gate="G$1" pin="-"/>
-<wire x1="104.14" y1="-104.14" x2="104.14" y2="-106.68" width="0.1524" layer="91"/>
-<wire x1="96.52" y1="-106.68" x2="104.14" y2="-106.68" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="+5V2" class="0">
-<segment>
-<pinref part="C1" gate="G$1" pin="+"/>
-<wire x1="73.66" y1="-96.52" x2="73.66" y2="-93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+12V" class="0">
@@ -22076,31 +22071,11 @@ WROOM-32D</text>
 </sheet>
 </sheets>
 <errors>
-<approved hash="104,1,13.58,109.84,BMX1,VCC,+5V,,,"/>
-<approved hash="204,1,13.58,107.3,BMX1,VCCIO,,,,"/>
-<approved hash="204,1,13.58,104.77,BMX1,3V3,,,,"/>
-<approved hash="104,1,-157.48,-40.64,U2,VDD,+3V3,,,"/>
-<approved hash="104,1,-157.48,-48.26,U2,VREGIN,+3V3,,,"/>
-<approved hash="104,1,-157.48,-43.18,U2,VBUS,CPVBUS,,,"/>
-<approved hash="202,1,-203.2,-58.42,U2,CTS,,,,"/>
-<approved hash="202,1,-203.2,-60.96,U2,DSR,,,,"/>
-<approved hash="202,1,-203.2,-66.04,U2,DCD,,,,"/>
-<approved hash="113,1,-49.53,22.7876,MD_R,,,,,"/>
-<approved hash="113,1,-54.7448,3.81,100μF,,,,,"/>
-<approved hash="113,1,-44.9419,3.81,0.1μF,,,,,"/>
-<approved hash="113,1,-49.53,-15.3124,MD_L,,,,,"/>
-<approved hash="113,1,-5.54355,-12.7,SERVO1,,,,,"/>
-<approved hash="113,1,-5.54355,-30.48,SERVO2,,,,,"/>
-<approved hash="113,1,-58.42,95.4215,RASPBERRYPI_4B,,,,,"/>
-<approved hash="113,1,-226.446,18.3134,3-REG2,,,,,"/>
-<approved hash="113,1,-310.344,17.3419,USB2,,,,,"/>
-<approved hash="113,1,-289.776,2.54,TVC4,,,,,"/>
-<approved hash="113,1,-282.156,2.54,TVC5,,,,,"/>
-<approved hash="113,1,-274.536,2.54,TVC6,,,,,"/>
-<approved hash="113,1,-286.635,-25.4,T3,,,,,"/>
-<approved hash="113,1,-286.635,-43.18,T4,,,,,"/>
-<approved hash="113,1,22.3965,24.13,U$13,,,,,"/>
-<approved hash="113,1,22.3965,8.89,U$14,,,,,"/>
+<approved hash="202,1,467.36,53.34,U2,CTS,,,,"/>
+<approved hash="202,1,467.36,50.8,U2,DSR,,,,"/>
+<approved hash="202,1,467.36,45.72,U2,DCD,,,,"/>
+<approved hash="204,1,175.26,175.26,BMX1,VCCIO,,,,"/>
+<approved hash="204,1,175.26,172.72,BMX1,3V3,,,,"/>
 </errors>
 </schematic>
 </drawing>
