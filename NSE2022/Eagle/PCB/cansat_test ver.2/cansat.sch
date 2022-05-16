@@ -19489,34 +19489,6 @@ WROOM-32D</text>
 </library>
 <library name="Connector">
 <packages>
-<package name="2.5_MINI-SPOX_2PIN">
-<pad name="1" x="-1.27" y="0" drill="1" shape="square"/>
-<pad name="2" x="1.27" y="0" drill="1" shape="square"/>
-<wire x1="3.7" y1="-0.38" x2="3.7" y2="1.52" width="0.127" layer="21"/>
-<wire x1="3.7" y1="1.52" x2="-2.7" y2="1.52" width="0.127" layer="21"/>
-<wire x1="-2.7" y1="1.52" x2="-3.7" y2="0.52" width="0.127" layer="21"/>
-<wire x1="-3.7" y1="0.52" x2="-3.7" y2="-0.38" width="0.127" layer="21"/>
-<wire x1="-3" y1="-2.38" x2="3" y2="-2.38" width="0.127" layer="21"/>
-<wire x1="-3.7" y1="-0.38" x2="-3.2" y2="-0.38" width="0.127" layer="21"/>
-<wire x1="-3.2" y1="-0.38" x2="-3" y2="-0.38" width="0.127" layer="21"/>
-<wire x1="-3" y1="-0.38" x2="-3" y2="-2.38" width="0.127" layer="21"/>
-<wire x1="3.7" y1="-0.38" x2="3.2" y2="-0.38" width="0.127" layer="21"/>
-<wire x1="3.2" y1="-0.38" x2="3" y2="-0.38" width="0.127" layer="21"/>
-<wire x1="3" y1="-0.38" x2="3" y2="-2.38" width="0.127" layer="21"/>
-<wire x1="-3.7" y1="-2.38" x2="-3.7" y2="-3.38" width="0.127" layer="21"/>
-<wire x1="-3.7" y1="-3.38" x2="3.7" y2="-3.38" width="0.127" layer="21"/>
-<wire x1="3.7" y1="-3.38" x2="3.7" y2="-2.38" width="0.127" layer="21"/>
-<wire x1="3.7" y1="-2.38" x2="-3.7" y2="-2.38" width="0.127" layer="21"/>
-<wire x1="-3.2" y1="-0.38" x2="-3.2" y2="0.2" width="0.127" layer="21"/>
-<wire x1="-3.2" y1="0.2" x2="-2.38" y2="1.02" width="0.127" layer="21"/>
-<wire x1="-2.38" y1="1.02" x2="-0.3" y2="1.02" width="0.127" layer="21"/>
-<wire x1="-0.3" y1="1.02" x2="0" y2="0.72" width="0.127" layer="21"/>
-<wire x1="0" y1="0.72" x2="0.3" y2="1.02" width="0.127" layer="21"/>
-<wire x1="0.3" y1="1.02" x2="3.2" y2="1.02" width="0.127" layer="21"/>
-<wire x1="3.2" y1="1.02" x2="3.2" y2="-0.38" width="0.127" layer="21"/>
-<text x="5.08" y="0" size="1.27" layer="25">&gt;NAME</text>
-<text x="5.08" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
-</package>
 <package name="2.5_MINI-SPOX_3PIN">
 <pad name="1" x="-1.27" y="0" drill="1" shape="square"/>
 <pad name="3" x="3.81" y="0" drill="1" shape="square"/>
@@ -19588,26 +19560,6 @@ WROOM-32D</text>
 </package>
 </packages>
 <symbols>
-<symbol name="2.5_MINI-SPOX_2PIN">
-<pin name="2" x="0" y="-2.54" visible="off" length="short" rot="R90"/>
-<pin name="1" x="-2.54" y="-2.54" visible="off" length="short" rot="R90"/>
-<wire x1="-3.81" y1="2.54" x2="-3.302" y2="3.556" width="0.254" layer="94"/>
-<wire x1="-3.302" y1="3.556" x2="-2.54" y2="4.064" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="4.064" x2="1.27" y2="4.064" width="0.254" layer="94"/>
-<wire x1="1.27" y1="4.064" x2="0.508" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0.508" y1="2.54" x2="0" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0" y1="2.54" x2="-2.54" y2="2.54" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="2.54" x2="-3.81" y2="2.54" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="2.54" x2="-3.81" y2="0" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="0" x2="0.508" y2="0" width="0.254" layer="94"/>
-<wire x1="0.508" y1="0" x2="0.508" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0.508" y1="0" x2="1.27" y2="1.524" width="0.254" layer="94"/>
-<wire x1="1.27" y1="1.524" x2="1.27" y2="4.064" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="2.54" x2="-2.54" y2="3.302" width="0.254" layer="94"/>
-<wire x1="0" y1="2.54" x2="0" y2="3.302" width="0.254" layer="94"/>
-<text x="2.54" y="2.54" size="1.27" layer="95">&gt;NAME</text>
-<text x="2.54" y="0" size="1.27" layer="96">&gt;VALUE</text>
-</symbol>
 <symbol name="2.5_MINI-SPOX_3PIN">
 <pin name="2" x="0" y="-2.54" visible="off" length="short" rot="R90"/>
 <pin name="1" x="-2.54" y="-2.54" visible="off" length="short" rot="R90"/>
@@ -19659,22 +19611,6 @@ WROOM-32D</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="2.5_MINI-SPOX_2PIN" prefix="CON" uservalue="yes">
-<gates>
-<gate name="G$1" symbol="2.5_MINI-SPOX_2PIN" x="2.54" y="0"/>
-</gates>
-<devices>
-<device name="" package="2.5_MINI-SPOX_2PIN">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="2.5_MINI-SPOX_3PIN" prefix="CON" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="2.5_MINI-SPOX_3PIN" x="2.54" y="0"/>
@@ -20019,7 +19955,6 @@ WROOM-32D</text>
 <part name="U$6" library="ChipLED" deviceset="OSXX1608C1A" device="" value="OSXX1608C1A"/>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="DCDC1" library="DC-DC" deviceset="3.3V0.5A_M78AR05-0.5" device="" value="5-3.3"/>
-<part name="CON1" library="Connector" deviceset="2.5_MINI-SPOX_2PIN" device=""/>
 <part name="MOS1" library="Chip MOSFET" deviceset="PCH_SSM6J808R" device=""/>
 <part name="MOS2" library="Chip MOSFET" deviceset="PCH_SSM6J808R" device=""/>
 <part name="R12" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2"/>
@@ -20061,6 +19996,7 @@ WROOM-32D</text>
 <part name="GND19" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0201" package3d_urn="urn:adsk.eagle:package:26117/2" value="10k"/>
 <part name="+3V3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
+<part name="TM3" library="TerminalBrock" deviceset="TERMINAL_SLOPED_2PIN" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -20445,10 +20381,6 @@ WROOM-32D</text>
 <attribute name="NAME" x="88.9" y="-75.438" size="1.27" layer="95"/>
 <attribute name="VALUE" x="101.6" y="-75.184" size="1.27" layer="96"/>
 </instance>
-<instance part="CON1" gate="G$1" x="10.16" y="-73.66" smashed="yes">
-<attribute name="NAME" x="12.7" y="-71.12" size="1.27" layer="95"/>
-<attribute name="VALUE" x="12.7" y="-73.66" size="1.27" layer="96"/>
-</instance>
 <instance part="MOS1" gate="G$1" x="25.4" y="-86.36" smashed="yes">
 <attribute name="NAME" x="23.876" y="-78.74" size="1.778" layer="95"/>
 <attribute name="VALUE" x="23.876" y="-81.28" size="1.778" layer="95"/>
@@ -20583,6 +20515,7 @@ WROOM-32D</text>
 <instance part="+3V3" gate="G$1" x="127" y="91.44" smashed="yes">
 <attribute name="VALUE" x="124.46" y="86.36" size="1.778" layer="96" rot="R90"/>
 </instance>
+<instance part="TM3" gate="G$1" x="10.16" y="-73.66" smashed="yes" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -21183,7 +21116,6 @@ WROOM-32D</text>
 <pinref part="GND5" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="CON1" gate="G$1" pin="1"/>
 <wire x1="7.62" y1="-76.2" x2="7.62" y2="-101.6" width="0.1524" layer="91"/>
 <wire x1="7.62" y1="-101.6" x2="25.4" y2="-101.6" width="0.1524" layer="91"/>
 <pinref part="SW1" gate="G$1" pin="LR"/>
@@ -21194,6 +21126,7 @@ WROOM-32D</text>
 <junction x="25.4" y="-101.6"/>
 <wire x1="25.4" y1="-101.6" x2="25.4" y2="-106.68" width="0.1524" layer="91"/>
 <pinref part="GND2" gate="1" pin="GND"/>
+<pinref part="TM3" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="C5" gate="G$1" pin="-"/>
@@ -22084,9 +22017,8 @@ WROOM-32D</text>
 <wire x1="266.7" y1="137.16" x2="269.24" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$10" class="0">
+<net name="7A" class="0">
 <segment>
-<pinref part="CON1" gate="G$1" pin="2"/>
 <pinref part="MOS1" gate="G$1" pin="D3"/>
 <wire x1="10.16" y1="-76.2" x2="10.16" y2="-78.74" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="-78.74" x2="17.78" y2="-78.74" width="0.1524" layer="91"/>
@@ -22103,9 +22035,10 @@ WROOM-32D</text>
 <wire x1="20.32" y1="-86.36" x2="17.78" y2="-86.36" width="0.1524" layer="91"/>
 <wire x1="17.78" y1="-86.36" x2="17.78" y2="-83.82" width="0.1524" layer="91"/>
 <junction x="17.78" y="-83.82"/>
+<pinref part="TM3" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$19" class="0">
+<net name="A7_1" class="0">
 <segment>
 <pinref part="MOS1" gate="G$1" pin="S"/>
 <pinref part="MOS2" gate="G$1" pin="S"/>
