@@ -19752,9 +19752,9 @@ WROOM-32D</text>
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0" drill="0.35">
 </class>
-<class number="1" name="esp" width="0.254" drill="0.127">
+<class number="1" name="esp" width="0.254" drill="0.35">
 <clearance class="1" value="0.0254"/>
 </class>
 </classes>
