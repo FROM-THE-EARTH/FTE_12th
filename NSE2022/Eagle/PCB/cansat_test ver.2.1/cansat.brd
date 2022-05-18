@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.6.0">
+<eagle version="9.6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -119,6 +119,51 @@
 <text x="2.413" y="45.339" size="0.6096" layer="21">IO3</text>
 <text x="2.413" y="47.879" size="0.6096" layer="21">IO2</text>
 <text x="2.413" y="50.419" size="0.6096" layer="21">3V3</text>
+<text x="85.471" y="3.175" size="0.6096" layer="21" rot="R90">+5v</text>
+<text x="82.931" y="3.175" size="0.6096" layer="21" rot="R90">CMD</text>
+<text x="80.391" y="3.175" size="0.6096" layer="21" rot="R90">SD3</text>
+<text x="77.851" y="3.175" size="0.6096" layer="21" rot="R90">SD2</text>
+<text x="75.311" y="3.175" size="0.6096" layer="21" rot="R90">IO13</text>
+<text x="72.771" y="3.175" size="0.6096" layer="21" rot="R90">GND</text>
+<text x="70.231" y="3.175" size="0.6096" layer="21" rot="R90">IM_R</text>
+<text x="67.691" y="3.175" size="0.6096" layer="21" rot="R90">IM_B</text>
+<text x="65.151" y="3.175" size="0.6096" layer="21" rot="R90">IO27</text>
+<text x="62.611" y="3.175" size="0.6096" layer="21" rot="R90">MD_LB</text>
+<text x="60.071" y="3.175" size="0.6096" layer="21" rot="R90">MD_LF</text>
+<text x="57.531" y="3.175" size="0.6096" layer="21" rot="R90">SV2</text>
+<text x="54.991" y="3.175" size="0.6096" layer="21" rot="R90">SV1</text>
+<text x="52.451" y="3.175" size="0.6096" layer="21" rot="R90">LED2</text>
+<text x="43.688" y="1.397" size="0.6096" layer="21" rot="R90">S_V</text>
+<text x="41.148" y="1.397" size="0.6096" layer="21" rot="R90">EN</text>
+<text x="39.751" y="3.175" size="0.6096" layer="21" rot="R90">3V3</text>
+<text x="65.913" y="30.988" size="0.6096" layer="21" rot="R270">IM_TX</text>
+<text x="73.533" y="31.115" size="0.6096" layer="21" rot="R270">RP_RX</text>
+<text x="77.216" y="29.845" size="0.6096" layer="21" rot="R270">RP_TX</text>
+<text x="79.756" y="29.845" size="0.6096" layer="21" rot="R270">SD1</text>
+<text x="82.296" y="29.845" size="0.6096" layer="21" rot="R270">SD0</text>
+<text x="84.836" y="29.845" size="0.6096" layer="21" rot="R270">CLK</text>
+<text x="87.249" y="6.985" size="0.6096" layer="21" rot="R270">DTR</text>
+<text x="84.709" y="6.985" size="0.6096" layer="21" rot="R270">RXD</text>
+<text x="82.169" y="6.985" size="0.6096" layer="21" rot="R270">TXD</text>
+<text x="79.629" y="6.985" size="0.6096" layer="21" rot="R270">3V3</text>
+<text x="77.089" y="6.985" size="0.6096" layer="21" rot="R270">CTS</text>
+<text x="74.549" y="6.985" size="0.6096" layer="21" rot="R270">GND</text>
+<text x="72.009" y="6.985" size="0.6096" layer="21" rot="R270">RTS</text>
+<text x="46.228" y="1.397" size="0.6096" layer="21" rot="R90">RP_SS</text>
+<text x="48.768" y="1.397" size="0.6096" layer="21" rot="R90">LED1</text>
+<text x="70.993" y="31.115" size="0.6096" layer="21" rot="R270">MD_RB</text>
+<text x="68.453" y="31.115" size="0.6096" layer="21" rot="R270">MD_RF</text>
+<text x="63.373" y="30.988" size="0.6096" layer="21" rot="R270">IM_RX</text>
+<text x="60.833" y="30.988" size="0.6096" layer="21" rot="R270">IO5</text>
+<text x="58.293" y="30.988" size="0.6096" layer="21" rot="R270">RP_SCK</text>
+<text x="55.753" y="31.496" size="0.6096" layer="21" rot="R270">RP_MISO</text>
+<text x="53.213" y="30.988" size="0.6096" layer="21" rot="R270">GND</text>
+<text x="50.673" y="30.988" size="0.6096" layer="21" rot="R270">AS_SDA</text>
+<text x="48.133" y="30.988" size="0.6096" layer="21" rot="R270">TXD</text>
+<text x="45.593" y="30.607" size="0.6096" layer="21" rot="R270">RXD</text>
+<text x="43.053" y="30.988" size="0.6096" layer="21" rot="R270">AS_SCL</text>
+<text x="40.513" y="30.988" size="0.6096" layer="21" rot="R270">RP_MOSI</text>
+<text x="37.973" y="30.988" size="0.6096" layer="21" rot="R270">GND</text>
 </plain>
 <libraries>
 <library name="TRIM_register">
