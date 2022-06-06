@@ -16940,6 +16940,16 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="200.66" y1="76.2" x2="200.66" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 <segment>
+<pinref part="MD_L" gate="G$1" pin="GND"/>
+<wire x1="292.1" y1="78.74" x2="294.64" y2="78.74" width="0.1524" layer="91"/>
+<label x="294.64" y="78.74" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="MD_R" gate="G$1" pin="GND"/>
+<wire x1="292.1" y1="50.8" x2="294.64" y2="50.8" width="0.1524" layer="91"/>
+<label x="294.64" y="50.8" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
 <wire x1="322.58" y1="43.18" x2="327.66" y2="43.18" width="0.1524" layer="91"/>
 <label x="345.44" y="43.18" size="1.778" layer="95" xref="yes"/>
 <pinref part="GND15" gate="1" pin="GND"/>
@@ -16950,16 +16960,6 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <junction x="327.66" y="43.18"/>
 <pinref part="C11" gate="G$1" pin="-"/>
 <junction x="335.28" y="43.18"/>
-</segment>
-<segment>
-<pinref part="MD_L" gate="G$1" pin="GND"/>
-<wire x1="292.1" y1="78.74" x2="294.64" y2="78.74" width="0.1524" layer="91"/>
-<label x="294.64" y="78.74" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="MD_R" gate="G$1" pin="GND"/>
-<wire x1="292.1" y1="50.8" x2="294.64" y2="50.8" width="0.1524" layer="91"/>
-<label x="294.64" y="50.8" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -17326,18 +17326,6 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="C20" gate="G$1" pin="+"/>
 </segment>
 <segment>
-<wire x1="322.58" y1="50.8" x2="327.66" y2="50.8" width="0.1524" layer="91"/>
-<label x="345.44" y="50.8" size="1.778" layer="95" xref="yes"/>
-<pinref part="P+6" gate="1" pin="+12V"/>
-<wire x1="327.66" y1="50.8" x2="335.28" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="335.28" y1="50.8" x2="345.44" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="322.58" y1="53.34" x2="322.58" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="C10" gate="G$1" pin="+"/>
-<junction x="327.66" y="50.8"/>
-<pinref part="C11" gate="G$1" pin="+"/>
-<junction x="335.28" y="50.8"/>
-</segment>
-<segment>
 <pinref part="MD_L" gate="G$1" pin="VCC_1"/>
 <wire x1="264.16" y1="73.66" x2="259.08" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="MD_L" gate="G$1" pin="VCC_2"/>
@@ -17366,6 +17354,18 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="MD_R" gate="G$1" pin="VREF"/>
 <wire x1="292.1" y1="40.64" x2="294.64" y2="40.64" width="0.1524" layer="91"/>
 <label x="294.64" y="40.64" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<wire x1="322.58" y1="50.8" x2="327.66" y2="50.8" width="0.1524" layer="91"/>
+<label x="345.44" y="50.8" size="1.778" layer="95" xref="yes"/>
+<pinref part="P+6" gate="1" pin="+12V"/>
+<wire x1="327.66" y1="50.8" x2="335.28" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="335.28" y1="50.8" x2="345.44" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="322.58" y1="53.34" x2="322.58" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="C10" gate="G$1" pin="+"/>
+<junction x="327.66" y="50.8"/>
+<pinref part="C11" gate="G$1" pin="+"/>
+<junction x="335.28" y="50.8"/>
 </segment>
 </net>
 <net name="N$9" class="0">
@@ -17564,34 +17564,23 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 </sheet>
 </sheets>
 <errors>
-<approved hash="104,1,513.08,71.12,U2,VDD,+3V3,,,"/>
-<approved hash="104,1,513.08,63.5,U2,VREGIN,+3V3,,,"/>
-<approved hash="104,1,513.08,68.58,U2,VBUS,CPVBUS,,,"/>
-<approved hash="202,1,467.36,53.34,U2,CTS,,,,"/>
-<approved hash="202,1,467.36,50.8,U2,DSR,,,,"/>
-<approved hash="202,1,467.36,45.72,U2,DCD,,,,"/>
 <approved hash="104,1,175.26,177.8,BMX1,VCC,+5V,,,"/>
 <approved hash="204,1,175.26,175.26,BMX1,VCCIO,,,,"/>
 <approved hash="204,1,175.26,172.72,BMX1,3V3,,,,"/>
-<approved hash="113,1,351.79,-43.2333,MD_R,,,,,"/>
-<approved hash="113,1,351.79,-15.2933,MD_L,,,,,"/>
-<approved hash="113,1,71.12,156.4,RASPBERRYPI_4B,,,,,"/>
-<approved hash="113,1,413.648,91.9734,3-REG2,,,,,"/>
-<approved hash="113,1,324.675,83.4009,USB2,,,,,"/>
-<approved hash="113,1,345.224,68.58,TVC4,,,,,"/>
-<approved hash="113,1,352.844,68.58,TVC5,,,,,"/>
-<approved hash="113,1,360.464,68.58,TVC6,,,,,"/>
-<approved hash="113,1,343.285,38.1,T3,,,,,"/>
-<approved hash="113,1,343.285,20.32,T4,,,,,"/>
+<approved hash="113,1,71.12,156.381,RASPBERRYPI_4B,,,,,"/>
 <approved hash="113,1,31.9303,-91.44,R22,,,,,"/>
 <approved hash="113,1,47.6335,-94.4778,SW1,,,,,"/>
-<approved hash="113,1,154.496,-24.13,TM1,,,,,"/>
-<approved hash="113,1,154.496,-31.75,TM2,,,,,"/>
-<approved hash="113,1,15.7679,-21.5646,CON2,,,,,"/>
-<approved hash="113,1,38.6279,-21.5646,CON3,,,,,"/>
-<approved hash="113,1,83.0779,-24.1046,CON4,,,,,"/>
-<approved hash="113,1,111.018,-24.1046,CON5,,,,,"/>
-<approved hash="113,1,8.89,-75.7555,TM3,,,,,"/>
+<approved hash="113,1,15.7724,-21.5646,CON2,,,,,"/>
+<approved hash="113,1,38.6324,-21.5646,CON3,,,,,"/>
+<approved hash="113,1,8.89,-75.7365,TM3,,,,,"/>
+<approved hash="113,1,101.434,-21.5646,TOTOP,,,,,"/>
+<approved hash="113,1,85.09,-22.3965,TM4,,,,,"/>
+<approved hash="113,1,166.955,-21.5646,TOBOTTOM,,,,,"/>
+<approved hash="113,1,148.59,-22.3965,TM5,,,,,"/>
+<approved hash="113,1,278.13,45.6476,MD_R,,,,,"/>
+<approved hash="113,1,278.13,73.5876,MD_L,,,,,"/>
+<approved hash="113,1,327.196,77.47,TM1,,,,,"/>
+<approved hash="113,1,327.196,69.85,TM2,,,,,"/>
 </errors>
 </schematic>
 </drawing>
