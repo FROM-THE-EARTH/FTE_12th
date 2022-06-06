@@ -5202,27 +5202,30 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="0" y1="0" x2="10" y2="0" width="0.127" layer="21"/>
 <wire x1="10" y1="0" x2="10" y2="-14" width="0.127" layer="21"/>
 <wire x1="10" y1="-14" x2="0" y2="-14" width="0.127" layer="21"/>
-<pad name="GND" x="1.19" y="-4.46" drill="0.75" diameter="1.5" shape="square"/>
-<pad name="SDA" x="1.19" y="-7" drill="0.75" diameter="1.5" shape="square"/>
-<pad name="SCL" x="1.19" y="-9.53" drill="0.75" diameter="1.5" shape="square"/>
-<pad name="VCC" x="8.81" y="-4.46" drill="0.75" diameter="1.5" shape="square"/>
-<pad name="VCCIO" x="8.81" y="-7" drill="0.75" diameter="1.5" shape="square"/>
-<pad name="3V3" x="8.81" y="-9.53" drill="0.75" diameter="1.5" shape="square"/>
+<pad name="GND" x="1.19" y="-4.46" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="SDA" x="1.19" y="-7" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="SCL" x="1.19" y="-9.53" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="VCC" x="8.81" y="-4.46" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="VCCIO" x="8.81" y="-7" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="3V3" x="8.81" y="-9.53" drill="0.8" diameter="1.5" shape="square"/>
+<text x="0" y="0.635" size="1.27" layer="25">&gt;NAME</text>
+<text x="0" y="-15.494" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 <symbols>
 <symbol name="BMX055">
-<wire x1="10" y1="-14" x2="0" y2="-14" width="0.254" layer="94"/>
-<wire x1="0" y1="0" x2="10" y2="0" width="0.254" layer="94"/>
-<wire x1="10" y1="0" x2="10" y2="-14" width="0.254" layer="94"/>
-<text x="-1" y="1" size="1.778" layer="95">BMX055</text>
-<wire x1="0" y1="0" x2="0" y2="-14" width="0.254" layer="94"/>
-<pin name="GND" x="1.5" y="-4.46" length="middle" direction="pwr" rot="R180"/>
-<pin name="VCC" x="8.5" y="-4.46" length="middle" direction="pwr"/>
-<pin name="SDA" x="1.5" y="-7" length="middle" rot="R180"/>
-<pin name="VCCIO" x="8.5" y="-7" length="middle" direction="pwr"/>
-<pin name="SCL" x="1.5" y="-9.53" length="middle" rot="R180"/>
-<pin name="3V3" x="8.5" y="-9.53" length="middle" direction="pwr"/>
+<text x="-6.08" y="6.08" size="1.778" layer="95">&gt;NAME</text>
+<pin name="GND" x="-12.7" y="2.54" length="middle" direction="pwr"/>
+<pin name="VCC" x="15.24" y="2.54" length="middle" direction="pwr" rot="R180"/>
+<pin name="SDA" x="-12.7" y="0" length="middle"/>
+<pin name="VCCIO" x="15.24" y="0" length="middle" direction="pwr" rot="R180"/>
+<pin name="SCL" x="-12.7" y="-2.54" length="middle"/>
+<pin name="3V3" x="15.24" y="-2.54" length="middle" direction="pwr" rot="R180"/>
+<wire x1="-7.62" y1="5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="5.08" x2="-7.62" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-5.08" x2="10.16" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-5.08" x2="10.16" y2="5.08" width="0.254" layer="94"/>
+<text x="-7.62" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -6243,7 +6246,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="BMX1" gate="G$1" pin="GND"/>
-<wire x1="161.52" y1="170.8" x2="132.08" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="147.32" y1="177.8" x2="132.08" y2="177.8" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="177.8" x2="132.08" y2="167.64" width="0.1524" layer="91"/>
 <pinref part="GND6" gate="1" pin="GND"/>
 </segment>
@@ -6374,7 +6377,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <segment>
 <pinref part="BMX1" gate="G$1" pin="VCC"/>
 <pinref part="P+10" gate="1" pin="+5V"/>
-<wire x1="168.52" y1="170.8" x2="182.88" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="175.26" y1="177.8" x2="182.88" y2="177.8" width="0.1524" layer="91"/>
 <wire x1="182.88" y1="177.8" x2="182.88" y2="180.34" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -6434,7 +6437,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="BMX1" gate="G$1" pin="SCL"/>
-<wire x1="161.52" y1="165.73" x2="144.78" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="147.32" y1="172.72" x2="144.78" y2="172.72" width="0.1524" layer="91"/>
 <label x="144.78" y="172.72" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
@@ -6547,7 +6550,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </segment>
 <segment>
 <pinref part="BMX1" gate="G$1" pin="SDA"/>
-<wire x1="161.52" y1="168.26" x2="144.78" y2="175.26" width="0.1524" layer="91"/>
+<wire x1="147.32" y1="175.26" x2="144.78" y2="175.26" width="0.1524" layer="91"/>
 <label x="144.78" y="175.26" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
