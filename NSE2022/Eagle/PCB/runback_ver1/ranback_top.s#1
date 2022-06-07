@@ -6363,6 +6363,12 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </net>
 <net name="+5V" class="0">
 <segment>
+<pinref part="RASPBERRYPI_4B" gate="G$1" pin="5V_1"/>
+<wire x1="91.44" y1="180.34" x2="96.52" y2="180.34" width="0.1524" layer="91"/>
+<pinref part="P+5" gate="1" pin="+5V"/>
+<wire x1="96.52" y1="180.34" x2="96.52" y2="185.42" width="0.1524" layer="91"/>
+</segment>
+<segment>
 <pinref part="GPS" gate="G$1" pin="5V"/>
 <wire x1="208.28" y1="165.1" x2="213.36" y2="165.1" width="0.1524" layer="91"/>
 <pinref part="P+3" gate="1" pin="+5V"/>
@@ -6389,6 +6395,11 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <pinref part="P+8" gate="1" pin="+5V"/>
 </segment>
 <segment>
+<pinref part="TM5" gate="G$1" pin="1"/>
+<pinref part="P+11" gate="1" pin="+5V"/>
+<wire x1="149.86" y1="-22.86" x2="149.86" y2="-27.94" width="0.1524" layer="91"/>
+</segment>
+<segment>
 <pinref part="P+1" gate="1" pin="+5V"/>
 <wire x1="22.86" y1="35.56" x2="22.86" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="5V"/>
@@ -6399,17 +6410,6 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="160.02" y1="30.48" x2="139.7" y2="30.48" width="0.1524" layer="91"/>
 <pinref part="P+4" gate="1" pin="+5V"/>
 <wire x1="139.7" y1="30.48" x2="139.7" y2="33.02" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="TM5" gate="G$1" pin="1"/>
-<pinref part="P+11" gate="1" pin="+5V"/>
-<wire x1="149.86" y1="-22.86" x2="149.86" y2="-27.94" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="RASPBERRYPI_4B" gate="G$1" pin="5V_1"/>
-<wire x1="91.44" y1="180.34" x2="96.52" y2="180.34" width="0.1524" layer="91"/>
-<pinref part="P+5" gate="1" pin="+5V"/>
-<wire x1="96.52" y1="185.42" x2="96.52" y2="180.34" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GPS_RX" class="0">
@@ -6747,6 +6747,20 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <approved hash="104,1,175.26,177.8,BMX1,VCC,+5V,,,"/>
 <approved hash="204,1,175.26,175.26,BMX1,VCCIO,,,,"/>
 <approved hash="204,1,175.26,172.72,BMX1,3V3,,,,"/>
+<approved hash="113,1,71.12,156.381,RASPBERRYPI_4B,,,,,"/>
+<approved hash="113,1,31.9303,-91.44,R22,,,,,"/>
+<approved hash="113,1,47.6335,-94.4778,SW1,,,,,"/>
+<approved hash="113,1,15.7724,-21.5646,CON2,,,,,"/>
+<approved hash="113,1,38.6324,-21.5646,CON3,,,,,"/>
+<approved hash="113,1,8.89,-75.7365,TM3,,,,,"/>
+<approved hash="113,1,101.434,-21.5646,TOTOP,,,,,"/>
+<approved hash="113,1,85.09,-22.3965,TM4,,,,,"/>
+<approved hash="113,1,166.955,-21.5646,TOBOTTOM,,,,,"/>
+<approved hash="113,1,148.59,-22.3965,TM5,,,,,"/>
+<approved hash="113,1,278.13,45.6476,MD_R,,,,,"/>
+<approved hash="113,1,278.13,73.5876,MD_L,,,,,"/>
+<approved hash="113,1,327.196,77.47,TM1,,,,,"/>
+<approved hash="113,1,327.196,69.85,TM2,,,,,"/>
 </errors>
 </schematic>
 </drawing>
