@@ -13871,10 +13871,9 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <classes>
 <class number="0" name="default" width="0" drill="0">
 </class>
-<class number="1" name="esp" width="0.254" drill="0.127">
-<clearance class="1" value="0.0254"/>
+<class number="1" name="esp" width="0" drill="0">
 </class>
-<class number="2" name="GND_+12V" width="0.1524" drill="0">
+<class number="2" name="GND_+12V" width="2" drill="0">
 </class>
 </classes>
 <parts>
@@ -14175,7 +14174,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <junction x="335.28" y="43.18"/>
 </segment>
 </net>
-<net name="+5V" class="0">
+<net name="+5V" class="2">
 <segment>
 <pinref part="U$8" gate="G$1" pin="VOUT2"/>
 <wire x1="127" y1="-86.36" x2="127" y2="-88.9" width="0.1524" layer="91"/>
@@ -14228,7 +14227,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="U$10" gate="G$1" pin="GATE"/>
 </segment>
 </net>
-<net name="+12V" class="0">
+<net name="+12V" class="2">
 <segment>
 <pinref part="U$10" gate="G$1" pin="DRAIN"/>
 <pinref part="P+2" gate="1" pin="+12V"/>
@@ -14319,7 +14318,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="124.46" y1="-101.6" x2="124.46" y2="-86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="OUT_MD_R2" class="2">
+<net name="OUT_MD_R2" class="0">
 <segment>
 <pinref part="MD_R" gate="G$1" pin="OUT2"/>
 <wire x1="292.1" y1="45.72" x2="294.64" y2="45.72" width="0.1524" layer="91"/>
@@ -14331,7 +14330,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="TM1" gate="G$1" pin="2"/>
 </segment>
 </net>
-<net name="OUT_MD_R1" class="2">
+<net name="OUT_MD_R1" class="0">
 <segment>
 <pinref part="MD_R" gate="G$1" pin="OUT1"/>
 <wire x1="264.16" y1="50.8" x2="261.62" y2="50.8" width="0.1524" layer="91"/>
@@ -14343,7 +14342,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="TM1" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="OUT_MD_L1" class="2">
+<net name="OUT_MD_L1" class="0">
 <segment>
 <pinref part="MD_L" gate="G$1" pin="OUT1"/>
 <wire x1="264.16" y1="78.74" x2="261.62" y2="78.74" width="0.1524" layer="91"/>
@@ -14355,7 +14354,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="TM2" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="OUT_MD_L2" class="2">
+<net name="OUT_MD_L2" class="0">
 <segment>
 <pinref part="MD_L" gate="G$1" pin="OUT2"/>
 <wire x1="292.1" y1="73.66" x2="294.64" y2="73.66" width="0.1524" layer="91"/>

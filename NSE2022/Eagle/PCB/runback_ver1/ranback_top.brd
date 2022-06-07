@@ -23,7 +23,7 @@
 <layer number="13" name="Route13" color="21" fill="1" visible="no" active="no"/>
 <layer number="14" name="Route14" color="22" fill="1" visible="no" active="no"/>
 <layer number="15" name="Route15" color="23" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -52,7 +52,7 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
@@ -78,6 +78,22 @@
 <wire x1="100" y1="0" x2="100" y2="60" width="0" layer="20"/>
 <wire x1="100" y1="60" x2="0" y2="60" width="0" layer="20"/>
 <wire x1="0" y1="60" x2="0" y2="0" width="0" layer="20"/>
+<hole x="2.54" y="2.54" drill="3"/>
+<hole x="2.54" y="57.46" drill="3"/>
+<hole x="97.46" y="57.46" drill="3"/>
+<hole x="97.46" y="2.54" drill="3"/>
+<text x="55.118" y="0.508" size="0.8128" layer="21">LF</text>
+<text x="57.531" y="0.508" size="0.8128" layer="21">RF</text>
+<text x="60.198" y="0.508" size="0.8128" layer="21">RB</text>
+<text x="62.865" y="0.508" size="0.8128" layer="21">LB</text>
+<text x="70.993" y="0.508" size="0.8128" layer="21">GND</text>
+<text x="83.82" y="0.508" size="0.8128" layer="21">GND</text>
+<text x="74.168" y="0.508" size="0.8128" layer="21">5V</text>
+<text x="87.249" y="0.508" size="0.8128" layer="21">5V</text>
+<text x="89.154" y="0.508" size="0.8128" layer="21">servo1</text>
+<text x="76.454" y="0.508" size="0.8128" layer="21">servo2</text>
+<text x="39.37" y="15.24" size="1.778" layer="21">5V</text>
+<text x="44.45" y="15.24" size="1.778" layer="21">GND</text>
 </plain>
 <libraries>
 <library name="BMX055">
@@ -1722,11 +1738,11 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="70.866" y="25.4" size="1.27" layer="27" rot="R270"/>
 </element>
 <element name="CON2" library="Connector" package="2.5_MINI-SPOX_3PIN" value="" x="86.36" y="5.08" smashed="yes">
-<attribute name="NAME" x="93.98" y="5.08" size="1.27" layer="25"/>
+<attribute name="NAME" x="87.63" y="6.35" size="1.27" layer="25"/>
 <attribute name="VALUE" x="93.98" y="2.54" size="1.27" layer="27"/>
 </element>
 <element name="CON3" library="Connector" package="2.5_MINI-SPOX_3PIN" value="" x="73.66" y="5.08" smashed="yes">
-<attribute name="NAME" x="81.28" y="5.08" size="1.27" layer="25"/>
+<attribute name="NAME" x="74.93" y="6.35" size="1.27" layer="25"/>
 <attribute name="VALUE" x="81.28" y="2.54" size="1.27" layer="27"/>
 </element>
 <element name="ESP_LED1" library="ChipLED" package="OSXX1608C1A" value="OSXX1608C1A" x="81.28" y="12.7" smashed="yes">
@@ -1790,7 +1806,7 @@ design rules under a new name.</description>
 </element>
 <element name="TM5" library="TerminalBrock" package="TERMINAL_SLOPED_2PIN" value="" x="44.45" y="7.62" smashed="yes"/>
 <element name="TOBOTTOM" library="Connector" package="2.5_MINI-SPOX_4PIN" value="" x="57.15" y="5.08" smashed="yes">
-<attribute name="NAME" x="67.31" y="5.08" size="1.27" layer="25"/>
+<attribute name="NAME" x="59.69" y="6.35" size="1.27" layer="25"/>
 <attribute name="VALUE" x="67.31" y="2.54" size="1.27" layer="27"/>
 </element>
 <element name="U$2" library="ESP32_dev" package="ESP32" value="ESP32" x="5.08" y="1.27" smashed="yes"/>
