@@ -14820,46 +14820,46 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <library name="RASPBERRYPI4B">
 <packages>
 <package name="RASPBERRYPI4B">
-<pad name="5V_1" x="0" y="-2.54" drill="0.6" shape="square"/>
-<pad name="5V_2" x="0" y="-5.08" drill="0.6" shape="square"/>
-<pad name="GND_1" x="0" y="-7.62" drill="0.6" shape="square"/>
-<pad name="GPIO14" x="0" y="-10.16" drill="0.6" shape="square"/>
-<pad name="GPIO15" x="0" y="-12.7" drill="0.6" shape="square"/>
-<pad name="GPIO18" x="0" y="-15.24" drill="0.6" shape="square"/>
-<pad name="GND_2" x="0" y="-17.78" drill="0.6" shape="square"/>
-<pad name="GPIO23" x="0" y="-20.32" drill="0.6" shape="square"/>
-<pad name="GPIO24" x="0" y="-22.86" drill="0.6" shape="square"/>
-<pad name="GND_3" x="0" y="-25.4" drill="0.6" shape="square"/>
-<pad name="GPIO25" x="0" y="-27.94" drill="0.6" shape="square"/>
-<pad name="GPIO8" x="0" y="-30.48" drill="0.6" shape="square"/>
-<pad name="GPIO7" x="0" y="-33.02" drill="0.6" shape="square"/>
-<pad name="GPIO1" x="0" y="-35.56" drill="0.6" shape="square"/>
-<pad name="GND_4" x="0" y="-38.1" drill="0.6" shape="square"/>
-<pad name="GPIO12" x="0" y="-40.64" drill="0.6" shape="square"/>
-<pad name="GND_5" x="0" y="-43.18" drill="0.6" shape="square"/>
-<pad name="GPIO16" x="0" y="-45.72" drill="0.6" shape="square"/>
-<pad name="GPIO20" x="0" y="-48.26" drill="0.6" shape="square"/>
-<pad name="GPIO21" x="0" y="-50.8" drill="0.6" shape="square"/>
-<pad name="GND_8" x="-2.54" y="-50.8" drill="0.6" shape="square"/>
-<pad name="GPIO26" x="-2.54" y="-48.26" drill="0.6" shape="square"/>
-<pad name="GPIO19" x="-2.54" y="-45.72" drill="0.6" shape="square"/>
-<pad name="GPIO13" x="-2.54" y="-43.18" drill="0.6" shape="square"/>
-<pad name="GPIO6" x="-2.54" y="-40.64" drill="0.6" shape="square"/>
-<pad name="GPIO5" x="-2.54" y="-38.1" drill="0.6" shape="square"/>
-<pad name="GPIO0" x="-2.54" y="-35.56" drill="0.6" shape="square"/>
-<pad name="GND_7" x="-2.54" y="-33.02" drill="0.6" shape="square"/>
-<pad name="GPIO11" x="-2.54" y="-30.48" drill="0.6" shape="square"/>
-<pad name="GPIO9" x="-2.54" y="-27.94" drill="0.6" shape="square"/>
-<pad name="GPIO10" x="-2.54" y="-25.4" drill="0.6" shape="square"/>
-<pad name="3V3_2" x="-2.54" y="-22.86" drill="0.6" shape="square"/>
-<pad name="GPIO22" x="-2.54" y="-20.32" drill="0.6" shape="square"/>
-<pad name="GPIO27" x="-2.54" y="-17.78" drill="0.6" shape="square"/>
-<pad name="GPIO17" x="-2.54" y="-15.24" drill="0.6" shape="square"/>
-<pad name="GND_6" x="-2.54" y="-12.7" drill="0.6" shape="square"/>
-<pad name="GPIO4" x="-2.54" y="-10.16" drill="0.6" shape="square"/>
-<pad name="GPIO3" x="-2.54" y="-7.62" drill="0.6" shape="square"/>
-<pad name="GPIO2" x="-2.54" y="-5.08" drill="0.6" shape="square"/>
-<pad name="3V3_1" x="-2.54" y="-2.54" drill="0.6" shape="square"/>
+<pad name="5V_1" x="0" y="-2.54" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="5V_2" x="0" y="-5.08" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_1" x="0" y="-7.62" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO14" x="0" y="-10.16" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO15" x="0" y="-12.7" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO18" x="0" y="-15.24" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_2" x="0" y="-17.78" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO23" x="0" y="-20.32" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO24" x="0" y="-22.86" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_3" x="0" y="-25.4" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO25" x="0" y="-27.94" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO8" x="0" y="-30.48" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO7" x="0" y="-33.02" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO1" x="0" y="-35.56" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_4" x="0" y="-38.1" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO12" x="0" y="-40.64" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_5" x="0" y="-43.18" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO16" x="0" y="-45.72" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO20" x="0" y="-48.26" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO21" x="0" y="-50.8" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_8" x="-2.54" y="-50.8" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO26" x="-2.54" y="-48.26" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO19" x="-2.54" y="-45.72" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO13" x="-2.54" y="-43.18" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO6" x="-2.54" y="-40.64" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO5" x="-2.54" y="-38.1" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO0" x="-2.54" y="-35.56" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_7" x="-2.54" y="-33.02" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO11" x="-2.54" y="-30.48" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO9" x="-2.54" y="-27.94" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO10" x="-2.54" y="-25.4" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="3V3_2" x="-2.54" y="-22.86" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO22" x="-2.54" y="-20.32" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO27" x="-2.54" y="-17.78" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO17" x="-2.54" y="-15.24" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GND_6" x="-2.54" y="-12.7" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO4" x="-2.54" y="-10.16" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO3" x="-2.54" y="-7.62" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="GPIO2" x="-2.54" y="-5.08" drill="0.85" diameter="1.4224" shape="square"/>
+<pad name="3V3_1" x="-2.54" y="-2.54" drill="0.85" diameter="1.4224" shape="square"/>
 <wire x1="1.27" y1="-1.27" x2="-3.81" y2="-1.27" width="0.127" layer="21"/>
 <wire x1="-3.81" y1="-1.27" x2="-3.81" y2="-52.07" width="0.127" layer="21"/>
 <wire x1="-3.81" y1="-52.07" x2="1.27" y2="-52.07" width="0.127" layer="21"/>
@@ -15065,12 +15065,12 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <library name="BMP280">
 <packages>
 <package name="GY-BMP280-FOOTPRINT">
-<pad name="VCC" x="1.27" y="0" drill="0.6"/>
-<pad name="GND" x="3.81" y="0" drill="0.6"/>
-<pad name="SCK" x="6.35" y="0" drill="0.6"/>
-<pad name="SDI" x="8.89" y="0" drill="0.6"/>
-<pad name="CSB" x="11.43" y="0" drill="0.6"/>
-<pad name="SDO" x="13.97" y="0" drill="0.6"/>
+<pad name="VCC" x="1.27" y="0" drill="0.75" diameter="1.27"/>
+<pad name="GND" x="3.81" y="0" drill="0.75" diameter="1.27"/>
+<pad name="SCK" x="6.35" y="0" drill="0.75" diameter="1.27"/>
+<pad name="SDI" x="8.89" y="0" drill="0.75" diameter="1.27"/>
+<pad name="CSB" x="11.43" y="0" drill="0.75" diameter="1.27"/>
+<pad name="SDO" x="13.97" y="0" drill="0.75" diameter="1.27"/>
 <hole x="1.27" y="7.62" drill="0.35"/>
 <wire x1="0" y1="-1.27" x2="15.24" y2="-1.27" width="0.127" layer="21"/>
 <wire x1="15.24" y1="-1.27" x2="15.24" y2="8.89" width="0.127" layer="21"/>
@@ -15372,12 +15372,12 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="0" y1="0" x2="10" y2="0" width="0.127" layer="21"/>
 <wire x1="10" y1="0" x2="10" y2="-14" width="0.127" layer="21"/>
 <wire x1="10" y1="-14" x2="0" y2="-14" width="0.127" layer="21"/>
-<pad name="GND" x="1.19" y="-4.46" drill="0.65" diameter="1.5" shape="square"/>
-<pad name="SDA" x="1.19" y="-7" drill="0.65" diameter="1.5" shape="square"/>
-<pad name="SCL" x="1.19" y="-9.53" drill="0.65" diameter="1.5" shape="square"/>
-<pad name="VCC" x="8.81" y="-4.46" drill="0.65" diameter="1.5" shape="square"/>
-<pad name="VCCIO" x="8.81" y="-7" drill="0.65" diameter="1.5" shape="square"/>
-<pad name="3V3" x="8.81" y="-9.53" drill="0.65" diameter="1.5" shape="square"/>
+<pad name="GND" x="1.19" y="-4.46" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="SDA" x="1.19" y="-7" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="SCL" x="1.19" y="-9.53" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="VCC" x="8.81" y="-4.46" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="VCCIO" x="8.81" y="-7" drill="0.8" diameter="1.5" shape="square"/>
+<pad name="3V3" x="8.81" y="-9.53" drill="0.8" diameter="1.5" shape="square"/>
 <text x="0" y="0.635" size="1.27" layer="25">&gt;NAME</text>
 <text x="0" y="-15.494" size="1.27" layer="27">&gt;VALUE</text>
 </package>
@@ -15858,48 +15858,48 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <library name="JumperPins">
 <packages>
 <package name="19_2.54">
-<pad name="P$1" x="0" y="12.7" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$2" x="0" y="10.16" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$3" x="0" y="7.62" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$4" x="0" y="5.08" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$5" x="0" y="2.54" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$6" x="0" y="0" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$7" x="0" y="-2.54" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$8" x="0" y="-5.08" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$9" x="0" y="-7.62" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$10" x="0" y="-10.16" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$11" x="0" y="-12.7" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$12" x="0" y="-15.24" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$13" x="0" y="-17.78" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$14" x="0" y="-20.32" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$15" x="0" y="-22.86" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$16" x="0" y="-25.4" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$17" x="0" y="-27.94" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$18" x="0" y="-30.48" drill="0.6" diameter="1.27" shape="square"/>
-<pad name="P$19" x="0" y="-33.02" drill="0.6" diameter="1.27" shape="square"/>
+<pad name="1" x="0" y="12.7" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="2" x="0" y="10.16" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="3" x="0" y="7.62" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="4" x="0" y="5.08" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="5" x="0" y="2.54" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="6" x="0" y="0" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="7" x="0" y="-2.54" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="8" x="0" y="-5.08" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="9" x="0" y="-7.62" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="10" x="0" y="-10.16" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="11" x="0" y="-12.7" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="12" x="0" y="-15.24" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="13" x="0" y="-17.78" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="14" x="0" y="-20.32" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="15" x="0" y="-22.86" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="16" x="0" y="-25.4" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="17" x="0" y="-27.94" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="18" x="0" y="-30.48" drill="0.8" diameter="1.27" shape="square"/>
+<pad name="19" x="0" y="-33.02" drill="0.8" diameter="1.27" shape="square"/>
 </package>
 </packages>
 <symbols>
 <symbol name="19_2.54">
-<pin name="P$1" x="-15.24" y="25.4" length="middle"/>
-<pin name="P$2" x="-15.24" y="22.86" length="middle"/>
-<pin name="P$3" x="-15.24" y="20.32" length="middle"/>
-<pin name="P$4" x="-15.24" y="17.78" length="middle"/>
-<pin name="P$5" x="-15.24" y="15.24" length="middle"/>
-<pin name="P$6" x="-15.24" y="12.7" length="middle"/>
-<pin name="P$7" x="-15.24" y="10.16" length="middle"/>
-<pin name="P$8" x="-15.24" y="7.62" length="middle"/>
-<pin name="P$9" x="-15.24" y="5.08" length="middle"/>
-<pin name="P$10" x="-15.24" y="2.54" length="middle"/>
-<pin name="P$11" x="-15.24" y="0" length="middle"/>
-<pin name="P$12" x="-15.24" y="-2.54" length="middle"/>
-<pin name="P$13" x="-15.24" y="-5.08" length="middle"/>
-<pin name="P$14" x="-15.24" y="-7.62" length="middle"/>
-<pin name="P$15" x="-15.24" y="-10.16" length="middle"/>
-<pin name="P$16" x="-15.24" y="-12.7" length="middle"/>
-<pin name="P$17" x="-15.24" y="-15.24" length="middle"/>
-<pin name="P$18" x="-15.24" y="-17.78" length="middle"/>
-<pin name="P$19" x="-15.24" y="-20.32" length="middle"/>
+<pin name="1" x="-15.24" y="25.4" length="middle"/>
+<pin name="2" x="-15.24" y="22.86" length="middle"/>
+<pin name="3" x="-15.24" y="20.32" length="middle"/>
+<pin name="4" x="-15.24" y="17.78" length="middle"/>
+<pin name="5" x="-15.24" y="15.24" length="middle"/>
+<pin name="6" x="-15.24" y="12.7" length="middle"/>
+<pin name="7" x="-15.24" y="10.16" length="middle"/>
+<pin name="8" x="-15.24" y="7.62" length="middle"/>
+<pin name="9" x="-15.24" y="5.08" length="middle"/>
+<pin name="10" x="-15.24" y="2.54" length="middle"/>
+<pin name="11" x="-15.24" y="0" length="middle"/>
+<pin name="12" x="-15.24" y="-2.54" length="middle"/>
+<pin name="13" x="-15.24" y="-5.08" length="middle"/>
+<pin name="14" x="-15.24" y="-7.62" length="middle"/>
+<pin name="15" x="-15.24" y="-10.16" length="middle"/>
+<pin name="16" x="-15.24" y="-12.7" length="middle"/>
+<pin name="17" x="-15.24" y="-15.24" length="middle"/>
+<pin name="18" x="-15.24" y="-17.78" length="middle"/>
+<pin name="19" x="-15.24" y="-20.32" length="middle"/>
 <wire x1="-12.7" y1="27.94" x2="-12.7" y2="-22.86" width="0.254" layer="94"/>
 <wire x1="-12.7" y1="-22.86" x2="0" y2="-22.86" width="0.254" layer="94"/>
 <wire x1="0" y1="-22.86" x2="0" y2="27.94" width="0.254" layer="94"/>
@@ -15907,32 +15907,32 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="19_2.54">
+<deviceset name="19_2.54" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="19_2.54" x="2.54" y="2.54"/>
 </gates>
 <devices>
 <device name="" package="19_2.54">
 <connects>
-<connect gate="G$1" pin="P$1" pad="P$1"/>
-<connect gate="G$1" pin="P$10" pad="P$10"/>
-<connect gate="G$1" pin="P$11" pad="P$11"/>
-<connect gate="G$1" pin="P$12" pad="P$12"/>
-<connect gate="G$1" pin="P$13" pad="P$13"/>
-<connect gate="G$1" pin="P$14" pad="P$14"/>
-<connect gate="G$1" pin="P$15" pad="P$15"/>
-<connect gate="G$1" pin="P$16" pad="P$16"/>
-<connect gate="G$1" pin="P$17" pad="P$17"/>
-<connect gate="G$1" pin="P$18" pad="P$18"/>
-<connect gate="G$1" pin="P$19" pad="P$19"/>
-<connect gate="G$1" pin="P$2" pad="P$2"/>
-<connect gate="G$1" pin="P$3" pad="P$3"/>
-<connect gate="G$1" pin="P$4" pad="P$4"/>
-<connect gate="G$1" pin="P$5" pad="P$5"/>
-<connect gate="G$1" pin="P$6" pad="P$6"/>
-<connect gate="G$1" pin="P$7" pad="P$7"/>
-<connect gate="G$1" pin="P$8" pad="P$8"/>
-<connect gate="G$1" pin="P$9" pad="P$9"/>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="15" pad="15"/>
+<connect gate="G$1" pin="16" pad="16"/>
+<connect gate="G$1" pin="17" pad="17"/>
+<connect gate="G$1" pin="18" pad="18"/>
+<connect gate="G$1" pin="19" pad="19"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -16408,7 +16408,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="78.74" y="76.2" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$2"/>
+<pinref part="PIN_R" gate="G$1" pin="2"/>
 <wire x1="193.04" y1="73.66" x2="198.12" y2="73.66" width="0.1524" layer="91"/>
 <label x="198.12" y="73.66" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16420,7 +16420,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="91.44" y="73.66" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$3"/>
+<pinref part="PIN_R" gate="G$1" pin="3"/>
 <wire x1="193.04" y1="71.12" x2="210.82" y2="71.12" width="0.1524" layer="91"/>
 <label x="210.82" y="71.12" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16432,7 +16432,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="78.74" y="66.04" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$6"/>
+<pinref part="PIN_R" gate="G$1" pin="6"/>
 <wire x1="193.04" y1="63.5" x2="198.12" y2="63.5" width="0.1524" layer="91"/>
 <label x="198.12" y="63.5" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16449,7 +16449,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="76.2" y="60.96" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$8"/>
+<pinref part="PIN_R" gate="G$1" pin="8"/>
 <wire x1="193.04" y1="58.42" x2="195.58" y2="58.42" width="0.1524" layer="91"/>
 <label x="195.58" y="58.42" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16466,7 +16466,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="88.9" y="58.42" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$9"/>
+<pinref part="PIN_R" gate="G$1" pin="9"/>
 <wire x1="193.04" y1="55.88" x2="208.28" y2="55.88" width="0.1524" layer="91"/>
 <label x="208.28" y="55.88" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16488,7 +16488,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="86.36" y="48.26" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$13"/>
+<pinref part="PIN_R" gate="G$1" pin="13"/>
 <wire x1="193.04" y1="45.72" x2="205.74" y2="45.72" width="0.1524" layer="91"/>
 <label x="205.74" y="45.72" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16515,7 +16515,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="76.2" y="45.72" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$14"/>
+<pinref part="PIN_R" gate="G$1" pin="14"/>
 <wire x1="193.04" y1="43.18" x2="195.58" y2="43.18" width="0.1524" layer="91"/>
 <label x="195.58" y="43.18" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16537,7 +16537,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="71.12" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$4"/>
+<pinref part="PIN_L" gate="G$1" pin="4"/>
 <wire x1="160.02" y1="68.58" x2="157.48" y2="68.58" width="0.1524" layer="91"/>
 <label x="157.48" y="68.58" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16554,7 +16554,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="30.48" y="68.58" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$5"/>
+<pinref part="PIN_L" gate="G$1" pin="5"/>
 <wire x1="160.02" y1="66.04" x2="147.32" y2="66.04" width="0.1524" layer="91"/>
 <label x="147.32" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16571,7 +16571,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$6"/>
+<pinref part="PIN_L" gate="G$1" pin="6"/>
 <wire x1="160.02" y1="63.5" x2="157.48" y2="63.5" width="0.1524" layer="91"/>
 <label x="157.48" y="63.5" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16589,7 +16589,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="27.94" y="63.5" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$7"/>
+<pinref part="PIN_L" gate="G$1" pin="7"/>
 <wire x1="160.02" y1="60.96" x2="144.78" y2="60.96" width="0.1524" layer="91"/>
 <label x="144.78" y="60.96" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16607,7 +16607,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="60.96" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$8"/>
+<pinref part="PIN_L" gate="G$1" pin="8"/>
 <wire x1="160.02" y1="58.42" x2="157.48" y2="58.42" width="0.1524" layer="91"/>
 <label x="157.48" y="58.42" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16629,7 +16629,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="27.94" y="58.42" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$9"/>
+<pinref part="PIN_L" gate="G$1" pin="9"/>
 <wire x1="160.02" y1="55.88" x2="144.78" y2="55.88" width="0.1524" layer="91"/>
 <label x="144.78" y="55.88" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16656,7 +16656,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="55.88" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$10"/>
+<pinref part="PIN_L" gate="G$1" pin="10"/>
 <wire x1="160.02" y1="53.34" x2="157.48" y2="53.34" width="0.1524" layer="91"/>
 <label x="157.48" y="53.34" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16678,7 +16678,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="50.8" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$12"/>
+<pinref part="PIN_L" gate="G$1" pin="12"/>
 <wire x1="160.02" y1="48.26" x2="157.48" y2="48.26" width="0.1524" layer="91"/>
 <label x="157.48" y="48.26" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -16695,17 +16695,12 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="27.94" y="48.26" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$13"/>
+<pinref part="PIN_L" gate="G$1" pin="13"/>
 <wire x1="160.02" y1="45.72" x2="144.78" y2="45.72" width="0.1524" layer="91"/>
 <label x="144.78" y="45.72" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="IM_RX" class="0">
-<segment>
-<pinref part="RASPBERRYPI_4B" gate="G$1" pin="GPIO1"/>
-<wire x1="91.44" y1="147.32" x2="99.06" y2="147.32" width="0.1524" layer="91"/>
-<label x="99.06" y="147.32" size="1.778" layer="95" xref="yes"/>
-</segment>
 <segment>
 <pinref part="IM" gate="G$1" pin="RXD/IO6"/>
 <wire x1="259.08" y1="-33.02" x2="264.16" y2="-33.02" width="0.1524" layer="91"/>
@@ -16717,17 +16712,12 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="86.36" y="43.18" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$15"/>
+<pinref part="PIN_R" gate="G$1" pin="15"/>
 <wire x1="193.04" y1="40.64" x2="205.74" y2="40.64" width="0.1524" layer="91"/>
 <label x="205.74" y="40.64" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
 </net>
 <net name="IM_TX" class="0">
-<segment>
-<pinref part="RASPBERRYPI_4B" gate="G$1" pin="GPIO0"/>
-<wire x1="50.8" y1="147.32" x2="43.18" y2="147.32" width="0.1524" layer="91"/>
-<label x="43.18" y="147.32" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
 <segment>
 <pinref part="IM" gate="G$1" pin="TXD/IO7"/>
 <wire x1="259.08" y1="-35.56" x2="274.32" y2="-35.56" width="0.1524" layer="91"/>
@@ -16739,7 +16729,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="76.2" y="40.64" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$16"/>
+<pinref part="PIN_R" gate="G$1" pin="16"/>
 <wire x1="193.04" y1="38.1" x2="195.58" y2="38.1" width="0.1524" layer="91"/>
 <label x="195.58" y="38.1" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -16925,14 +16915,14 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <segment>
 <pinref part="GND12" gate="1" pin="GND"/>
 <wire x1="134.62" y1="40.64" x2="134.62" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="PIN_L" gate="G$1" pin="P$14"/>
+<pinref part="PIN_L" gate="G$1" pin="14"/>
 <wire x1="134.62" y1="43.18" x2="160.02" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$7"/>
+<pinref part="PIN_R" gate="G$1" pin="7"/>
 <wire x1="193.04" y1="60.96" x2="195.58" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="195.58" y1="60.96" x2="195.58" y2="76.2" width="0.1524" layer="91"/>
-<pinref part="PIN_R" gate="G$1" pin="P$1"/>
+<pinref part="PIN_R" gate="G$1" pin="1"/>
 <wire x1="193.04" y1="76.2" x2="195.58" y2="76.2" width="0.1524" layer="91"/>
 <junction x="195.58" y="76.2"/>
 <wire x1="195.58" y1="76.2" x2="200.66" y2="76.2" width="0.1524" layer="91"/>
@@ -16985,7 +16975,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="38.1" y1="78.74" x2="43.18" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$1"/>
+<pinref part="PIN_L" gate="G$1" pin="1"/>
 <wire x1="160.02" y1="76.2" x2="154.94" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="+3V5" gate="G$1" pin="+3V3"/>
 <wire x1="154.94" y1="76.2" x2="154.94" y2="78.74" width="0.1524" layer="91"/>
@@ -17063,7 +17053,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="22.86" y1="33.02" x2="43.18" y2="33.02" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$19"/>
+<pinref part="PIN_L" gate="G$1" pin="19"/>
 <wire x1="160.02" y1="30.48" x2="139.7" y2="30.48" width="0.1524" layer="91"/>
 <pinref part="P+4" gate="1" pin="+5V"/>
 <wire x1="139.7" y1="30.48" x2="139.7" y2="33.02" width="0.1524" layer="91"/>
@@ -17105,7 +17095,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="30.48" y="73.66" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$3"/>
+<pinref part="PIN_L" gate="G$1" pin="3"/>
 <wire x1="160.02" y1="71.12" x2="147.32" y2="71.12" width="0.1524" layer="91"/>
 <label x="147.32" y="71.12" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17117,7 +17107,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="76.2" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$2"/>
+<pinref part="PIN_L" gate="G$1" pin="2"/>
 <wire x1="160.02" y1="73.66" x2="157.48" y2="73.66" width="0.1524" layer="91"/>
 <label x="157.48" y="73.66" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17129,7 +17119,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="27.94" y="53.34" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$11"/>
+<pinref part="PIN_L" gate="G$1" pin="11"/>
 <wire x1="160.02" y1="50.8" x2="144.78" y2="50.8" width="0.1524" layer="91"/>
 <label x="144.78" y="50.8" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17141,7 +17131,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="86.36" y="38.1" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$17"/>
+<pinref part="PIN_R" gate="G$1" pin="17"/>
 <wire x1="193.04" y1="35.56" x2="205.74" y2="35.56" width="0.1524" layer="91"/>
 <label x="205.74" y="35.56" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -17153,7 +17143,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="76.2" y="35.56" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$18"/>
+<pinref part="PIN_R" gate="G$1" pin="18"/>
 <wire x1="193.04" y1="33.02" x2="195.58" y2="33.02" width="0.1524" layer="91"/>
 <label x="195.58" y="33.02" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -17165,7 +17155,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="33.02" y="40.64" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$16"/>
+<pinref part="PIN_L" gate="G$1" pin="16"/>
 <wire x1="160.02" y1="38.1" x2="149.86" y2="38.1" width="0.1524" layer="91"/>
 <label x="149.86" y="38.1" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17177,7 +17167,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="43.18" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$15"/>
+<pinref part="PIN_L" gate="G$1" pin="15"/>
 <wire x1="160.02" y1="40.64" x2="157.48" y2="40.64" width="0.1524" layer="91"/>
 <label x="157.48" y="40.64" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17189,7 +17179,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="76.2" y="55.88" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$10"/>
+<pinref part="PIN_R" gate="G$1" pin="10"/>
 <wire x1="193.04" y1="53.34" x2="195.58" y2="53.34" width="0.1524" layer="91"/>
 <label x="195.58" y="53.34" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -17383,7 +17373,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="78.74" y="71.12" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$4"/>
+<pinref part="PIN_R" gate="G$1" pin="4"/>
 <wire x1="193.04" y1="68.58" x2="198.12" y2="68.58" width="0.1524" layer="91"/>
 <label x="198.12" y="68.58" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -17395,7 +17385,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="91.44" y="68.58" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$5"/>
+<pinref part="PIN_R" gate="G$1" pin="5"/>
 <wire x1="193.04" y1="66.04" x2="210.82" y2="66.04" width="0.1524" layer="91"/>
 <label x="210.82" y="66.04" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
@@ -17407,9 +17397,14 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="86.36" y="53.34" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$11"/>
+<pinref part="PIN_R" gate="G$1" pin="11"/>
 <wire x1="193.04" y1="50.8" x2="205.74" y2="50.8" width="0.1524" layer="91"/>
 <label x="205.74" y="50.8" size="1.778" layer="95" rot="MR180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="RASPBERRYPI_4B" gate="G$1" pin="GPIO1"/>
+<wire x1="91.44" y1="147.32" x2="99.06" y2="147.32" width="0.1524" layer="91"/>
+<label x="99.06" y="147.32" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="RP_TX" class="0">
@@ -17419,9 +17414,14 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="76.2" y="50.8" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$12"/>
+<pinref part="PIN_R" gate="G$1" pin="12"/>
 <wire x1="193.04" y1="48.26" x2="195.58" y2="48.26" width="0.1524" layer="91"/>
 <label x="195.58" y="48.26" size="1.778" layer="95" rot="MR180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="RASPBERRYPI_4B" gate="G$1" pin="GPIO0"/>
+<wire x1="50.8" y1="147.32" x2="43.18" y2="147.32" width="0.1524" layer="91"/>
+<label x="43.18" y="147.32" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="IO10" class="0">
@@ -17431,7 +17431,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="40.64" y="38.1" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$17"/>
+<pinref part="PIN_L" gate="G$1" pin="17"/>
 <wire x1="160.02" y1="35.56" x2="157.48" y2="35.56" width="0.1524" layer="91"/>
 <label x="157.48" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17443,7 +17443,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="33.02" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_L" gate="G$1" pin="P$18"/>
+<pinref part="PIN_L" gate="G$1" pin="18"/>
 <wire x1="160.02" y1="33.02" x2="149.86" y2="33.02" width="0.1524" layer="91"/>
 <label x="149.86" y="33.02" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -17455,7 +17455,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="83.82" y="33.02" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="PIN_R" gate="G$1" pin="P$19"/>
+<pinref part="PIN_R" gate="G$1" pin="19"/>
 <wire x1="193.04" y1="30.48" x2="203.2" y2="30.48" width="0.1524" layer="91"/>
 <label x="203.2" y="30.48" size="1.778" layer="95" rot="MR180" xref="yes"/>
 </segment>
