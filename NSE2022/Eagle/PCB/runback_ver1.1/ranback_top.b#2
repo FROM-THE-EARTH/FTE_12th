@@ -4653,18 +4653,20 @@ design rules under a new name.</description>
 <wire x1="31.75" y1="12.75" x2="35.5" y2="12.75" width="0.1524" layer="1"/>
 <wire x1="35.5" y1="12.75" x2="35.56" y2="12.7" width="0.1524" layer="1"/>
 <wire x1="31.75" y1="12.75" x2="31.52" y2="12.7" width="0.1524" layer="1"/>
-<wire x1="35.75" y1="12.75" x2="35.56" y2="12.7" width="0.1524" layer="1"/>
-<wire x1="78.5" y1="33" x2="78.5" y2="32.5" width="0.1524" layer="1"/>
-<wire x1="73.5" y1="38" x2="78.5" y2="33" width="0.1524" layer="1"/>
-<wire x1="65" y1="38" x2="73.5" y2="38" width="0.1524" layer="1"/>
-<wire x1="65" y1="29.5" x2="65" y2="38" width="0.1524" layer="1"/>
-<wire x1="64.5" y1="29" x2="65" y2="29.5" width="0.1524" layer="16"/>
-<wire x1="52" y1="29" x2="64.5" y2="29" width="0.1524" layer="16"/>
-<wire x1="36" y1="13" x2="52" y2="29" width="0.1524" layer="1"/>
+<wire x1="78.5" y1="37.5" x2="78.5" y2="32.5" width="0.1524" layer="1"/>
+<wire x1="64.25" y1="51.75" x2="78.5" y2="37.5" width="0.1524" layer="1"/>
+<wire x1="60.25" y1="55.75" x2="64.25" y2="51.75" width="0.1524" layer="16"/>
+<wire x1="44.25" y1="55.75" x2="60.25" y2="55.75" width="0.1524" layer="16"/>
+<wire x1="43.25" y1="54.75" x2="44.25" y2="55.75" width="0.1524" layer="16"/>
 <wire x1="78.5" y1="32.5" x2="78.53" y2="32.36" width="0.1524" layer="1"/>
-<wire x1="36" y1="13" x2="35.56" y2="12.7" width="0.1524" layer="1"/>
-<via x="65" y="29.5" extent="1-16" drill="0.2"/>
-<via x="52" y="29" extent="1-16" drill="0.2"/>
+<wire x1="38.75" y1="15.75" x2="35.75" y2="12.75" width="0.1524" layer="1"/>
+<wire x1="38.75" y1="48.25" x2="38.75" y2="15.75" width="0.1524" layer="1"/>
+<wire x1="42" y1="51.5" x2="38.75" y2="48.25" width="0.1524" layer="1"/>
+<wire x1="42" y1="53.5" x2="42" y2="51.5" width="0.1524" layer="1"/>
+<wire x1="43" y1="54.5" x2="42" y2="53.5" width="0.1524" layer="1"/>
+<wire x1="35.75" y1="12.75" x2="35.56" y2="12.7" width="0.1524" layer="1"/>
+<via x="64.25" y="51.75" extent="1-16" drill="0.2"/>
+<wire x1="43" y1="54.5" x2="43.25" y2="54.75" width="0" layer="19" extent="1-16"/>
 </signal>
 <signal name="IM_TX">
 <contactref element="IM" pad="$P7"/>
@@ -4678,6 +4680,9 @@ design rules under a new name.</description>
 <wire x1="35.5" y1="10.25" x2="31.75" y2="10.25" width="0.1524" layer="1"/>
 <wire x1="31.75" y1="10.25" x2="31.52" y2="10.16" width="0.1524" layer="1"/>
 <wire x1="35.5" y1="10.25" x2="35.56" y2="10.16" width="0.1524" layer="1"/>
+<wire x1="39.25" y1="48.25" x2="43" y2="52" width="0.1524" layer="1"/>
+<wire x1="39.25" y1="13.75" x2="39.25" y2="48.25" width="0.1524" layer="1"/>
+<wire x1="35.75" y1="10.25" x2="39.25" y2="13.75" width="0.1524" layer="1"/>
 <wire x1="35.75" y1="10.25" x2="35.56" y2="10.16" width="0.1524" layer="1"/>
 <via x="78" y="20.5" extent="1-16" drill="0.2"/>
 </signal>
@@ -5108,13 +5113,7 @@ design rules under a new name.</description>
 <wire x1="35.5" y1="23" x2="35.56" y2="22.86" width="0.1524" layer="1"/>
 <wire x1="31.75" y1="23" x2="31.52" y2="22.86" width="0.1524" layer="1"/>
 <contactref element="RASPBERRYPI_4B" pad="GPIO1"/>
-<wire x1="35.56" y1="22.86" x2="38.1" y2="25.4" width="0.1524" layer="1"/>
-<wire x1="38.1" y1="25.4" x2="38.1" y2="49.53" width="0.1524" layer="1"/>
-<wire x1="38.1" y1="49.53" x2="41.91" y2="49.53" width="0.1524" layer="1"/>
-<wire x1="43.18" y1="53.8156875" x2="43.18" y2="54.61" width="0.1524" layer="1"/>
-<wire x1="42.2402" y1="52.8758875" x2="43.18" y2="53.8156875" width="0.1524" layer="1"/>
-<wire x1="41.91" y1="49.53" x2="42.2402" y2="49.8602" width="0.1524" layer="1"/>
-<wire x1="42.2402" y1="49.8602" x2="42.2402" y2="52.8758875" width="0.1524" layer="1"/>
+<wire x1="35.56" y1="22.86" x2="43.18" y2="54.61" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RP_TX">
 <contactref element="U$2" pad="GPIO16"/>
@@ -5123,10 +5122,7 @@ design rules under a new name.</description>
 <wire x1="35.5" y1="20.25" x2="35.56" y2="20.32" width="0.1524" layer="1"/>
 <wire x1="31.75" y1="20.25" x2="31.52" y2="20.32" width="0.1524" layer="1"/>
 <contactref element="RASPBERRYPI_4B" pad="GPIO0"/>
-<wire x1="43.18" y1="49.51335" x2="43.18" y2="52.07" width="0.1524" layer="1"/>
-<wire x1="40.7338" y1="47.06715" x2="43.18" y2="49.51335" width="0.1524" layer="1"/>
-<wire x1="35.56" y1="20.32" x2="40.7338" y2="25.4938" width="0.1524" layer="1"/>
-<wire x1="40.7338" y1="25.4938" x2="40.7338" y2="47.06715" width="0.1524" layer="1"/>
+<wire x1="35.56" y1="20.32" x2="43.18" y2="52.07" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO10">
 <contactref element="U$2" pad="GPIO10"/>
