@@ -4828,15 +4828,7 @@ design rules under a new name.</description>
 </polygon>
 <contactref element="RAS_LED3" pad="CT"/>
 <contactref element="RAS_LED2" pad="CT"/>
-<wire x1="81.9" y1="22.94" x2="81.9" y2="29.86" width="0.3048" layer="16"/>
-<wire x1="81.9" y1="29.86" x2="80.01" y2="31.75" width="0.3048" layer="16"/>
-<via x="80.01" y="31.75" extent="1-16" drill="0.35"/>
-<wire x1="80.01" y1="31.75" x2="81.5248" y2="30.2352" width="0.3048" layer="1"/>
-<wire x1="81.5248" y1="30.2352" x2="82.55" y2="30.2352" width="0.3048" layer="1"/>
-<wire x1="82.55" y1="30.2352" x2="82.92625" y2="30.2352" width="0.3048" layer="1"/>
-<wire x1="82.92625" y1="30.2352" x2="83.1048" y2="30.41375" width="0.3048" layer="1"/>
-<wire x1="83.1048" y1="30.41375" x2="83.1048" y2="31.0448" width="0.3048" layer="1"/>
-<wire x1="83.1048" y1="31.0448" x2="83.15" y2="31.09" width="0.3048" layer="1"/>
+<wire x1="83.15" y1="31.09" x2="81.9" y2="22.94" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="+3V3">
 <contactref element="IM" pad="$P17"/>
