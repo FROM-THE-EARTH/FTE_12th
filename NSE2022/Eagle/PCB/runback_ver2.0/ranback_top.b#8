@@ -4224,12 +4224,12 @@ design rules under a new name.</description>
 </designrules>
 <autorouter>
 <pass name="Default">
-<param name="RoutingGrid" value="50mil"/>
+<param name="RoutingGrid" value="0.5mm"/>
 <param name="AutoGrid" value="1"/>
 <param name="Efforts" value="2"/>
 <param name="TopRouterVariant" value="1"/>
 <param name="tpViaShape" value="round"/>
-<param name="PrefDir.1" value="a"/>
+<param name="PrefDir.1" value="-"/>
 <param name="PrefDir.2" value="0"/>
 <param name="PrefDir.3" value="0"/>
 <param name="PrefDir.4" value="0"/>
@@ -4244,7 +4244,7 @@ design rules under a new name.</description>
 <param name="PrefDir.13" value="0"/>
 <param name="PrefDir.14" value="0"/>
 <param name="PrefDir.15" value="0"/>
-<param name="PrefDir.16" value="a"/>
+<param name="PrefDir.16" value="|"/>
 <param name="cfVia" value="8"/>
 <param name="cfNonPref" value="5"/>
 <param name="cfChangeDir" value="2"/>
@@ -4412,123 +4412,89 @@ design rules under a new name.</description>
 <contactref element="RASPBERRYPI_4B" pad="GPIO10"/>
 <contactref element="U$2" pad="GPIO23"/>
 <contactref element="PIN_R" pad="2"/>
-<wire x1="60.73" y1="45.72" x2="33.02" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="67.31" y1="45.72" x2="60.73" y2="45.72" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SCL">
 <contactref element="U$2" pad="GPIO22"/>
 <contactref element="PIN_R" pad="3"/>
-<wire x1="60.73" y1="43.18" x2="67.31" y2="43.18" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SDA">
 <contactref element="U$2" pad="GPIO21"/>
 <contactref element="PIN_R" pad="6"/>
-<wire x1="60.73" y1="35.56" x2="67.31" y2="35.56" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RP_MISO">
 <contactref element="RASPBERRYPI_4B" pad="GPIO9"/>
 <contactref element="U$2" pad="GPIO19"/>
 <contactref element="PIN_R" pad="8"/>
-<wire x1="67.31" y1="30.48" x2="35.56" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="30.48" x2="67.31" y2="30.48" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RP_SCK">
 <contactref element="RASPBERRYPI_4B" pad="GPIO11"/>
 <contactref element="U$2" pad="GPIO18"/>
 <contactref element="PIN_R" pad="9"/>
-<wire x1="67.31" y1="27.94" x2="38.1" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="27.94" x2="67.31" y2="27.94" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="MD_RF">
 <contactref element="TOBOTTOM" pad="P$3"/>
 <contactref element="U$2" pad="GPIO4"/>
 <contactref element="PIN_R" pad="13"/>
-<wire x1="67.31" y1="17.78" x2="86.36" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="17.78" x2="67.31" y2="17.78" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="MD_RB">
 <contactref element="TOBOTTOM" pad="P$4"/>
 <contactref element="U$2" pad="GPIO0"/>
 <contactref element="PIN_R" pad="14"/>
-<wire x1="67.31" y1="15.24" x2="88.9" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="15.24" x2="67.31" y2="15.24" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RP_SS">
 <contactref element="RASPBERRYPI_4B" pad="GPIO8"/>
 <contactref element="U$2" pad="GPIO39"/>
 <contactref element="PIN_L" pad="4"/>
-<wire x1="35.56" y1="40.64" x2="38.1" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="40.64" x2="35.56" y2="40.64" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED1">
 <contactref element="R1" pad="1"/>
 <contactref element="U$2" pad="GPIO6"/>
 <contactref element="PIN_R" pad="19"/>
-<wire x1="67.31" y1="2.54" x2="76.2" y2="53.76" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="2.54" x2="67.31" y2="2.54" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED2">
 <contactref element="R2" pad="1"/>
 <contactref element="U$2" pad="GPIO7"/>
 <contactref element="PIN_R" pad="18"/>
-<wire x1="67.31" y1="5.08" x2="76.2" y2="48.68" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="5.08" x2="67.31" y2="5.08" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SERVO1">
 <contactref element="CON2" pad="3"/>
 <contactref element="U$2" pad="GPIO32"/>
 <contactref element="PIN_L" pad="7"/>
-<wire x1="35.56" y1="33.02" x2="30.48" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="33.02" x2="35.56" y2="33.02" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SERVO2">
 <contactref element="CON3" pad="3"/>
 <contactref element="U$2" pad="GPIO33"/>
 <contactref element="PIN_L" pad="8"/>
-<wire x1="35.56" y1="30.48" x2="17.78" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="30.48" x2="35.56" y2="30.48" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="MD_LF">
 <contactref element="TOBOTTOM" pad="P$1"/>
 <contactref element="U$2" pad="GPIO25"/>
 <contactref element="PIN_L" pad="9"/>
-<wire x1="35.56" y1="27.94" x2="83.82" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="27.94" x2="35.56" y2="27.94" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="MD_LB">
 <contactref element="TOBOTTOM" pad="P$2"/>
 <contactref element="U$2" pad="GPIO26"/>
 <contactref element="PIN_L" pad="10"/>
-<wire x1="35.56" y1="25.4" x2="91.44" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="25.4" x2="35.56" y2="25.4" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IM_BUSY">
 <contactref element="IM" pad="$P1"/>
 <contactref element="U$2" pad="GPIO14"/>
 <contactref element="PIN_L" pad="12"/>
-<wire x1="35.56" y1="20.32" x2="87.15" y2="27.19" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="20.32" x2="35.56" y2="20.32" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IM_RESET">
 <contactref element="IM" pad="$P19"/>
 <contactref element="U$2" pad="GPIO12"/>
 <contactref element="PIN_L" pad="13"/>
-<wire x1="35.56" y1="17.78" x2="82.65" y2="27.19" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="17.78" x2="35.56" y2="17.78" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IM_RX">
 <contactref element="IM" pad="$P6"/>
 <contactref element="U$2" pad="GPIO2"/>
 <contactref element="PIN_R" pad="15"/>
-<wire x1="67.31" y1="12.7" x2="86.15" y2="31.09" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="12.7" x2="67.31" y2="12.7" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IM_TX">
 <contactref element="IM" pad="$P7"/>
 <contactref element="U$2" pad="GPIO15"/>
 <contactref element="PIN_R" pad="16"/>
-<wire x1="67.31" y1="10.16" x2="85.65" y2="27.19" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="10.16" x2="67.31" y2="10.16" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="GND" class="2">
 <contactref element="IM" pad="$P18"/>
@@ -4571,33 +4537,6 @@ design rules under a new name.</description>
 <vertex x="101.6" y="-1.27"/>
 <vertex x="-1.27" y="-1.27"/>
 </polygon>
-<wire x1="72.39" y1="50.28" x2="72.39" y2="55.36" width="0" layer="19" extent="1-1"/>
-<wire x1="72.39" y1="45.2" x2="72.39" y2="50.28" width="0" layer="19" extent="1-1"/>
-<wire x1="72.39" y1="40.12" x2="72.39" y2="45.2" width="0" layer="19" extent="1-1"/>
-<wire x1="72.39" y1="35.04" x2="72.39" y2="40.12" width="0" layer="19" extent="1-1"/>
-<wire x1="72.39" y1="29.96" x2="72.39" y2="35.04" width="0" layer="19" extent="1-1"/>
-<wire x1="58.42" y1="52.07" x2="72.39" y2="29.96" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="48.26" x2="58.42" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="67.31" y1="48.26" x2="60.73" y2="48.26" width="0" layer="19" extent="1-1"/>
-<wire x1="50.8" y1="54.61" x2="58.42" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="45.72" y1="54.61" x2="50.8" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="40.64" y1="52.07" x2="45.72" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="33.02" y1="54.61" x2="40.64" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="25.4" y1="54.61" x2="33.02" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="20.32" y1="52.07" x2="25.4" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="15.24" y1="54.61" x2="20.32" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="67.31" y1="33.02" x2="67.31" y2="48.26" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="33.02" x2="67.31" y2="33.02" width="0" layer="19" extent="1-1"/>
-<wire x1="83.15" y1="31.09" x2="67.31" y2="33.02" width="0" layer="19" extent="1-1"/>
-<wire x1="81.9" y1="22.94" x2="83.15" y2="31.09" width="0" layer="19" extent="1-1"/>
-<wire x1="97.79" y1="22.86" x2="81.9" y2="22.94" width="0" layer="19" extent="1-1"/>
-<wire x1="97.79" y1="12.7" x2="97.79" y2="22.86" width="0" layer="19" extent="1-1"/>
-<wire x1="77.47" y1="6.35" x2="81.9" y2="22.94" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="15.24" x2="77.47" y2="6.35" width="0" layer="19" extent="1-1"/>
-<wire x1="30.226" y1="36.83" x2="33.02" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="35.56" y1="15.24" x2="30.226" y2="36.83" width="0" layer="19" extent="1-1"/>
-<wire x1="25.4" y1="5.08" x2="35.56" y2="15.24" width="0" layer="19" extent="1-1"/>
-<wire x1="12.7" y1="5.08" x2="25.4" y2="5.08" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="+3V3">
 <contactref element="IM" pad="$P17"/>
@@ -4605,10 +4544,6 @@ design rules under a new name.</description>
 <contactref element="U$9" pad="CSB"/>
 <contactref element="PIN_L" pad="1"/>
 <contactref element="RASPBERRYPI_4B" pad="3V3_1"/>
-<wire x1="97.79" y1="10.16" x2="97.79" y2="20.32" width="0" layer="19" extent="1-1"/>
-<wire x1="83.15" y1="27.19" x2="97.79" y2="20.32" width="0" layer="19" extent="1-1"/>
-<wire x1="10.16" y1="52.07" x2="83.15" y2="27.19" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="48.26" x2="10.16" y2="52.07" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="+5V">
 <contactref element="GPS" pad="P1"/>
@@ -4619,166 +4554,148 @@ design rules under a new name.</description>
 <contactref element="PIN_L" pad="19"/>
 <contactref element="TM5" pad="1"/>
 <contactref element="RASPBERRYPI_4B" pad="5V_1"/>
-<wire x1="81.9" y1="15.32" x2="30.226" y2="39.37" width="0" layer="19" extent="1-1"/>
-<wire x1="27.94" y1="5.08" x2="81.9" y2="15.32" width="0" layer="19" extent="1-1"/>
-<wire x1="15.24" y1="5.08" x2="27.94" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="72.39" y1="6.35" x2="15.24" y2="5.08" width="0" layer="19" extent="1-1"/>
-<wire x1="35.56" y1="2.54" x2="72.39" y2="6.35" width="0" layer="19" extent="1-1"/>
-<wire x1="64.77" y1="2.54" x2="35.56" y2="2.54" width="0" layer="19" extent="1-1"/>
-<wire x1="10.16" y1="54.61" x2="64.77" y2="2.54" width="0" layer="19" extent="1-1"/>
+<wire x1="72.39" y1="6.35" x2="69.85" y2="8.89" width="3" layer="1"/>
+<wire x1="69.85" y1="8.89" x2="69.85" y2="49.53" width="3" layer="1"/>
+<wire x1="69.85" y1="49.53" x2="60.96" y2="58.42" width="3" layer="1"/>
+<wire x1="12.7" y1="58.42" x2="10.16" y2="55.88" width="3" layer="1"/>
+<wire x1="10.16" y1="55.88" x2="10.16" y2="54.61" width="3" layer="1"/>
+<wire x1="60.96" y1="58.42" x2="12.7" y2="58.42" width="3" layer="1"/>
+<wire x1="72.39" y1="6.35" x2="72.39" y2="1.27" width="1" layer="1"/>
+<wire x1="72.39" y1="1.27" x2="71.82" y2="0.7" width="1" layer="1"/>
+<wire x1="71.82" y1="0.7" x2="64.77" y2="0.7" width="1" layer="1"/>
+<wire x1="64.77" y1="0.7" x2="35.56" y2="0.7" width="1" layer="1"/>
+<wire x1="35.56" y1="0.7" x2="27.94" y2="0.7" width="1" layer="1"/>
+<wire x1="27.94" y1="0.7" x2="15.24" y2="0.7" width="1" layer="1"/>
+<wire x1="15.24" y1="0.7" x2="15.24" y2="5.08" width="1" layer="1"/>
+<wire x1="27.94" y1="0.7" x2="27.94" y2="5.08" width="1" layer="1"/>
+<wire x1="10.16" y1="54.61" x2="7.62" y2="52.07" width="1" layer="1"/>
+<wire x1="7.62" y1="39.37" x2="30.226" y2="39.37" width="1" layer="1"/>
+<wire x1="7.62" y1="52.07" x2="7.62" y2="39.37" width="1" layer="1"/>
+<wire x1="35.56" y1="0.7" x2="35.56" y2="2.54" width="1" layer="1"/>
+<wire x1="64.77" y1="2.54" x2="64.77" y2="0.7" width="1" layer="1"/>
+<wire x1="72.39" y1="6.35" x2="72.39" y2="10.16" width="1" layer="1"/>
+<wire x1="81.9" y1="10.16" x2="81.9" y2="15.32" width="1" layer="1"/>
+<wire x1="72.39" y1="10.16" x2="81.9" y2="10.16" width="1" layer="1"/>
 </signal>
 <signal name="GPS_RX">
 <contactref element="RASPBERRYPI_4B" pad="GPIO14"/>
 <contactref element="GPS" pad="P3"/>
-<wire x1="17.78" y1="54.61" x2="30.226" y2="34.29" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="BB_SCL">
 <contactref element="RASPBERRYPI_4B" pad="GPIO3"/>
 <contactref element="U$9" pad="SCK"/>
 <contactref element="BMX1" pad="SCL"/>
-<wire x1="76.83" y1="22.94" x2="97.79" y2="15.24" width="0" layer="19" extent="1-1"/>
-<wire x1="15.24" y1="52.07" x2="76.83" y2="22.94" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SENSOR_VP">
 <contactref element="U$2" pad="GPIO36"/>
 <contactref element="PIN_L" pad="3"/>
-<wire x1="64.77" y1="43.18" x2="35.56" y2="43.18" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="EN">
 <contactref element="U$2" pad="EN"/>
 <contactref element="PIN_L" pad="2"/>
-<wire x1="64.77" y1="45.72" x2="35.56" y2="45.72" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO27">
 <contactref element="U$2" pad="GPIO27"/>
 <contactref element="PIN_L" pad="11"/>
-<wire x1="64.77" y1="22.86" x2="35.56" y2="22.86" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO8">
 <contactref element="U$2" pad="GPIO8"/>
 <contactref element="PIN_R" pad="17"/>
-<wire x1="60.73" y1="7.62" x2="67.31" y2="7.62" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO9">
 <contactref element="U$2" pad="GPIO9"/>
 <contactref element="PIN_L" pad="16"/>
-<wire x1="64.77" y1="10.16" x2="35.56" y2="10.16" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO13">
 <contactref element="U$2" pad="GPIO13"/>
 <contactref element="PIN_L" pad="15"/>
-<wire x1="64.77" y1="12.7" x2="35.56" y2="12.7" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO5">
 <contactref element="U$2" pad="GPIO5"/>
 <contactref element="PIN_R" pad="10"/>
-<wire x1="60.73" y1="25.4" x2="67.31" y2="25.4" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="BB_SDA">
 <contactref element="RASPBERRYPI_4B" pad="GPIO2"/>
 <contactref element="U$9" pad="SDI"/>
 <contactref element="BMX1" pad="SDA"/>
-<wire x1="79.36" y1="22.94" x2="97.79" y2="17.78" width="0" layer="19" extent="1-1"/>
-<wire x1="12.7" y1="52.07" x2="79.36" y2="22.94" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED4">
 <contactref element="RASPBERRYPI_4B" pad="GPIO17"/>
 <contactref element="R4" pad="1"/>
-<wire x1="22.86" y1="52.07" x2="76.2" y2="38.52" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED5">
 <contactref element="RASPBERRYPI_4B" pad="GPIO27"/>
 <contactref element="R5" pad="1"/>
-<wire x1="25.4" y1="52.07" x2="76.2" y2="33.44" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED6">
 <contactref element="RASPBERRYPI_4B" pad="GPIO22"/>
 <contactref element="R6" pad="1"/>
-<wire x1="27.94" y1="52.07" x2="76.2" y2="28.36" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="LED3">
 <contactref element="IM" pad="$P15"/>
 <contactref element="R3" pad="1"/>
-<wire x1="83.65" y1="27.19" x2="76.2" y2="43.6" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="GPS_TX">
 <contactref element="GPS" pad="P4"/>
 <contactref element="RASPBERRYPI_4B" pad="GPIO15"/>
-<wire x1="20.32" y1="54.61" x2="30.226" y2="31.75" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RXD" class="1">
 <contactref element="U$2" pad="TX"/>
 <contactref element="PIN_R" pad="4"/>
-<wire x1="60.73" y1="40.64" x2="67.31" y2="40.64" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="TXD" class="1">
 <contactref element="U$2" pad="RX"/>
 <contactref element="PIN_R" pad="5"/>
-<wire x1="60.73" y1="38.1" x2="67.31" y2="38.1" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RP_RX">
 <contactref element="U$2" pad="GPIO17"/>
 <contactref element="PIN_R" pad="11"/>
 <contactref element="RASPBERRYPI_4B" pad="GPIO1"/>
-<wire x1="67.31" y1="22.86" x2="43.18" y2="54.61" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="22.86" x2="67.31" y2="22.86" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RP_TX">
 <contactref element="U$2" pad="GPIO16"/>
 <contactref element="PIN_R" pad="12"/>
 <contactref element="RASPBERRYPI_4B" pad="GPIO0"/>
-<wire x1="67.31" y1="20.32" x2="43.18" y2="52.07" width="0" layer="19" extent="1-1"/>
-<wire x1="60.73" y1="20.32" x2="67.31" y2="20.32" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO10">
 <contactref element="U$2" pad="GPIO10"/>
 <contactref element="PIN_L" pad="17"/>
-<wire x1="64.77" y1="7.62" x2="35.56" y2="7.62" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO11">
 <contactref element="U$2" pad="GPIO11"/>
 <contactref element="PIN_L" pad="18"/>
-<wire x1="64.77" y1="5.08" x2="35.56" y2="5.08" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$1">
 <contactref element="R1" pad="2"/>
 <contactref element="ESP_LED1" pad="AN"/>
-<wire x1="76.2" y1="55.46" x2="72.39" y2="53.86" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$2">
 <contactref element="R2" pad="2"/>
 <contactref element="ESP_LED2" pad="AN"/>
-<wire x1="76.2" y1="50.38" x2="72.39" y2="48.78" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$3">
 <contactref element="R3" pad="2"/>
 <contactref element="IMCHECK" pad="AN"/>
-<wire x1="76.2" y1="45.3" x2="72.39" y2="43.7" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$4">
 <contactref element="R4" pad="2"/>
 <contactref element="RAS_LED1" pad="AN"/>
-<wire x1="76.2" y1="40.22" x2="72.39" y2="38.62" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$5">
 <contactref element="R5" pad="2"/>
 <contactref element="RAS_LED2" pad="AN"/>
-<wire x1="76.2" y1="35.14" x2="72.39" y2="33.54" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$6">
 <contactref element="R6" pad="2"/>
 <contactref element="RAS_LED3" pad="AN"/>
-<wire x1="76.2" y1="30.06" x2="72.39" y2="28.46" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO34">
 <contactref element="U$2" pad="GPIO34"/>
 <contactref element="PIN_L" pad="5"/>
-<wire x1="64.77" y1="38.1" x2="35.56" y2="38.1" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="IO35">
 <contactref element="U$2" pad="GPIO35"/>
 <contactref element="PIN_L" pad="6"/>
-<wire x1="64.77" y1="35.56" x2="35.56" y2="35.56" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
