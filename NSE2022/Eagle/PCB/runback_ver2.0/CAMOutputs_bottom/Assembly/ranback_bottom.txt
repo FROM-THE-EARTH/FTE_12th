@@ -1,0 +1,15 @@
+Partlist exported from /Users/abehiroto/Documents/GitHub/FTE_12th/NSE2022/Eagle/PCB/runback_ver2.0/ranback_bottom.sch at 2022/06/11 16:24
+
+Qty Value        Device               Package              Parts              Description                          POPULARITY SPICEPREFIX
+1                2.5_MINI-SPOX_4PIN   2.5_MINI-SPOX_4PIN   TOTOP                                                                         
+2                BD6231F              BD6231F              MD_L, MD_R                                                                    
+1                R-EU_0207/10         0207/10              R22                RESISTOR, European symbol            81         R          
+1                SRIDE_SWITCH         SRIDE_SWITCH         SW1                                                                           
+4                TERMINAL_SLOPED_2PIN TERMINAL_SLOPED_2PIN TM1, TM2, TM3, TM4                                                            
+2   0.1uF        CPOL-EUE2.5-7        E2,5-7               C16, C20           POLARIZED CAPACITOR, European symbol 17         C          
+1   0.1uf        CPOL-EUE2.5-7        E2,5-7               C11                POLARIZED CAPACITOR, European symbol 17         C          
+3   1000uF       CPOL-EUE5-10.5       E5-10,5              C17, C18, C19      POLARIZED CAPACITOR, European symbol 23         C          
+1   100kR        3362P                3362P                100KR1                                                                        
+1   100uf        CPOL-EUE2.5-7        E2,5-7               C10                POLARIZED CAPACITOR, European symbol 17         C          
+2   2SJ681-PCH   2SJ681-PCH           2SJ681               U$7, U$10                                                                     
+1   5V3A_KIC-053 5V3A_KIC-053         5V3A_KIC-053         U$8                                                                           
