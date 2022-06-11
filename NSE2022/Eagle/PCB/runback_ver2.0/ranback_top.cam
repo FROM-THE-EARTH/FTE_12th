@@ -192,7 +192,8 @@
                     "filename_format": "%PREFIX/silkscreen_top.gbr",
                     "layers": [
                         21,
-                        25
+                        25,
+                        27
                     ],
                     "milling": false,
                     "name": "Silkscreen Top",
