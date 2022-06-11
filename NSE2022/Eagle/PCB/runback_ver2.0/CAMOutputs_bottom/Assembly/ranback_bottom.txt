@@ -1,4 +1,4 @@
-Partlist exported from /Users/abehiroto/Documents/GitHub/FTE_12th/NSE2022/Eagle/PCB/runback_ver2.0/ranback_bottom.sch at 2022/06/11 17:29
+Partlist exported from /Users/abehiroto/Documents/GitHub/FTE_12th/NSE2022/Eagle/PCB/runback_ver2.0/ranback_bottom.sch at 2022/06/12 2:30
 
 Qty Value        Device               Package              Parts              Description                          POPULARITY SPICEPREFIX
 1                2.5_MINI-SPOX_4PIN   2.5_MINI-SPOX_4PIN   TOTOP                                                                         
