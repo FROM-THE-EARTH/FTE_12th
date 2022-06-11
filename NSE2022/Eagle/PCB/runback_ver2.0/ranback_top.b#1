@@ -4556,14 +4556,6 @@ design rules under a new name.</description>
 </signal>
 <signal name="RP_SS">
 <contactref element="RASPBERRYPI_4B" pad="GPIO8"/>
-<contactref element="U$2" pad="GPIO39"/>
-<contactref element="PIN_L" pad="4"/>
-<wire x1="63.75" y1="41.75" x2="64.75" y2="40.75" width="0.1524" layer="1"/>
-<wire x1="37.5" y1="41.75" x2="63.75" y2="41.75" width="0.1524" layer="1"/>
-<wire x1="36.5" y1="40.75" x2="37.5" y2="41.75" width="0.1524" layer="1"/>
-<wire x1="35.75" y1="40.75" x2="36.5" y2="40.75" width="0.1524" layer="1"/>
-<wire x1="64.75" y1="40.75" x2="64.77" y2="40.64" width="0.1524" layer="1"/>
-<wire x1="35.75" y1="40.75" x2="35.56" y2="40.64" width="0.1524" layer="1"/>
 <wire x1="36.5" y1="53" x2="38" y2="54.5" width="0.1524" layer="16"/>
 <wire x1="36.5" y1="51" x2="36.5" y2="53" width="0.1524" layer="16"/>
 <wire x1="37" y1="50.5" x2="36.5" y2="51" width="0.1524" layer="16"/>
@@ -4571,7 +4563,15 @@ design rules under a new name.</description>
 <wire x1="35.75" y1="41" x2="37" y2="42.25" width="0.1524" layer="16"/>
 <wire x1="35.75" y1="40.75" x2="35.75" y2="41" width="0.1524" layer="16"/>
 <wire x1="38" y1="54.5" x2="38.1" y2="54.61" width="0.1524" layer="16"/>
-<wire x1="35.75" y1="40.75" x2="35.56" y2="40.64" width="0.1524" layer="16"/>
+<contactref element="U$2" pad="GPIO5"/>
+<contactref element="PIN_R" pad="10"/>
+<wire x1="66.5" y1="24.5" x2="67.25" y2="25.25" width="0.1524" layer="1"/>
+<wire x1="64" y1="24.5" x2="66.5" y2="24.5" width="0.1524" layer="1"/>
+<wire x1="63.25" y1="25.25" x2="64" y2="24.5" width="0.1524" layer="1"/>
+<wire x1="60.75" y1="25.25" x2="63.25" y2="25.25" width="0.1524" layer="1"/>
+<wire x1="67.25" y1="25.25" x2="67.31" y2="25.4" width="0.1524" layer="1"/>
+<wire x1="60.75" y1="25.25" x2="60.73" y2="25.4" width="0" layer="19" extent="1-1"/>
+<wire x1="35.75" y1="40.75" x2="60.73" y2="25.4" width="0" layer="19" extent="16-16"/>
 </signal>
 <signal name="LED1">
 <contactref element="U$2" pad="GPIO6"/>
@@ -4828,7 +4828,15 @@ design rules under a new name.</description>
 </polygon>
 <contactref element="RAS_LED3" pad="CT"/>
 <contactref element="RAS_LED2" pad="CT"/>
-<wire x1="83.15" y1="31.09" x2="81.9" y2="22.94" width="0" layer="19" extent="1-1"/>
+<wire x1="81.9" y1="22.94" x2="81.9" y2="29.86" width="0.3048" layer="16"/>
+<wire x1="81.9" y1="29.86" x2="80.01" y2="31.75" width="0.3048" layer="16"/>
+<via x="80.01" y="31.75" extent="1-16" drill="0.35"/>
+<wire x1="80.01" y1="31.75" x2="81.5248" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="81.5248" y1="30.2352" x2="82.55" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="82.55" y1="30.2352" x2="82.92625" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="82.92625" y1="30.2352" x2="83.1048" y2="30.41375" width="0.3048" layer="1"/>
+<wire x1="83.1048" y1="30.41375" x2="83.1048" y2="31.0448" width="0.3048" layer="1"/>
+<wire x1="83.1048" y1="31.0448" x2="83.15" y2="31.09" width="0.3048" layer="1"/>
 </signal>
 <signal name="+3V3">
 <contactref element="IM" pad="$P17"/>
@@ -5015,16 +5023,6 @@ design rules under a new name.</description>
 <wire x1="35.75" y1="12.75" x2="36" y2="13" width="0.1524" layer="1"/>
 <wire x1="64.75" y1="12.75" x2="64.77" y2="12.7" width="0.1524" layer="1"/>
 <wire x1="35.75" y1="12.75" x2="35.56" y2="12.7" width="0.1524" layer="1"/>
-</signal>
-<signal name="IO5">
-<contactref element="U$2" pad="GPIO5"/>
-<contactref element="PIN_R" pad="10"/>
-<wire x1="66.5" y1="24.5" x2="67.25" y2="25.25" width="0.1524" layer="1"/>
-<wire x1="64" y1="24.5" x2="66.5" y2="24.5" width="0.1524" layer="1"/>
-<wire x1="63.25" y1="25.25" x2="64" y2="24.5" width="0.1524" layer="1"/>
-<wire x1="60.75" y1="25.25" x2="63.25" y2="25.25" width="0.1524" layer="1"/>
-<wire x1="67.25" y1="25.25" x2="67.31" y2="25.4" width="0.1524" layer="1"/>
-<wire x1="60.75" y1="25.25" x2="60.73" y2="25.4" width="0.1524" layer="1"/>
 </signal>
 <signal name="BB_SDA">
 <contactref element="RASPBERRYPI_4B" pad="GPIO2"/>
@@ -5340,6 +5338,16 @@ design rules under a new name.</description>
 <wire x1="43.25" y1="11.25" x2="43.18" y2="11.43" width="0.1524" layer="1"/>
 <via x="75.5" y="30.5" extent="1-16" drill="0.35"/>
 <via x="62.75" y="11.5" extent="1-16" drill="0.35"/>
+</signal>
+<signal name="IO39">
+<contactref element="U$2" pad="GPIO39"/>
+<contactref element="PIN_L" pad="4"/>
+<wire x1="63.75" y1="41.75" x2="64.75" y2="40.75" width="0.1524" layer="1"/>
+<wire x1="37.5" y1="41.75" x2="63.75" y2="41.75" width="0.1524" layer="1"/>
+<wire x1="36.5" y1="40.75" x2="37.5" y2="41.75" width="0.1524" layer="1"/>
+<wire x1="35.75" y1="40.75" x2="36.5" y2="40.75" width="0.1524" layer="1"/>
+<wire x1="64.75" y1="40.75" x2="64.77" y2="40.64" width="0.1524" layer="1"/>
+<wire x1="35.75" y1="40.75" x2="35.56" y2="40.64" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
