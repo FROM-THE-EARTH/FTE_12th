@@ -1,4 +1,4 @@
-Partlist exported from /Users/abehiroto/Documents/GitHub/FTE_12th/NSE2022/Eagle/PCB/runback_ver2.0/ranback_top.sch at 2022/06/11 17:26
+Partlist exported from /Users/abehiroto/Documents/GitHub/FTE_12th/NSE2022/Eagle/PCB/runback_ver2.0/ranback_top.sch at 2022/06/11 18:29
 
 Qty Value        Device               Package              Parts                                                     Description               POPULARITY SPICEPREFIX
 2                19_2.54              19_2.54              PIN_L, PIN_R                                                                                              
