@@ -975,6 +975,59 @@ general purpose rectifier, 1 A</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="Switches">
+<packages>
+<package name="SRIDE_SWITCH" urn="urn:adsk.eagle:footprint:27212889/1">
+<pad name="LR" x="0" y="0" drill="1"/>
+<pad name="R" x="2.5" y="0" drill="1"/>
+<pad name="L" x="-2.5" y="0" drill="1"/>
+<wire x1="4.25" y1="1.75" x2="4.25" y2="-1.75" width="0.127" layer="1"/>
+<wire x1="4.25" y1="-1.75" x2="-4.25" y2="-1.75" width="0.127" layer="1"/>
+<wire x1="-4.25" y1="-1.75" x2="-4.25" y2="1.75" width="0.127" layer="1"/>
+<wire x1="-4.25" y1="1.75" x2="4.25" y2="1.75" width="0.127" layer="1"/>
+</package>
+</packages>
+<packages3d>
+<package3d name="SRIDE_SWITCH" urn="urn:adsk.eagle:package:27212891/1" type="box">
+<packageinstances>
+<packageinstance name="SRIDE_SWITCH"/>
+</packageinstances>
+</package3d>
+</packages3d>
+<symbols>
+<symbol name="SRIDE_SWITCH">
+<pin name="LR" x="0" y="-5.08" length="middle" rot="R90"/>
+<pin name="L" x="-5.08" y="-5.08" length="middle" rot="R90"/>
+<pin name="R" x="5.08" y="-5.08" length="middle" rot="R90"/>
+<wire x1="-7.62" y1="0" x2="-7.62" y2="7.62" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="7.62" x2="7.62" y2="7.62" width="0.254" layer="94"/>
+<wire x1="7.62" y1="7.62" x2="7.62" y2="0" width="0.254" layer="94"/>
+<wire x1="7.62" y1="0" x2="-7.62" y2="0" width="0.254" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="SRIDE_SWITCH" prefix="SRIDE_SWTCH">
+<gates>
+<gate name="G$1" symbol="SRIDE_SWITCH" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SRIDE_SWITCH">
+<connects>
+<connect gate="G$1" pin="L" pad="L"/>
+<connect gate="G$1" pin="LR" pad="LR"/>
+<connect gate="G$1" pin="R" pad="R"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:27212891/1"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 <library name="LEDkato">
 <packages>
 <package name="LED">
@@ -3661,47 +3714,6 @@ general purpose rectifier, 1 A</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="SLIDESWITCH">
-<packages>
-<package name="SLIDESWITCH">
-<pad name="A" x="0" y="0" drill="0.6" diameter="1.4224" shape="square"/>
-<pad name="C" x="2.54" y="0" drill="0.6" diameter="1.4224" shape="square"/>
-<pad name="B" x="5.08" y="0" drill="0.6" diameter="1.4224" shape="square"/>
-<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.127" layer="21"/>
-<wire x1="-1.27" y1="-1.27" x2="6.35" y2="-1.27" width="0.127" layer="21"/>
-<wire x1="6.35" y1="-1.27" x2="6.35" y2="1.27" width="0.127" layer="21"/>
-<wire x1="6.35" y1="1.27" x2="-1.27" y2="1.27" width="0.127" layer="21"/>
-</package>
-</packages>
-<symbols>
-<symbol name="SLIDESWITCH">
-<wire x1="0" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
-<pin name="A" x="-2.54" y="0" visible="off" length="middle"/>
-<wire x1="2.54" y1="0" x2="6.35" y2="2.54" width="0.254" layer="94"/>
-<pin name="B" x="11.43" y="2.54" visible="off" length="middle" rot="R180"/>
-<pin name="C" x="15.24" y="0" visible="off" length="middle" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="SLIDESWITCH">
-<gates>
-<gate name="G$1" symbol="SLIDESWITCH" x="2.54" y="0"/>
-</gates>
-<devices>
-<device name="" package="SLIDESWITCH">
-<connects>
-<connect gate="G$1" pin="A" pad="A"/>
-<connect gate="G$1" pin="B" pad="B"/>
-<connect gate="G$1" pin="C" pad="C"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 </libraries>
 <attributes>
 </attributes>
@@ -3757,6 +3769,7 @@ general purpose rectifier, 1 A</description>
 <part name="GND22" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="P+4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
+<part name="SRIDE_SWTCH3" library="Switches" deviceset="SRIDE_SWITCH" device="" package3d_urn="urn:adsk.eagle:package:27212891/1"/>
 <part name="R1" library="normal register" deviceset="RESISTER" device="">
 <attribute name="R" value="10k"/>
 </part>
@@ -3782,7 +3795,6 @@ general purpose rectifier, 1 A</description>
 <part name="GND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="P+2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
-<part name="U$8" library="SLIDESWITCH" deviceset="SLIDESWITCH" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3887,6 +3899,7 @@ general purpose rectifier, 1 A</description>
 <instance part="P+4" gate="1" x="614.68" y="88.9" smashed="yes">
 <attribute name="VALUE" x="612.14" y="83.82" size="1.778" layer="96" rot="R90"/>
 </instance>
+<instance part="SRIDE_SWTCH3" gate="G$1" x="508" y="33.02" smashed="yes"/>
 <instance part="R1" gate="G$1" x="485.14" y="-17.78" smashed="yes" rot="R180">
 <attribute name="R" x="488.442" y="-16.256" size="1.778" layer="96" rot="R90" display="both"/>
 </instance>
@@ -3922,7 +3935,6 @@ general purpose rectifier, 1 A</description>
 <instance part="P+2" gate="1" x="398.78" y="40.64" smashed="yes">
 <attribute name="VALUE" x="396.24" y="35.56" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$8" gate="G$1" x="502.666" y="41.91" smashed="yes"/>
 </instances>
 <busses>
 </busses>
@@ -4363,12 +4375,10 @@ general purpose rectifier, 1 A</description>
 <pinref part="CERAMIC_CAPACITOR2" gate="G$1" pin="1"/>
 <wire x1="518.16" y1="20.32" x2="513.08" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="513.08" y1="20.32" x2="513.08" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="SRIDE_SWTCH3" gate="G$1" pin="LR"/>
 <wire x1="508" y1="27.94" x2="508" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="508" y1="25.4" x2="513.08" y2="25.4" width="0.1524" layer="91"/>
 <junction x="513.08" y="25.4"/>
-<pinref part="U$8" gate="G$1" pin="C"/>
-<wire x1="517.906" y1="41.91" x2="517.906" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="517.906" y1="27.94" x2="508" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="CANL2" class="0">
@@ -4416,13 +4426,10 @@ general purpose rectifier, 1 A</description>
 <wire x1="495.3" y1="30.48" x2="495.3" y2="25.4" width="0.1524" layer="91"/>
 <pinref part="U$3" gate="G$1" pin="DRAIN"/>
 <wire x1="482.6" y1="25.4" x2="495.3" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="SRIDE_SWTCH3" gate="G$1" pin="L"/>
 <wire x1="495.3" y1="25.4" x2="502.92" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="502.92" y1="25.4" x2="502.92" y2="27.94" width="0.1524" layer="91"/>
 <junction x="495.3" y="25.4"/>
-<pinref part="U$8" gate="G$1" pin="A"/>
-<wire x1="500.126" y1="41.91" x2="500.38" y2="41.91" width="0.1524" layer="91"/>
-<wire x1="500.38" y1="41.91" x2="500.38" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="500.38" y1="27.94" x2="502.92" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="LED1" class="0">
