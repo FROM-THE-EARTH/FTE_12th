@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2022-06-12T06:37:49Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.6.0"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.57,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "untitled"
+        },
+        "Owner": "  <kato.shunsuke.p7@dc.tohoku.ac.jp>",
+        "Size": {
+            "X": 49.2,
+            "Y": 45.72
+        }
+    }
+}
