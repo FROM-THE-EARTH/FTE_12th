@@ -74,7 +74,7 @@
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIxMTAxNTQ1NjAwODI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:Ol8f5ImPTCC5028qe5RlCA" pcbguid="6d0395dd-fb46-4498-ba04-0223c8cb01ed" lastpulledtime="2022-06-16T06:36:24Z" lastsyncedchangeguid="" latestrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastsyncedrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastboardhashguid="13702d90-27f0-0dfe-6662-ce6b2d370638" lastpushedtime="2022-06-16T06:33:57Z" linktopcb3d="%12"/>
+<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIxMTAxNTQ1NjAwODI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:Ol8f5ImPTCC5028qe5RlCA" pcbguid="6d0395dd-fb46-4498-ba04-0223c8cb01ed" lastpulledtime="2022-06-16T06:39:35Z" lastsyncedchangeguid="" latestrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastsyncedrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastboardhashguid="13702d90-27f0-0dfe-6662-ce6b2d370638" lastpushedtime="2022-06-16T06:33:57Z" linktopcb3d="%12"/>
 <plain>
 <text x="83.058" y="0.508" size="0.8128" layer="21">LF</text>
 <text x="85.471" y="0.508" size="0.8128" layer="21">RF</text>

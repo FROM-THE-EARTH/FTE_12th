@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.6.0">
+<eagle version="9.6.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="yes"/>
+<setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="50" unitdist="mil" unit="mm" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mm"/>
@@ -29,12 +29,12 @@
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
@@ -46,10 +46,10 @@
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
@@ -57,8 +57,8 @@
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="88" name="SimResults" color="9" fill="1" visible="no" active="no"/>
 <layer number="89" name="SimProbes" color="9" fill="1" visible="no" active="no"/>
 <layer number="90" name="Modules" color="5" fill="1" visible="no" active="no"/>
@@ -74,8 +74,15 @@
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIxMTAxNTQ1NjAwODI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:Ol8f5ImPTCC5028qe5RlCA" pcbguid="6d0395dd-fb46-4498-ba04-0223c8cb01ed" lastpulledtime="2022-06-16T06:36:24Z" lastsyncedchangeguid="" latestrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastsyncedrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastboardhashguid="13702d90-27f0-0dfe-6662-ce6b2d370638" lastpushedtime="2022-06-16T06:33:57Z" linktopcb3d="%12"/>
 <plain>
+<wire x1="0" y1="0" x2="100" y2="0" width="0" layer="20"/>
+<wire x1="100" y1="0" x2="100" y2="61.27" width="0" layer="20"/>
+<wire x1="100" y1="61.27" x2="0" y2="61.27" width="0" layer="20"/>
+<wire x1="0" y1="61.27" x2="0" y2="0" width="0" layer="20"/>
+<hole x="2.54" y="2.54" drill="3"/>
+<hole x="2.54" y="58.73" drill="3"/>
+<hole x="97.46" y="58.73" drill="3"/>
+<hole x="97.46" y="2.54" drill="3"/>
 <text x="83.058" y="0.508" size="0.8128" layer="21">LF</text>
 <text x="85.471" y="0.508" size="0.8128" layer="21">RF</text>
 <text x="88.138" y="0.508" size="0.8128" layer="21">RB</text>
@@ -104,22 +111,6 @@
 <text x="81.026" y="21.082" size="0.6096" layer="21">GND</text>
 <text x="76.073" y="21.082" size="0.6096" layer="21">SCL</text>
 <text x="78.613" y="21.082" size="0.6096" layer="21">SDA</text>
-<hole x="4.51" y="46.29" drill="3.2"/>
-<hole x="28.51" y="46.29" drill="3.2"/>
-<hole x="28.51" y="22.29" drill="3.2"/>
-<hole x="4.51" y="22.29" drill="3.2"/>
-<hole x="2.54" y="2.54" drill="3"/>
-<hole x="2.54" y="58.73" drill="3"/>
-<hole x="97.46" y="58.73" drill="3"/>
-<hole x="97.46" y="2.54" drill="3"/>
-<hole x="95.9" y="28.64" drill="2.5"/>
-<hole x="81.9" y="54.64" drill="2"/>
-<hole x="90.17" y="10.16" drill="0.35"/>
-<hole x="90.17" y="22.86" drill="0.35"/>
-<wire x1="0" y1="61.27" x2="0" y2="0" width="0" layer="20"/>
-<wire x1="0" y1="0" x2="100" y2="0" width="0" layer="20"/>
-<wire x1="100" y1="0" x2="100" y2="61.27" width="0" layer="20"/>
-<wire x1="100" y1="61.27" x2="0" y2="61.27" width="0" layer="20"/>
 </plain>
 <libraries>
 <library name="BMX055">
@@ -4375,7 +4366,7 @@ design rules under a new name.</description>
 <element name="ESP_LED2" library="ChipLED" package="OSXX1608C1A" value="OSXX1608C1A" x="73.66" y="50.8" smashed="yes" rot="R180">
 <attribute name="NAME" x="74.46" y="50.33" size="0.3048" layer="25" rot="R180"/>
 </element>
-<element name="GPS" library="AE-GYSFDMAXB" package="AE-GYSFDMAXB" override_package3d_urn="urn:adsk.eagle:package:36193898/2" override_package_urn="urn:adsk.eagle:footprint:36193899/1" value="AE-GYSFDMAXB" x="16.51" y="34.29" smashed="yes"/>
+<element name="GPS" library="AE-GYSFDMAXB" package="AE-GYSFDMAXB" value="AE-GYSFDMAXB" x="16.51" y="34.29" smashed="yes"/>
 <element name="IM" library="IM920" package="IM920C" value="IM920C" x="88.9" y="40.64" smashed="yes"/>
 <element name="IMCHECK" library="ChipLED" package="OSXX1608C1A" value="OSXX1608C1A" x="73.66" y="45.72" smashed="yes" rot="R180">
 <attribute name="NAME" x="74.46" y="45.25" size="0.3048" layer="25" rot="R180"/>
@@ -4846,7 +4837,8 @@ design rules under a new name.</description>
 <wire x1="81.9" y1="29.86" x2="80.01" y2="31.75" width="0.3048" layer="16"/>
 <via x="80.01" y="31.75" extent="1-16" drill="0.35"/>
 <wire x1="80.01" y1="31.75" x2="81.5248" y2="30.2352" width="0.3048" layer="1"/>
-<wire x1="81.5248" y1="30.2352" x2="82.92625" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="81.5248" y1="30.2352" x2="82.55" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="82.55" y1="30.2352" x2="82.92625" y2="30.2352" width="0.3048" layer="1"/>
 <wire x1="82.92625" y1="30.2352" x2="83.1048" y2="30.41375" width="0.3048" layer="1"/>
 <wire x1="83.1048" y1="30.41375" x2="83.1048" y2="31.0448" width="0.3048" layer="1"/>
 <wire x1="83.1048" y1="31.0448" x2="83.15" y2="31.09" width="0.3048" layer="1"/>
@@ -5377,11 +5369,6 @@ of those online libraries will not be understood (or retained)
 with this version.
 </note>
 <note version="8.3" severity="warning">
-Since Version 8.3, EAGLE supports Fusion synchronisation.
-This feature will not be available in this version and saving
-the document will break the link to the Fusion PCB feature.
-</note>
-<note version="8.3" severity="warning">
 Since Version 8.3, EAGLE supports URNs for individual library
 assets (packages, symbols, and devices). The URNs of those assets
 will not be understood (or retained) with this version.
@@ -5390,11 +5377,6 @@ will not be understood (or retained) with this version.
 Since Version 8.3, EAGLE supports the association of 3D packages
 with devices in libraries, schematics, and board files. Those 3D
 packages will not be understood (or retained) with this version.
-</note>
-<note version="9.4" severity="warning">
-Since Version 9.4, EAGLE supports the overriding of 3D packages
-in schematics and board files. Those overridden 3d packages
-will not be understood (or retained) with this version.
 </note>
 </compatibility>
 </eagle>

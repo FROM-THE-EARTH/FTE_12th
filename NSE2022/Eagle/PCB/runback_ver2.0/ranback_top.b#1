@@ -74,8 +74,16 @@
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIxMTAxNTQ1NjAwODI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:Ol8f5ImPTCC5028qe5RlCA" pcbguid="6d0395dd-fb46-4498-ba04-0223c8cb01ed" lastpulledtime="2022-06-16T06:36:24Z" lastsyncedchangeguid="" latestrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastsyncedrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastboardhashguid="13702d90-27f0-0dfe-6662-ce6b2d370638" lastpushedtime="2022-06-16T06:33:57Z" linktopcb3d="%12"/>
+<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIxMTAxNTQ1NjAwODI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:Ol8f5ImPTCC5028qe5RlCA" pcbguid="6d0395dd-fb46-4498-ba04-0223c8cb01ed" lastpulledtime="" lastsyncedchangeguid="" latestrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastsyncedrevisionid="ec536ab4-678f-4979-83f2-b7ee21021ea0" lastboardhashguid="13702d90-27f0-0dfe-6662-ce6b2d370638" lastpushedtime="2022-06-16T06:33:57Z" linktopcb3d="%12"/>
 <plain>
+<wire x1="0" y1="0" x2="100" y2="0" width="0" layer="20"/>
+<wire x1="100" y1="0" x2="100" y2="61.27" width="0" layer="20"/>
+<wire x1="100" y1="61.27" x2="0" y2="61.27" width="0" layer="20"/>
+<wire x1="0" y1="61.27" x2="0" y2="0" width="0" layer="20"/>
+<hole x="2.54" y="2.54" drill="3"/>
+<hole x="2.54" y="58.73" drill="3"/>
+<hole x="97.46" y="58.73" drill="3"/>
+<hole x="97.46" y="2.54" drill="3"/>
 <text x="83.058" y="0.508" size="0.8128" layer="21">LF</text>
 <text x="85.471" y="0.508" size="0.8128" layer="21">RF</text>
 <text x="88.138" y="0.508" size="0.8128" layer="21">RB</text>
@@ -104,22 +112,6 @@
 <text x="81.026" y="21.082" size="0.6096" layer="21">GND</text>
 <text x="76.073" y="21.082" size="0.6096" layer="21">SCL</text>
 <text x="78.613" y="21.082" size="0.6096" layer="21">SDA</text>
-<hole x="4.51" y="46.29" drill="3.2"/>
-<hole x="28.51" y="46.29" drill="3.2"/>
-<hole x="28.51" y="22.29" drill="3.2"/>
-<hole x="4.51" y="22.29" drill="3.2"/>
-<hole x="2.54" y="2.54" drill="3"/>
-<hole x="2.54" y="58.73" drill="3"/>
-<hole x="97.46" y="58.73" drill="3"/>
-<hole x="97.46" y="2.54" drill="3"/>
-<hole x="95.9" y="28.64" drill="2.5"/>
-<hole x="81.9" y="54.64" drill="2"/>
-<hole x="90.17" y="10.16" drill="0.35"/>
-<hole x="90.17" y="22.86" drill="0.35"/>
-<wire x1="0" y1="61.27" x2="0" y2="0" width="0" layer="20"/>
-<wire x1="0" y1="0" x2="100" y2="0" width="0" layer="20"/>
-<wire x1="100" y1="0" x2="100" y2="61.27" width="0" layer="20"/>
-<wire x1="100" y1="61.27" x2="0" y2="61.27" width="0" layer="20"/>
 </plain>
 <libraries>
 <library name="BMX055">
@@ -4846,7 +4838,8 @@ design rules under a new name.</description>
 <wire x1="81.9" y1="29.86" x2="80.01" y2="31.75" width="0.3048" layer="16"/>
 <via x="80.01" y="31.75" extent="1-16" drill="0.35"/>
 <wire x1="80.01" y1="31.75" x2="81.5248" y2="30.2352" width="0.3048" layer="1"/>
-<wire x1="81.5248" y1="30.2352" x2="82.92625" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="81.5248" y1="30.2352" x2="82.55" y2="30.2352" width="0.3048" layer="1"/>
+<wire x1="82.55" y1="30.2352" x2="82.92625" y2="30.2352" width="0.3048" layer="1"/>
 <wire x1="82.92625" y1="30.2352" x2="83.1048" y2="30.41375" width="0.3048" layer="1"/>
 <wire x1="83.1048" y1="30.41375" x2="83.1048" y2="31.0448" width="0.3048" layer="1"/>
 <wire x1="83.1048" y1="31.0448" x2="83.15" y2="31.09" width="0.3048" layer="1"/>
