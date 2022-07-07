@@ -179,7 +179,10 @@ def sendData_thread3():
         dirdata = str(direction)
         data = accdata + ',' + gyrodata + ',' + magdata +',' + dirdata
         esp.write(data.encode())
-        time.sleep(0.5)
+        GPIO.output(LED_SECOND, 1)
+        time.sleep(0.1)
+        GPIO.output(LED_SECOND, 0)
+        time.sleep(0.4)
 
 
 def printData():
