@@ -6,17 +6,24 @@
 #include "CAN.h"
 
 Adafruit_BMP085 bmp180;
+#define LED1 2
+#define LED2 15
+#define LED3 8
+
 
 //offset for BMX055
-#define Addr_Accl 0x19 
+#define Addr_Accl 0x19
 #define Addr_Gyro 0x69  
 #define Addr_Mag 0x13
-#define FLIGHT_PIN 25
+#define FLIGHT_PIN 32
 
 union ByteFloatUnion{
   uint8_t byteformat[4];
   float floatformat;
 };
+
+
+volatile int intdata = 0;
 
 //BMX055
 float tmp;
@@ -65,7 +72,9 @@ void setup()
   pinMode(FLIGHT_PIN,INPUT);
   
   //SG90
-  init_pwm();
+  //init_pwm();
+  pinMode(33,OUTPUT);
+  digitalWrite(33,LOW);
 
   //SD
   if(!SD.begin()){
@@ -77,7 +86,7 @@ void setup()
   writeFile(SD, "/LOG.csv", "start ");
 
   //CAN
-  CAN.setPins(26,27);
+  CAN.setPins(27,26);
 
   if(!CAN.begin(500E3)){
     Serial.println("CAN connection failed");
@@ -85,40 +94,95 @@ void setup()
     init_CAN = true;
   }
 
+  //LED
+  pinMode(LED1,OUTPUT);
+  pinMode(LED2,OUTPUT);
+  pinMode(LED3,OUTPUT);
+
+  digitalWrite(LED1,HIGH);
+  digitalWrite(LED2,HIGH);
+  digitalWrite(LED3,HIGH);
+
+  //dual
+  xTaskCreatePinnedToCore(subProcess,"subProcess",4096,NULL,1,NULL,0);
 }
 
 void loop()
 { 
   phase = 0;
+
+  
+
+  /*
+  while(1){
+    digitalWrite(LED1,HIGH);
+    delay(1000);
+    digitalWrite(LED2,HIGH);
+    delay(1000);
+    digitalWrite(LED3,HIGH);
+    delay(1000);
+  }
+  */
+
+  
+  while(1){
+    get_data();
+    check_I2C_data();
+    can_send(1);
+    delay(100);
+  }
+  
   
   while(phase < 4){
     get_data();
+    /*
+    Serial.print(phase);
+    Serial.print("****");
+    Serial.println(val);
+    */
 
     switch(phase){
-      case 0:if(val == 0 || norm > 9.8*9.8*10){
+      //case 0:if(val == 0 || norm > 9.8*9.8*4){
+      case 0:if(norm > 9.8*9.8*4){
         launchedTime = millis();
+        digitalWrite(LED1,HIGH);
         can_send(0);
-        sd_write();
+        //sd_write();
         phase++;
       }break;
 
       case 1:if(millis() - launchedTime > 15*1000 || maxAltitude - Altitude > 10){
+        digitalWrite(LED1,LOW);
+        digitalWrite(LED2,HIGH);
+        /*
         servoUpperWrite(90);
         servoUnderWrite(90);
+        */
+        digitalWrite(33,HIGH);
         can_send(1);
-        sd_write();
+        //sd_write();
         phase++;
       }break;
 
       case 2:if(millis() - launchedTime > 180*1000){
+        digitalWrite(LED1,HIGH);
+        digitalWrite(LED2,HIGH);
         can_send(2);
-        sd_write();
+        //sd_write();
         phase++;
       }break;
       
     }
   }
 
+}
+
+void subProcess(void *pvParameters){
+  while(1){
+    //intdata = intdata + 1000;
+    Serial.println(zAccl);
+    delay(100);
+  }
 }
 
 void get_data(){
@@ -128,14 +192,30 @@ void get_data(){
 }
 
 void can_send(int phase){
+
+  ByteFloatUnion acc;
+  acc.floatformat = xAccl;
+
+  
   if(phase == 0){
     CAN.beginPacket(0x12);
+    CAN.endPacket();
     //send FlightPin informaation
   }else if(phase == 1){
-    CAN.beginPacket(0x48);
+    
+    
+    CAN.beginPacket(0x12);
+
+    CAN.write(0xC0);
+    CAN.write(acc.byteformat[0]);
+    CAN.write(acc.byteformat[1]);
+    CAN.write(acc.byteformat[2]);
+    CAN.write(acc.byteformat[3]); 
+
+    /*
     send_byte(0x00,Altitude);
     
-    send_byte(0x11,xAccl);
+    send_byte(0xC0,xAccl);
     send_byte(0x21,yAccl);
     send_byte(0x31,zAccl);
 
@@ -146,11 +226,13 @@ void can_send(int phase){
     send_byte(0x13,xMag);
     send_byte(0x23,yMag);
     send_byte(0x33,zMag);
-
+    */
+    CAN.endPacket();
     //send_byte(0x14,current_time);
   }else if(phase == 2){
     CAN.beginPacket(0x96);
     //send phase information
+    CAN.endPacket();
   }
 }
 
@@ -164,14 +246,14 @@ void sd_write(){
 //setup for SG90
 void init_pwm(){
   
-  pinMode(17,OUTPUT);
-  pinMode(5,OUTPUT);
+  pinMode(33,OUTPUT);
+  pinMode(25,OUTPUT);
   
   ledcSetup(0,50,10);
-  ledcAttachPin(17,0);
+  ledcAttachPin(33,0);
 
   ledcSetup(1,50,10);
-  ledcAttachPin(5,1);
+  ledcAttachPin(25,1);
 
   servoUpperWrite(0);
   servoUnderWrite(1);
@@ -190,7 +272,7 @@ void check_I2C_data(){
   
   Serial.print(xMag);
   Serial.print(yMag); 
-  Serial.print(zMag);
+  Serial.println(zMag);
  
   Serial.println(pressure);
   Serial.println(temperature);
@@ -206,6 +288,8 @@ void send_byte(uint8_t packet,float rawdata){
   CAN.write(val.byteformat[1]);
   CAN.write(val.byteformat[2]);
   CAN.write(val.byteformat[3]);
+
+  Serial.println("Done");
 }
 
 //cast float to char
