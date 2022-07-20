@@ -3,8 +3,8 @@ HardwareSerial rasp(2);//17,16
 
 const int INDEX_OF_STREAMS = 4;
 
-const int RF = 4;
-const int RB = 33; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
+const int RF = 33;
+const int RB = 4; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
 const int LF = 26;
 const int LB = 25;
 const int SERVO = 32;
@@ -118,6 +118,10 @@ int splitData(String dataString, String* dst){ //文字列を分割する関数
 void setMove(float dir){//モーター制御関数
   if(dir == 0.0){ //phase0
     Serial.println("ESP32: FLYING NOW");
+    ledcWrite(0,0); //RF
+    ledcWrite(2,0); //RB
+    ledcWrite(4,0); //LF
+    ledcWrite(6,0); //LB
   }else if(dir == 360){ //phase1
     Serial.println("ESP32: PARA OPENING");
     ledcWrite(8, 1024);
