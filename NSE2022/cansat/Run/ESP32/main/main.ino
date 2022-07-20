@@ -4,9 +4,9 @@ HardwareSerial rasp(2);//17,16
 const int INDEX_OF_STREAMS = 4;
 
 const int RF = 4;
-const int RB = 0; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
-const int LF = 25;
-const int LB = 26;
+const int RB = 33; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
+const int LF = 26;
+const int LB = 25;
 const int SERVO = 32;
 const int IM_BUSY = 14;
 
@@ -130,7 +130,7 @@ void setMove(float dir){//モーター制御関数
   }else{
     if(dir>0){
       Serial.println("ESP32: LEFT");
-      ledcWrite(0,1024);
+      ledcWrite(0,512);
       ledcWrite(2,0);
       ledcWrite(4,1024);
       ledcWrite(6,0);
@@ -138,7 +138,7 @@ void setMove(float dir){//モーター制御関数
       Serial.println("ESP32: RIGHT");
       ledcWrite(0,1024);
       ledcWrite(2,0);
-      ledcWrite(4,1024);
+      ledcWrite(4,512);
       ledcWrite(6,0);
     }
   }
