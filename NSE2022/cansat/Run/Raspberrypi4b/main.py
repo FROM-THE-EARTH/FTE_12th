@@ -12,7 +12,8 @@ from library import corn
 
 DATA_SAMPLING_RATE = 0.001 #ms
 CALIBRATION_MILLITIME = 20*1000 #ms
-ALTITUDE_CONST = 100 #m
+ALTITUDE_RANGE = 100 #m
+ALTITUDE_GROUND = 5
 TARGET_LAT = 0.0
 TARGET_LNG = 0.0
 MAG_CONST = 8.53 #地磁気補正用の偏角
@@ -53,13 +54,16 @@ detect = corn(camera_for_pi=True)
 def main():
     global phase
 
-    #phase1
-    print("Phase1 start.")
+    #phase0
+    print("Phase0 start.")
     phase = 0.0
     setUp()
     GPIO.output(LED_FIRST, 1)
     while flying():
         time.sleep(0.01)
+    
+    #phase1
+    print("Phase1 start.")
     phase = 1.0
     release() #パラ分離&スタビライザー開放
 
@@ -67,7 +71,7 @@ def main():
     print("phase2 start.")
     phase = 2.0
     GPIO.output(LED_FIRST, 0)
-    #calibration() #地磁気補正
+    calibration() #地磁気補正
 
     #phase3
     print("phase3 start.")
@@ -220,7 +224,9 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
     if minAlti>alti:
         minAlti = alti
     
-    if maxAlti-minAlti<ALTITUDE_CONST:
+    if maxAlti-minAlti<ALTITUDE_RANGE:
+        return True
+    elif abs(alti-minAlti)>ALTITUDE_GROUND:
         return True
     else:
         return False

@@ -9,6 +9,7 @@ const int LF = 26;
 const int LB = 25;
 const int SERVO = 32;
 const int IM_BUSY = 14;
+const int Kp = 256/180;
 
 int splitData(String dataString, String* dst); //文字列を分割する関数
 void setMove(float dir); //モーター制御関数
@@ -134,16 +135,12 @@ void setMove(float dir){//モーター制御関数
   }else{
     if(dir>0){
       Serial.println("ESP32: LEFT");
-      ledcWrite(0,512);
-      ledcWrite(2,0);
-      ledcWrite(4,1024);
-      ledcWrite(6,0);
     }else if(dir<0){
       Serial.println("ESP32: RIGHT");
-      ledcWrite(0,1024);
-      ledcWrite(2,0);
-      ledcWrite(4,512);
-      ledcWrite(6,0);
     }
+    ledcWrite(0,512-dir*Kp);
+    ledcWrite(2,0);
+    ledcWrite(4,512+dir*Kp);
+    ledcWrite(6,0);
   }
 }
