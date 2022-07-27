@@ -25,6 +25,7 @@ void setup(){
   //UARTの設定
   Serial.begin(19200);
   im920.begin(19200,SERIAL_8N1,15,2); //UART1はこのように書かなければ使えない
+  /*
   while(1){
     im920.print("ECIO\r\n");
     Serial.println("IM920: send ECIO\r\n");
@@ -33,6 +34,7 @@ void setup(){
     Serial.println(cmd);
     if(cmd == "OK\r") break;
   }
+  */
   rasp.begin(9600);
 
   //ピンの設定
