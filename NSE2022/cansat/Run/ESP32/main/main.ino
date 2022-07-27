@@ -3,16 +3,18 @@ HardwareSerial rasp(2);//17,16
 
 const int INDEX_OF_STREAMS = 4;
 
-const int RF = 33;
-const int RB = 4; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
-const int LF = 26;
-const int LB = 25;
-const int SERVO = 32;
-const int IM_BUSY = 14;
+const int RF = 4;
+const int RB = 32; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
+const int LF = 25;
+const int LB = 26;
+const int SERVO = 33;
+const int IM_BUSY = 14; 
 const int Kp = 256/180;
 
 int splitData(String dataString, String* dst); //文字列を分割する関数
 void setMove(float dir); //モーター制御関数
+void servoWrite(float angle);
+
 
 String incomingStream; //ラズパイからUARTで送られてくる生文字列
 String streams[INDEX_OF_STREAMS]; //incomingStreamを分割した文字列
@@ -43,7 +45,6 @@ void setup(){
   pinMode(LB, OUTPUT);
   pinMode(SERVO, OUTPUT);
   //pinMode(IM_BUSY, OUTPUT);
-
   //digitalWrite(IM_BUSY, HIGH);
 
   //PWMの設定
@@ -51,7 +52,7 @@ void setup(){
   ledcSetup(2, 12800, 10); //10bit分解能 max1024
   ledcSetup(4, 12800, 10);
   ledcSetup(6, 12800, 10);
-  ledcSetup(8, 12800, 10);
+  ledcSetup(8, 50, 10);
   ledcAttachPin(RF, 0); //チャネル0へ接続
   ledcAttachPin(RB, 2);
   ledcAttachPin(LF, 4);
@@ -61,7 +62,7 @@ void setup(){
   ledcWrite(2,0);
   ledcWrite(4,0);
   ledcWrite(6,0);
-  ledcWrite(8,0);
+  servoWrite(0);
   
   separatedData[1] = 0.0;
 }
@@ -120,26 +121,26 @@ int splitData(String dataString, String* dst){ //文字列を分割する関数
 
 void setMove(float dir){//モーター制御関数
   if(dir == 0.0){ //phase0
-    Serial.println("ESP32: FLYING NOW");
+    Serial.println("ESP32: FLYING NOW OR UART IS NOT READABLE");
     ledcWrite(0,0); //RF
     ledcWrite(2,0); //RB
     ledcWrite(4,0); //LF
     ledcWrite(6,0); //LB
-    ledcWrite(8, 0); //SERVO
+    servoWrite(0); //SERVO
   }else if(dir == 360){ //phase1
     Serial.println("ESP32: PARA OPENING");
     ledcWrite(0,0); //RF
     ledcWrite(2,0); //RB
     ledcWrite(4,0); //LF
     ledcWrite(6,0); //LB
-    ledcWrite(8, 1024); //SERVO
+    servoWrite(180); //SERVO
   }else if(dir == -360.0){ //停止コマンドならば、
     Serial.println("ESP32: STOP");
     ledcWrite(0,0); //RF
     ledcWrite(2,0); //RB
     ledcWrite(4,0); //LF
     ledcWrite(6,0); //LB
-    ledcWrite(8, 0); //SERVO
+    servoWrite(0); //SERVO
   }else{
     if(dir>0){
       Serial.println("ESP32: LEFT");
@@ -150,6 +151,13 @@ void setMove(float dir){//モーター制御関数
     ledcWrite(2,0);
     ledcWrite(4,512+dir*Kp);
     ledcWrite(6,0);
-    ledcWrite(8, 0);
+    servoWrite(0);
   }
+}
+
+void servoWrite(float angle){
+  float k = angle*0.539;
+  float pwm =  k + 26;
+  if(pwm > 123) pwm = 123;
+  ledcWrite(8,pwm);
 }
