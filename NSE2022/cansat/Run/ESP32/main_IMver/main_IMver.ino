@@ -1,26 +1,41 @@
+HardwareSerial im920(1);//2,15(TX,RX)
 HardwareSerial rasp(2);//17,16
 
 const int INDEX_OF_STREAMS = 4;
 
 const int RF = 4;
-const int RB = 32;
+const int RB = 32; //GPIO0は常に0.24Vくらい出してる(電源系と繋がっているため)ピンの選定ミスですごめんなさい
 const int LF = 25;
 const int LB = 26;
 const int SERVO = 33;
+const int IM_BUSY = 14; 
 const int Kp = 256/180;
 
 int splitData(String dataString, String* dst); //文字列を分割する関数
 void setMove(float dir); //モーター制御関数
 void servoWrite(float angle);
 
+
 String incomingStream; //ラズパイからUARTで送られてくる生文字列
 String streams[INDEX_OF_STREAMS]; //incomingStreamを分割した文字列
 float separatedData[INDEX_OF_STREAMS]; //streams[]をdouble型にした配列
 
 
+
+
 void setup(){
   //UARTの設定
   Serial.begin(115200);
+  im920.begin(19200,SERIAL_8N1,15,2); //UART1はこのように書かなければ使えない
+  Serial.print("hello");
+  while(1){
+    im920.print("ECIO\r\n");
+    Serial.println("IM920: send ECIO\r\n");
+    String cmd = im920.readStringUntil('\n'); //改行コードが来るまで一気に読み込む
+    Serial.print("IM920: the response is ");
+    Serial.println(cmd);
+    if(cmd == "OK\r") break;
+  }
   rasp.begin(9600);
 
   //ピンの設定
@@ -29,6 +44,8 @@ void setup(){
   pinMode(LF, OUTPUT);
   pinMode(LB, OUTPUT);
   pinMode(SERVO, OUTPUT);
+  pinMode(IM_BUSY, OUTPUT);
+  digitalWrite(IM_BUSY, HIGH);
 
   //PWMの設定
   ledcSetup(0, 12800, 10); //使用するタイマーのチャネルと周波数の設定
@@ -41,7 +58,7 @@ void setup(){
   ledcAttachPin(LF, 4);
   ledcAttachPin(LB, 6);
   ledcAttachPin(SERVO, 8);
-  ledcWrite(0,0); //0に初期化
+  ledcWrite(0,512); //0に初期化
   ledcWrite(2,0);
   ledcWrite(4,0);
   ledcWrite(6,0);
@@ -66,7 +83,23 @@ void loop(){
   }
   Serial.println(incomingStream);
   setMove(separatedData[1]);
+  char imSendData[64]; //IM920に送る文字列
+  char buf[64];
+  incomingStream.toCharArray(buf, 64); //Stringをcharに変更
+  sprintf(imSendData, "ECIO\r\nTXDA %s\r\n", buf); //送信コマンドを結合
+  Serial.println("IM920: send ECIO");
+  Serial.print("IM920: send TXDA ");
+  Serial.println(incomingStream);
+  im920.print(imSendData);
+  delay(500);
+  while(im920.available()){
+    Serial.println("IM920: port is available");
+    String message = im920.readStringUntil('\n'); //改行コードが来るまで一気に読み込む
+    Serial.print("IM920: the response is ");
+    Serial.println(message);
+  }
 }
+
 
 
 int splitData(String dataString, String* dst){ //文字列を分割する関数
@@ -114,9 +147,9 @@ void setMove(float dir){//モーター制御関数
     }else if(dir<0){
       Serial.println("ESP32: RIGHT");
     }
-    ledcWrite(0,767-dir*Kp); //direction=-180で最大1023
+    ledcWrite(0,512-dir*Kp);
     ledcWrite(2,0);
-    ledcWrite(4,767+dir*Kp);
+    ledcWrite(4,512+dir*Kp);
     ledcWrite(6,0);
     servoWrite(0);
   }
