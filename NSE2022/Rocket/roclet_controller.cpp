@@ -142,8 +142,8 @@ void loop()
     */
 
     switch(phase){
-      //case 0:if(val == 0 || norm > 9.8*9.8*4){
-      case 0:if(norm > 9.8*9.8*4){
+      case 0:if(val == 0 || norm > 9.8*9.8*4){
+      //case 0:if(norm > 9.8*9.8*4){
         launchedTime = millis();
         digitalWrite(LED1,HIGH);
         can_send(0);
@@ -154,11 +154,11 @@ void loop()
       case 1:if(millis() - launchedTime > 15*1000 || maxAltitude - Altitude > 10){
         digitalWrite(LED1,LOW);
         digitalWrite(LED2,HIGH);
-        /*
+        
         servoUpperWrite(90);
         servoUnderWrite(90);
-        */
-        digitalWrite(33,HIGH);
+        
+        //digitalWrite(33,HIGH);
         can_send(1);
         //sd_write();
         phase++;
