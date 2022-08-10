@@ -9,6 +9,9 @@
 Adafruit_BMP085 bmp180;
 BluetoothSerial SerialIBT;
 
+//これを本番書き直してください
+const int TIME = 15;
+
 #define LED1 2
 #define LED2 15
 #define LED3 8
@@ -170,7 +173,7 @@ void loop()
     while(1){
       get_data();
       SerialIBT.println("pressure only mode");
-      if(maxAltitude - Altitude > 10 || millis()-timeout > 15*1000){
+      if(maxAltitude - Altitude > 10 || millis()-timeout > TIME*1000){
         servoUpperWrite(0);
         servoUnderWrite(180);
         break;
@@ -206,7 +209,7 @@ void loop()
         phase++;
       }break;
 
-      case 1:if(millis() - launchedTime > 15*1000 || maxAltitude - Altitude > 10){
+      case 1:if(millis() - launchedTime > TIME*1000 || maxAltitude - Altitude > 10){
       //case 1:if(maxAltitude - Altitude > 5){
         digitalWrite(LED1,LOW);
         digitalWrite(LED1,LOW);
