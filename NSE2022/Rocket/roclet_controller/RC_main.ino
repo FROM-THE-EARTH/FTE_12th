@@ -175,6 +175,11 @@ void loop()
         servoUnderWrite(180);
         break;
       }
+
+      if(val == 1){//一度抜けてから再びフライトピンが刺さったらリセット
+        resetFunc();
+      }
+
       sd_write();
     }
   }
@@ -391,18 +396,18 @@ void convertData(){
 
   sprintf(buf0,"%d",millis()-launchedTime);
   
-  dtostrf(xAccl,5,2,buf1);
-  dtostrf(yAccl,5,2,buf2);
-  dtostrf(zAccl,5,2,buf3);
-  dtostrf(xGyro,5,2,buf4);
-  dtostrf(yGyro,5,2,buf5);
-  dtostrf(zGyro,5,2,buf6);
+  dtostrf(xAccl,5,4,buf1);
+  dtostrf(yAccl,5,4,buf2);
+  dtostrf(zAccl,5,4,buf3);
+  dtostrf(xGyro,5,4,buf4);
+  dtostrf(yGyro,5,4,buf5);
+  dtostrf(zGyro,5,4,buf6);
   dtostrf(xMag,5,2,buf7);
   dtostrf(yMag,5,2,buf8);
   dtostrf(zMag,5,2,buf9);
 
-  dtostrf(Altitude,5,2,buf10);
-  dtostrf(maxAltitude,5,2,buf11);
+  dtostrf(Altitude,5,4,buf10);
+  dtostrf(maxAltitude,5,4,buf11);
   dtostrf(temperature,5,2,buf12);
 
   sprintf(buf13,"%d",pressure);
