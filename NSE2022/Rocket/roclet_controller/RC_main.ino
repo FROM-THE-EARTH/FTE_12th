@@ -10,7 +10,7 @@ Adafruit_BMP085 bmp180;
 BluetoothSerial SerialIBT;
 
 //これを本番書き直してください
-const int TIME = 15;
+const int TIME = 9;
 
 #define LED1 2
 #define LED2 15
