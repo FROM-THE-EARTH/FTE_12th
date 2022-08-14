@@ -2,10 +2,10 @@ HardwareSerial rasp(2);//17,16
 
 const int INDEX_OF_STREAMS = 4;
 
-const int RF = 4;
-const int RB = 32;
-const int LF = 25;
-const int LB = 26;
+const int RF = 32;
+const int RB = 4;
+const int LF = 26;
+const int LB = 25;
 const int SERVO = 33;
 const int Kp = 256/180;
 
@@ -20,22 +20,7 @@ float separatedData[INDEX_OF_STREAMS]; //streams[]をdouble型にした配列
 
 void setup(){
   //UARTの設定
-<<<<<<< HEAD
-  Serial.begin(19200);
-  im920.begin(19200,SERIAL_8N1,15,2); //UART1はこのように書かなければ使えない
-  /*
-  while(1){
-    im920.print("ECIO\r\n");
-    Serial.println("IM920: send ECIO\r\n");
-    String cmd = im920.readStringUntil('\n'); //改行コードが来るまで一気に読み込む
-    Serial.print("IM920: the response is ");
-    Serial.println(cmd);
-    if(cmd == "OK\r") break;
-  }
-  */
-=======
   Serial.begin(115200);
->>>>>>> cb92e3c0f2c0874a498f0ef68e1a6090c0a26cb3
   rasp.begin(9600);
 
   //ピンの設定
@@ -115,7 +100,7 @@ void setMove(float dir){//モーター制御関数
     ledcWrite(2,0); //RB
     ledcWrite(4,0); //LF
     ledcWrite(6,0); //LB
-    servoWrite(180); //SERVO
+    servoWrite(60); //SERVO
   }else if(dir == -360.0){ //停止コマンドならば、
     Serial.println("ESP32: STOP");
     ledcWrite(0,0); //RF
