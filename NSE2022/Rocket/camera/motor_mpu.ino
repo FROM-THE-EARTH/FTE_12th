@@ -20,21 +20,21 @@ void setup() {
 }
 
 void loop() {
-//digitalWrite(rightP, LOW);
-//digitalWrite(leftP, HIGH);
-//delay(1000);
-digitalWrite(rightP, LOW);
-digitalWrite(leftP, LOW);
-delay(1000);
-digitalWrite(leftP, LOW);
-digitalWrite(rightP, HIGH);
-delay(1000);
-digitalWrite(rightP, LOW);
-digitalWrite(leftP, LOW);
-delay(1000);
+  //digitalWrite(rightP, LOW);
+  //digitalWrite(leftP, HIGH);
+  //delay(1000);
+  digitalWrite(rightP, LOW);
+  digitalWrite(leftP, LOW);
+  delay(1000);
+  digitalWrite(leftP, LOW);
+  digitalWrite(rightP, HIGH);
+  delay(1000);
+  digitalWrite(rightP, LOW);
+  digitalWrite(leftP, LOW);
+  delay(1000);
 
 
-Wire.beginTransmission(MPU_addr);
+  Wire.beginTransmission(MPU_addr);
   Wire.write(0x3B);
   Wire.endTransmission(false);
   Wire.requestFrom(MPU_addr,14,true);
