@@ -1,20 +1,36 @@
 #include <Wire.h>
 
-int trig = 6;
-int ct = 0;
+unsigned long dt = 0;
+unsigned long pretm = 0;
+unsigned long nowtm = 0;
+int GNDgate = 8;
+int trig1 = 7;
+int trig2 = 6;
+int trig3 = 5;
+int trig4 = 4;
+char buf[60];
 int16_t axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw, tempRaw;
 float ax, ay, az, gx, gy, gz, temp;
-float gxA, gyA, gzA;
 
 void setup(){
   Serial.begin(9600);
+  pretm = millis();
+  nowtm = millis();
   
   Wire.setClock(400000);
   Wire.begin();
   setupMPU();
   
-  pinMode(trig,OUTPUT);
-  digitalWrite(trig,HIGH);
+  pinMode(GNDgate,OUTPUT);
+  digitalWrite(GNDgate,LOW);
+  pinMode(trig1,OUTPUT);
+  digitalWrite(trig1,HIGH);
+  pinMode(trig2,OUTPUT);
+  digitalWrite(trig2,HIGH);
+  pinMode(trig3,OUTPUT);
+  digitalWrite(trig3,HIGH);
+  pinMode(trig4,OUTPUT);
+  digitalWrite(trig4,HIGH);
 }
 
 void loop(){
@@ -29,14 +45,8 @@ void loop(){
 //  delay(1200);
 //  digitalWrite(trig,HIGH);
 //  delay(100000);
+  digitalWrite(GNDgate,HIGH);
   getMPU();
-  Serial.print(ax); Serial.print(",");
-  Serial.print(ay); Serial.print(",");
-  Serial.print(az); Serial.print(",");
-  Serial.print(gxA); Serial.print(",");
-  Serial.print(gyA); Serial.print(",");
-  Serial.print(gzA); Serial.print(",");
-  Serial.println(temp);
 }
 
 void setupMPU(){
@@ -59,7 +69,6 @@ void setupMPU(){
 }
 
 void getMPU(){
-  ct++;
   Wire.beginTransmission(0x68);
   Wire.write(0x3B);
   Wire.endTransmission();
@@ -79,14 +88,8 @@ void getMPU(){
   ax += 0.05;
   ay += 0;
   az += -0.09;
-  gx = (float)gxRaw;
-  gy = (float)gyRaw;
-  gz = (float)gzRaw;
+  gx = (float)gxRaw+301.66;
+  gy = (float)gyRaw+4.55;
+  gz = (float)gzRaw-31.54;
   temp = (float)tempRaw;
-  gxA += ax;
-  gyA += ay;
-  gzA += az;
-  gxA /= (float)ct;
-  gyA /= (float)ct;
-  gzA /= (float)ct;
 }
