@@ -1,7 +1,10 @@
 #include <Wire.h>
 
 int trig = 6;
-int16_t ax, ay, az, gx, gy, gz, temp;
+int ct = 0;
+int16_t axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw, tempRaw;
+float ax, ay, az, gx, gy, gz, temp;
+float gxA, gyA, gzA;
 
 void setup(){
   Serial.begin(9600);
@@ -30,9 +33,10 @@ void loop(){
   Serial.print(ax); Serial.print(",");
   Serial.print(ay); Serial.print(",");
   Serial.print(az); Serial.print(",");
-  Serial.print(gx); Serial.print(",");
-  Serial.print(gy); Serial.print(",");
-  Serial.println(gz);
+  Serial.print(gxA); Serial.print(",");
+  Serial.print(gyA); Serial.print(",");
+  Serial.print(gzA); Serial.print(",");
+  Serial.println(temp);
 }
 
 void setupMPU(){
@@ -55,16 +59,34 @@ void setupMPU(){
 }
 
 void getMPU(){
+  ct++;
   Wire.beginTransmission(0x68);
   Wire.write(0x3B);
   Wire.endTransmission();
   Wire.requestFrom(0x68, 14);
   while (Wire.available() < 14);
-  ax = Wire.read() << 8 | Wire.read();
-  ay = Wire.read() << 8 | Wire.read();
-  az = Wire.read() << 8 | Wire.read();
-  temp = Wire.read() << 8 | Wire.read();
-  gx = Wire.read() << 8 | Wire.read();
-  gy = Wire.read() << 8 | Wire.read();
-  gz = Wire.read() << 8 | Wire.read();
+  axRaw = Wire.read() << 8 | Wire.read();
+  ayRaw = Wire.read() << 8 | Wire.read();
+  azRaw = Wire.read() << 8 | Wire.read();
+  tempRaw = Wire.read() << 8 | Wire.read();
+  gxRaw = Wire.read() << 8 | Wire.read();
+  gyRaw = Wire.read() << 8 | Wire.read();
+  gzRaw = Wire.read() << 8 | Wire.read();
+
+  ax = (((float)axRaw-(4300-3850))*2)/(4300+3850);
+  ay = (float)ayRaw/4100;
+  az = (((float)azRaw-(3850-4500))*2)/(3850+4500);
+  ax += 0.05;
+  ay += 0;
+  az += -0.09;
+  gx = (float)gxRaw;
+  gy = (float)gyRaw;
+  gz = (float)gzRaw;
+  temp = (float)tempRaw;
+  gxA += ax;
+  gyA += ay;
+  gzA += az;
+  gxA /= (float)ct;
+  gyA /= (float)ct;
+  gzA /= (float)ct;
 }
