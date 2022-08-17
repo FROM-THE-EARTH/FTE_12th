@@ -105,6 +105,8 @@ void setup() {
 void loop() {
 
   
+
+  
   while(phase < 4){
     transmit();
     receive_can();
@@ -156,6 +158,7 @@ void transmit(){
       //Serial.print("LAT: ");Serial.println(gps.location.lat(),9);
       //Serial.print("LONG: ");Serial.println(gps.location.lng(),9);
 
+
       longtitude = gps.location.lng();
       latitude = gps.location.lat();
 
@@ -171,7 +174,10 @@ void transmit(){
       //buf_val = char(main_val.i);
       //buf_phase = char(main_phase.i);
 
-      sprintf(senddata,"ECIO\r\nTXDA %s,%s,%s\r\n",buf_lon,buf_lat,buf_val);
+      char b_val[10];
+      sprintf(b_val,"%d",val);
+
+      sprintf(senddata,"ECIO\r\nTXDA %s,%s,%s,%s,%s,%s,%s,%s\r\n",buf_lat,buf_lon,buf_Altitude,b_val,buf_val,buf_norm,buf_maxAltitude,buf_phase);
       sprintf(logdata,"%s,%s,%s,%s\r\n",buf_time,buf_lon,buf_lat,buf_val);
 
       im920.print(senddata);
@@ -192,7 +198,10 @@ void transmit(){
       sprintf(buf_phase,"%d",main_phase.i);
       sprintf(buf_time,"%d",millis()-launchedTime);
 
-      sprintf(senddata,"ECIO\r\nTXDA %s,%s,%s\r\n",buf_lon,buf_lat,buf_val);
+      char bu_val[10];
+      sprintf(bu_val,"%d",val);
+
+      sprintf(senddata,"ECIO\r\nTXDA %s,%s,%s,%s,%s,%s,%s,%s\r\n",buf_lat,buf_lon,buf_Altitude,bu_val,buf_val,buf_norm,buf_maxAltitude,buf_phase);
       sprintf(logdata,"%s,%s,%s,%s\r\n",buf_time,buf_lon,buf_lat,buf_val);
 
 
@@ -214,7 +223,6 @@ void receive_can(){
   int timer = 0;
   int packetSize = CAN.parsePacket();
 
-  ///パケットIDでif文組もう
   if (packetSize) {
     Serial.print("Received ");
 
