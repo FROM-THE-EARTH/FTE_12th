@@ -79,13 +79,13 @@ def main():
             print("main():         Phase1 start. release")
             release() #パラ分離&スタビライザー開放
             GPIO.output(LED_FIRST, 0)
-            phase = 0.0
+            phase = 2.0
 
         elif phase == 2.0:
             #phase2
             print("main():         Phase2 start. caibration")
             GPIO.output(LED_FIRST, 1)
-            #calibration() #地磁気補正
+            calibration() #地磁気補正
             phase = 3.0
         
         elif phase == 3.0:
@@ -511,8 +511,6 @@ def detectCorn(): #カラーコーンを認識する関数
 
 
 if __name__ == "__main__":
-    #mainProgramFlag = True
-    #main()
     try:
         mainProgramFlag = True
         main()
