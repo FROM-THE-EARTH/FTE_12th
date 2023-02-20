@@ -4,8 +4,14 @@
 #include "SD.h"
 #include "SPI.h"
 #include "CAN.h"
+//#include "BluetoothSerial.h"
 
 Adafruit_BMP085 bmp180;
+//BluetoothSerial SerialIBT;
+
+//これを本番書き直してください
+const int TIME = 12;
+
 #define LED1 2
 #define LED2 15
 #define LED3 8
@@ -17,10 +23,17 @@ Adafruit_BMP085 bmp180;
 #define Addr_Mag 0x13
 #define FLIGHT_PIN 32
 
-union ByteFloatUnion{
-  uint8_t byteformat[4];
-  float floatformat;
+union BIF{
+  uint8_t b[4];
+  int i;
+  float f;
 };
+
+BIF norms;
+BIF main_phase;
+BIF Altitudes;
+BIF maxAltitudes;
+BIF main_val;
 
 
 volatile int intdata = 0;
@@ -31,12 +44,15 @@ float xAccl,yAccl,zAccl;
 float xGyro,yGyro,zGyro;
 float xMag,yMag,zMag;
 float norm = 0;
+bool BMX = true;
 
 //BMP180
+bool Init_bmp = true;
 float pressure;
 float temperature;
 float Altitude;
 float maxAltitude = 0;
+float minAltitude = 1000;
 
 //flightpin
 int val = 0;
@@ -58,10 +74,15 @@ int phase = 0;
 //CAN
 bool init_CAN = false;
 
+char fileName[16];
+int fileNum = 0;
+
 void setup()
 {
   //UART0
   Serial.begin(9600);
+
+  //SerialIBT.begin("ESP32RC");
   
   //I2C
   Wire.begin();
@@ -72,19 +93,46 @@ void setup()
   pinMode(FLIGHT_PIN,INPUT);
   
   //SG90
-  //init_pwm();
+  //init_pwm();//サーボの初期化
+
+  //ソレノイドの初期化
+  
   pinMode(33,OUTPUT);
   digitalWrite(33,LOW);
+  pinMode(25,OUTPUT);
+  digitalWrite(25,LOW);
+  
 
   //SD
+  
   if(!SD.begin()){
     Serial.println("Card Mount Failed");
   }else{
     init_SD = true;
   }
 
-  writeFile(SD, "/LOG.csv", "start ");
+  String s;
 
+  while(1){
+    
+    s = "/LOG";
+    if (fileNum < 10) {
+      s += "00";
+    } else if(fileNum < 100) {
+      s += "0";
+    }
+    s += fileNum;
+    s += ".csv";
+    s.toCharArray(fileName, 16);
+    if(!SD.exists(fileName)) break;
+    fileNum++;
+    
+  }
+
+  //writeFile(SD, "/LOG.csv", "start ");
+
+  writeFile(SD,fileName,LOGDATA);
+ 
   //CAN
   CAN.setPins(27,26);
 
@@ -99,67 +147,137 @@ void setup()
   pinMode(LED2,OUTPUT);
   pinMode(LED3,OUTPUT);
 
-  digitalWrite(LED1,HIGH);
-  digitalWrite(LED2,HIGH);
-  digitalWrite(LED3,HIGH);
+  digitalWrite(LED1,LOW);
+  digitalWrite(LED2,LOW);
+  digitalWrite(LED3,LOW);
 
   //dual
   xTaskCreatePinnedToCore(subProcess,"subProcess",4096,NULL,1,NULL,0);
 }
 
+
+void(* resetFunc) (void) = 0;
+
+
 void loop()
 { 
   phase = 0;
 
-  
+  delay(100);
+  get_data();
+  delay(100);
 
-  /*
-  while(1){
-    digitalWrite(LED1,HIGH);
-    delay(1000);
-    digitalWrite(LED2,HIGH);
-    delay(1000);
-    digitalWrite(LED3,HIGH);
-    delay(1000);
+  minAltitude = Altitude;
+  
+  if(val == 0){//瞬断して再起動した場合は高度変化のみで
+    int timeout =  millis();
+    
+    while(1){
+      
+      get_data();
+      can_send();
+      //SerialIBT.println("pressure only mode");
+      if(maxAltitude - Altitude > 10){
+     
+        digitalWrite(33,HIGH);
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,HIGH);
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,HIGH);
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,LOW);
+        digitalWrite(25,LOW);
+
+        break;
+      }else if(millis()-timeout > TIME*1000){
+        break;
+      }
+
+      if(val == 1){//一度抜けてから再びフライトピンが刺さったらリセット
+        resetFunc();
+      }
+
+      sd_write();//SD記録
+    }
   }
-  */
 
-  
-  while(1){
-    get_data();
-    check_I2C_data();
-    can_send(1);
-    delay(100);
-  }
-  
-  
-  while(phase < 4){
-    get_data();
-    /*
-    Serial.print(phase);
-    Serial.print("****");
-    Serial.println(val);
-    */
 
+  while(phase < 3){
+    //check_I2C_data();
+    Serial.println(phase);
+    Serial.println(maxAltitude);
+    Serial.println(Altitude);
+    get_data();
+    //BLE();
+    if(val == 0){
+      sd_write();
+    }
+    
+    can_send();
+   
+    if(val == 1){//一度抜けてから再びフライトピンが刺さったらリセっと
+      phase = 0;
+      digitalWrite(LED1,LOW);
+      digitalWrite(LED2,LOW);
+      digitalWrite(LED3,LOW);
+
+      digitalWrite(33,LOW);//ソレノイド
+      digitalWrite(25,LOW);
+    }else if(val == 0 && phase == 0){
+      digitalWrite(LED1,HIGH);
+      digitalWrite(LED2,HIGH);
+      digitalWrite(LED3,LOW);
+    }
+    
     switch(phase){
-      case 0:if(val == 0 || norm > 9.8*9.8*4){
-      //case 0:if(norm > 9.8*9.8*4){
+      case 0:if(val == 0){
+      //case 0:if(safety_checker() == true){
         launchedTime = millis();
         digitalWrite(LED1,HIGH);
-        can_send(0);
+        digitalWrite(LED2,LOW);
+        
         //sd_write();
         phase++;
       }break;
 
-      case 1:if(millis() - launchedTime > 15*1000 || maxAltitude - Altitude > 10){
+      //case 1:if(millis() - launchedTime > TIME*1000 || maxAltitude - Altitude > 10){
+      case 1:if(maxAltitude - Altitude > 10){
+        digitalWrite(LED1,LOW);
         digitalWrite(LED1,LOW);
         digitalWrite(LED2,HIGH);
         
-        servoUpperWrite(90);
-        servoUnderWrite(90);
-        
-        //digitalWrite(33,HIGH);
-        can_send(1);
+        digitalWrite(33,HIGH);//ソレノイド
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,HIGH);//ソレノイド
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,HIGH);//ソレノイド
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,HIGH);//ソレノイド
+        digitalWrite(25,HIGH);
+
+        delay(1000);
+
+        digitalWrite(33,LOW);//ソレノイド
+        digitalWrite(25,LOW);
+
         //sd_write();
         phase++;
       }break;
@@ -167,8 +285,8 @@ void loop()
       case 2:if(millis() - launchedTime > 180*1000){
         digitalWrite(LED1,HIGH);
         digitalWrite(LED2,HIGH);
-        can_send(2);
-        //sd_write();
+    
+        
         phase++;
       }break;
       
@@ -177,10 +295,18 @@ void loop()
 
 }
 
+bool safety_checker(){
+  if(val == 0 && maxAltitude - minAltitude > 15){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 void subProcess(void *pvParameters){
   while(1){
     //intdata = intdata + 1000;
-    Serial.println(zAccl);
+    //Serial.println(zAccl);
     delay(100);
   }
 }
@@ -191,56 +317,74 @@ void get_data(){
   getBMP180();
 }
 
-void can_send(int phase){
-
-  ByteFloatUnion acc;
-  acc.floatformat = xAccl;
-
-  
-  if(phase == 0){
-    CAN.beginPacket(0x12);
-    CAN.endPacket();
-    //send FlightPin informaation
-  }else if(phase == 1){
-    
-    
-    CAN.beginPacket(0x12);
-
-    CAN.write(0xC0);
-    CAN.write(acc.byteformat[0]);
-    CAN.write(acc.byteformat[1]);
-    CAN.write(acc.byteformat[2]);
-    CAN.write(acc.byteformat[3]); 
+void can_send(){
 
     /*
-    send_byte(0x00,Altitude);
-    
-    send_byte(0xC0,xAccl);
-    send_byte(0x21,yAccl);
-    send_byte(0x31,zAccl);
-
-    send_byte(0x12,xGyro);
-    send_byte(0x22,yGyro);
-    send_byte(0x32,zGyro);
-
-    send_byte(0x13,xMag);
-    send_byte(0x23,yMag);
-    send_byte(0x33,zMag);
+    BIF norms;
+    BIF main_phase;
+    BIF Altitudes;
+    BIF maxAltitudes;
+    BIF main_val;
     */
+    norms.f = norm;
+    Altitudes.f = Altitude;
+    maxAltitudes.f = maxAltitude;
+    main_val.i = val;
+    main_phase.i = phase;
+    
+
+    
+    CAN.beginPacket(0x12);
+
+    CAN.write(norms.b[0]);
+    CAN.write(norms.b[1]);
+    CAN.write(norms.b[2]);
+    CAN.write(norms.b[3]);
+ 
     CAN.endPacket();
-    //send_byte(0x14,current_time);
-  }else if(phase == 2){
-    CAN.beginPacket(0x96);
-    //send phase information
+
+    Serial.println("Done");
+
+    CAN.beginPacket(0x10);
+
+    CAN.write(Altitudes.b[0]);
+    CAN.write(Altitudes.b[1]);
+    CAN.write(Altitudes.b[2]);
+    CAN.write(Altitudes.b[3]);
+ 
     CAN.endPacket();
-  }
+
+    CAN.beginPacket(0xC0);
+
+    CAN.write(maxAltitudes.b[0]);
+    CAN.write(maxAltitudes.b[1]);
+    CAN.write(maxAltitudes.b[2]);
+    CAN.write(maxAltitudes.b[3]);
+ 
+    CAN.endPacket();
+
+    CAN.beginPacket(0xC1);
+
+    CAN.write(main_val.b[0]);
+    CAN.write(main_val.b[1]);
+ 
+    CAN.endPacket();
+
+    CAN.beginPacket(0x11);
+
+    CAN.write(main_phase.b[0]);
+    CAN.write(main_phase.b[1]);
+ 
+    CAN.endPacket();
+
+
 }
 
 //save data
 void sd_write(){
   convertData();
-  writeFile(SD, "/LOG.csv",LOGDATA);
-  appendFile(SD,"/LOG.csv",LOGDATA);
+  
+  appendFile(SD,fileName,LOGDATA);
 }
 
 //setup for SG90
@@ -262,48 +406,96 @@ void init_pwm(){
 
 //for debug 
 void check_I2C_data(){
-  Serial.print(xAccl);
-  Serial.print(yAccl);
-  Serial.print(zAccl);   
+  int number = 3;
+  int val = 0;
   
+  Serial.print("00,D33D,C9:,");
+  Serial.print(number);
+  Serial.print(",");
+  Serial.print(val);
+  Serial.print(",");
+  Serial.print(xAccl*4.0027,6);
+  Serial.print(",");
+  Serial.print(yAccl*4.0027,6);
+  Serial.print(",");
+  Serial.print(zAccl*4.0027,6);   
+  Serial.print(",");
   Serial.print(xGyro);
+  Serial.print(",");
   Serial.print(yGyro);
-  Serial.print(zGyro);
-  
+  Serial.print(",");
+  Serial.println(zGyro);
+
+  /*
   Serial.print(xMag);
   Serial.print(yMag); 
   Serial.println(zMag);
  
   Serial.println(pressure);
   Serial.println(temperature);
+
+  Serial.println(Altitude);
+  */
+ 
 }
 
-//send flaot data by CAN
-void send_byte(uint8_t packet,float rawdata){
-  ByteFloatUnion val;
-  val.floatformat = rawdata;
+/*
+void BLE(){
+  SerialIBT.print(val);
+  SerialIBT.print(",");
+  SerialIBT.print(phase);
+  SerialIBT.print(",");
+  SerialIBT.print(xAccl);
+  SerialIBT.print(",");
+  SerialIBT.print(yAccl);
+  SerialIBT.print(",");
+  SerialIBT.print(zAccl);
+  SerialIBT.print(",");
+  SerialIBT.println(Altitude);
   
-  CAN.write(packet);
-  CAN.write(val.byteformat[0]);
-  CAN.write(val.byteformat[1]);
-  CAN.write(val.byteformat[2]);
-  CAN.write(val.byteformat[3]);
-
-  Serial.println("Done");
 }
-
-//cast float to char
-char* loger(float rawdata){
-  char buf[20];
-  dtostrf(rawdata,5,2,buf);
-  return buf;
-}
+*/
 
 //convert logdata to one char format
 void convertData(){
 
-  sprintf(LOGDATA,"%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",loger(xAccl),loger(yAccl),loger(zAccl),loger(xGyro),loger(yGyro),loger(zGyro),loger(xMag),loger(yMag),loger(zMag),
-  loger(pressure),loger(temperature),loger(Altitude));
+  char buf0[10];
+  char buf1[10];
+  char buf2[10];
+  char buf3[10];
+  char buf4[10];
+  char buf5[10];
+  char buf6[10];
+  char buf7[10];
+  char buf8[10];
+  char buf9[10];
+  char buf10[10];
+  char buf11[10];
+  char buf12[10];
+  char buf13[10];
+  char buf14[10];
+  char buf15[10];
+  
+  sprintf(buf0,"%d",millis()-launchedTime);
+  
+  dtostrf(xAccl,5,4,buf1);
+  dtostrf(yAccl,5,4,buf2);
+  dtostrf(zAccl,5,4,buf3);
+  dtostrf(xGyro,5,4,buf4);
+  dtostrf(yGyro,5,4,buf5);
+  dtostrf(zGyro,5,4,buf6);
+  dtostrf(xMag,5,2,buf7);
+  dtostrf(yMag,5,2,buf8);
+  dtostrf(zMag,5,2,buf9);
+
+  dtostrf(Altitude,5,4,buf10);
+  dtostrf(maxAltitude,5,4,buf11);
+  dtostrf(temperature,5,2,buf12);
+
+  sprintf(buf13,"%d",pressure);
+  sprintf(buf14,"%d",phase);
+  
+  sprintf(LOGDATA,"%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",buf0,buf1,buf2,buf3,buf4,buf5,buf6,buf7,buf8,buf9,buf10,buf11,buf12,buf13,buf14);
 
 }
 
@@ -373,10 +565,10 @@ void servoUnderWrite(float angle2){
 //method to unitialize BM055
 void InitBMX055()
 {
-  
+  delay(100);
   Wire.beginTransmission(Addr_Accl);
   Wire.write(0x0F); // Select PMU_Range register
-  Wire.write(0x03);   // Range = +/- 2g
+  Wire.write(0x08);   // Range = +/- 2g
   Wire.endTransmission();
   delay(100);
  
@@ -455,19 +647,33 @@ void BMX055_Accl()
     Wire.requestFrom(Addr_Accl, 1);// Request 1 byte of data
     // Read 6 bytes of data
     // xAccl lsb, xAccl msb, yAccl lsb, yAccl msb, zAccl lsb, zAccl msb
-    if (Wire.available() == 1)
+    if (Wire.available() == 1){
       data[i] = Wire.read();
+      BMX = true;
+    }else{
+      Serial.println("BMXEROOR");
+      BMX = false;
+      
+    }
   }
   // Convert the data to 12-bits
-  xAccl = ((data[1] * 256) + (data[0] & 0xF0)) / 16;
-  if (xAccl > 2047)  xAccl -= 4096;
-  yAccl = ((data[3] * 256) + (data[2] & 0xF0)) / 16;
-  if (yAccl > 2047)  yAccl -= 4096;
-  zAccl = ((data[5] * 256) + (data[4] & 0xF0)) / 16;
-  if (zAccl > 2047)  zAccl -= 4096;
-  xAccl = xAccl * 0.0098; // range = +/-2g
-  yAccl = yAccl * 0.0098; // range = +/-2g
-  zAccl = zAccl * 0.0098; // range = +/-2g
+
+  if(BMX = true){
+    xAccl = ((data[1] * 256) + (data[0] & 0xF0)) / 16;
+    if (xAccl > 2047)  xAccl -= 4096;
+    yAccl = ((data[3] * 256) + (data[2] & 0xF0)) / 16;
+    if (yAccl > 2047)  yAccl -= 4096;
+    zAccl = ((data[5] * 256) + (data[4] & 0xF0)) / 16;
+    if (zAccl > 2047)  zAccl -= 4096;
+    xAccl = xAccl * 0.0098; // range = +/-2g
+    yAccl = yAccl * 0.0098; // range = +/-2g
+    zAccl = zAccl * 0.0098; // range = +/-2g
+  }else{
+    xAccl = 0;
+    yAccl = 0;
+    zAccl = 0;
+  }
+  
 }
 
 //method to get gyro data
@@ -482,8 +688,11 @@ void BMX055_Gyro()
     Wire.requestFrom(Addr_Gyro, 1);    // Request 1 byte of data
     // Read 6 bytes of data
     // xGyro lsb, xGyro msb, yGyro lsb, yGyro msb, zGyro lsb, zGyro msb
-    if (Wire.available() == 1)
+    if (Wire.available() == 1){
       data[i] = Wire.read();
+    }else{
+      Serial.println("BMXEROOR");
+    }
   }
   // Convert the data
   xGyro = (data[1] * 256) + data[0];
@@ -510,8 +719,11 @@ void BMX055_Mag()
     Wire.requestFrom(Addr_Mag, 1);    // Request 1 byte of data
     // Read 6 bytes of data
     // xMag lsb, xMag msb, yMag lsb, yMag msb, zMag lsb, zMag msb
-    if (Wire.available() == 1)
+    if (Wire.available() == 1){
       data[i] = Wire.read();
+    }else{
+      Serial.println("BMXEROOR");
+    }
   }
 // Convert the data
   xMag = ((data[1] <<5) | (data[0]>>3));
@@ -528,27 +740,42 @@ void getBMX055(){
   BMX055_Gyro();
   BMX055_Mag();
 
-  norm = xAccl*xAccl + yAccl*yAccl + zAccl*zAccl;
+  norm = (sqrt(xAccl*xAccl + yAccl*yAccl + zAccl*zAccl))/9.8;
 }
 
 //initialize BMP180
 void InitBMP180(){
   if(!bmp180.begin()){
     Serial.print("BMP180 Error");
+    Init_bmp = false;    
   }else{
-    bool startBmp = true;
+    Init_bmp = true;
   }
 }
 
 //get pressure and temperature
 void getBMP180(){
-  pressure = bmp180.readPressure();
-  temperature = bmp180.readTemperature();
-  float changePressure = pressure/100;
-  float ratio = (1012.25/changePressure);
-  float absoluteTemperature = temperature + 273.15;
-  Altitude = (pow(ratio,1/5.257)-1)/0.0065;
-  if(maxAltitude < Altitude){
-    maxAltitude = Altitude;
+
+  if(Init_bmp == true){
+    pressure = bmp180.readPressure();
+    temperature = bmp180.readTemperature();
+    float changePressure = float(pressure)/100;
+    float ratio = (1012.25/changePressure);
+    float absoluteTemperature = temperature + 273.15;
+    Altitude = (pow(ratio,1/5.257)-1)*absoluteTemperature/0.0065;
+    
+    if(maxAltitude < Altitude){
+      maxAltitude = Altitude;
+    }
+
+    if(minAltitude > Altitude){
+      minAltitude = Altitude;
+    }
+    
+  }else{
+    Altitude = 10;
+    maxAltitude = 10;
+    minAltitude = 20;
   }
+  
 }
