@@ -201,7 +201,7 @@ def main():
             time.sleep(100000)
 
         else:
-            phase = 0.0 #もしおかしくなってphaseが6.0より大きくなったらphase0に戻す
+            phase = 0.0 #もしおかしくなってphaseが6.0より大きくなったらphase0に戻す仕様
 
 
 
