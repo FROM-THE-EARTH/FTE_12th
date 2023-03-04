@@ -14,26 +14,26 @@ from library import corn
 
 DATA_SAMPLING_RATE = 0.00001 #s
 CALIBRATION_MILLITIME = 20*1000 #ms
-ALTITUDE_CONST1 = 40 #m :最大と最小の差
-ALTITUDE_CONST2 = 5 #m :最小と現在の差の絶対値
-TARGET_LAT = 38.0
-TARGET_LNG = 140.0
+ALTITUDE_CONST1 = 10 #m :最大と最小の差
+ALTITUDE_CONST2 = 10 #m :最小と現在の差の絶対値
+TARGET_LAT = 30.374673
+TARGET_LNG = 130.95996
 MAG_CONST = 8.53 #地磁気補正用の偏角
-SERVO0_RESET = 44 #initial (from 44 to 232)
-SERVO0_SET = 180 #moving
+SERVO0_RESET = 75 #initial (from 44 to 232)
+SERVO0_SET = 230 #moving
 SERVO1_RESET = 138 # center of (from 48 to 228)
 
 LED0 = 22
 LED1 = 19
 LED2 = 26
-MD_LF0 = 5
-MD_LB0 = 6
-MD_RF0 = 17
-MD_RB0 = 27
-MD_LF1 = 25
-MD_LB1 = 16
-MD_RF1 = 23
-MD_RB1 = 24
+MD_LF0 = 27
+MD_LB0 = 17
+MD_RF0 = 25
+MD_RB0 = 16
+MD_LF1 = 6
+MD_LB1 = 5
+MD_RF1 = 24
+MD_RB1 = 23
 SERVO0 = 12
 SERVO1 = 13
 
@@ -62,12 +62,19 @@ direction = 0.0
 colorCorn = False #カラーコーンが近くにあればTrue
 detection = [0,0,False] #画像処理[x,y,calorCorn]
 
+glob_control_m = 0
+glob_control_p = 0
+
+startTime = 0 #タイマー初期化
+restTime = 0 #残った時間
+
 bmp = BMP085.BMP085()
 bmx = BMX055.BMX055()
 gps = micropyGPS.MicropyGPS(9, 'dd') # MicroGPSオブジェクトを生成する。
                                      # 引数はタイムゾーンの時差と出力フォーマット
 nowTime = datetime.datetime.now()
 fileName = 'log/testlog_' + nowTime.strftime('%Y-%m%d-%H%M%S') + '.csv'
+
 try:
     detect = corn.corn(camera_for_pi=True)
 except:
@@ -75,27 +82,58 @@ except:
     cameraFlag = False
 
 
-
 def main():
     global phase
+    global direction
+
+    global glob_control_m
+    global glob_control_p
+
+    global start
+    global restTime
+
+    global maxAlti
+    global minAlti
+
+    print("program start")
+
     phase = 0.0
+    GPIO.cleanup()
     setUp()
+    start = time.time()
+
+    #高度関連の情報の初期化
+    setBmpData()
+    maxAlti = alti
+    minAlti = alti
+
     while True:
         if phase == 0.0:
             #phase0
             print("main():         Phase0 start. flying")
             GPIO.output(LED0, 1)
+            
             while True:
+                restTime = time.time() - start
                 if flying() == False:
                     break
                 time.sleep(0.1)
             phase = 1.0
+            
+            print("through")
 
         elif phase == 1.0:
             #phase1
             print("main():         Phase1 start. release")
             release() #パラ分離&スタビライザー開放
             GPIO.output(LED0, 0)
+
+            #編集箇所
+            direction = -400.0 #motor thredを編集 direction = -400.0で任意のduty比で直進する
+            time.sleep(10) #10秒間直進
+            direction = 360.0 #phase1のoffsetに戻す
+            #編集箇所
+
             phase = 2.0
 
         elif phase == 2.0:
@@ -116,6 +154,7 @@ def main():
                         break
             else: #カメラが使えなかった時用
                 while True:
+                    print("camera is not available")
                     if distance<1.0:
                         time.sleep(3)
                         phase = 6.0
@@ -129,7 +168,7 @@ def main():
             if resetFlag == True:
                 phase = 5.0
             else:
-                phase = 3.0
+                phase = 4.0# デバック用に4にするが本来は3
 
         elif phase == 5.0:
             #phase5
@@ -137,6 +176,8 @@ def main():
             noCornCount = 0 #カラーコーンが連続で見えていない回数を数える
             breakhook = False
             while True:
+                if cameraFlag == False:
+                    print("can't access to camera")
                 detect = detectCorn() #カラーコーンを認識
                 if detect == True:
                     noCornCount = 0
@@ -147,7 +188,7 @@ def main():
                 else: #カラーコーンが見えないときは
                     noCornCount = noCornCount+1
                     if noCornCount>20:
-                        phase = 3.0 #phase3に戻る
+                        phase = 4.0 #phase3に戻る.デバック用に4にするが本来は3
                         breakhook = True
                 if breakhook == True:
                     break
@@ -230,6 +271,7 @@ def setBmxData():
     global acc
     global gyro
     global mag
+    global attitude
     acc = bmx.getAcc()
     gyro = bmx.getGyro()
     mag = bmx.getMag()
@@ -255,9 +297,19 @@ def setData_thread2():
 
 
 def direction2duty(direction): #ToDo サーボへの出力 48-228: 180刻みにした
-    return direction/2 + 135
+    value = round(direction/2) + 135
+    if value > 229:
+        value = 228
+    elif value < 47:
+        value = 48
+    return value
+
 
 def moveMotor_thread3():
+
+    global glob_control_m
+    global glob_control_p
+
     GPIO.setmode(GPIO.BCM)
     wiringpi.wiringPiSetupGpio()
     GPIO.setup(MD_LF0, GPIO.OUT)
@@ -282,10 +334,10 @@ def moveMotor_thread3():
     LB0 = GPIO.PWM(MD_LB0, 50)
     RF0 = GPIO.PWM(MD_RF0, 50)
     RB0 = GPIO.PWM(MD_RB0, 50)
-    LF1 = GPIO.PWM(MD_LF0, 50)
-    LB1 = GPIO.PWM(MD_LB0, 50)
-    RF1 = GPIO.PWM(MD_RF0, 50)
-    RB1 = GPIO.PWM(MD_RB0, 50)
+    LF1 = GPIO.PWM(MD_LF1, 50)
+    LB1 = GPIO.PWM(MD_LB1, 50)
+    RF1 = GPIO.PWM(MD_RF1, 50)
+    RB1 = GPIO.PWM(MD_RB1, 50)
     LF0.start(0)
     LB0.start(0)
     RF0.start(0)
@@ -297,7 +349,7 @@ def moveMotor_thread3():
     try:
         i=0
         while True:
-            if i%10==0:
+            if i%5==0:
                 printData()
             if direction == 0.0: #phase0
                 LF0.ChangeDutyCycle(0)
@@ -321,7 +373,7 @@ def moveMotor_thread3():
                 RB1.ChangeDutyCycle(0)
                 wiringpi.pwmWrite(SERVO0, SERVO0_SET)
                 wiringpi.pwmWrite(SERVO1, SERVO1_RESET)
-            elif direction == -360.0: #停止コマンド
+            elif direction == -360.0: #停止コマンドs
                 LF0.ChangeDutyCycle(0)
                 LB0.ChangeDutyCycle(0)
                 RF0.ChangeDutyCycle(0)
@@ -331,27 +383,68 @@ def moveMotor_thread3():
                 RF1.ChangeDutyCycle(0)
                 RB1.ChangeDutyCycle(0)
                 wiringpi.pwmWrite(SERVO0, SERVO0_RESET)
+            elif direction == -400.0: #直進コマンド
+                myduty = 80
+                LF0.ChangeDutyCycle(myduty) #direction=-180で最大100
+                LB0.ChangeDutyCycle(0)
+                RF0.ChangeDutyCycle(myduty)
+                RB0.ChangeDutyCycle(0)
+                LF1.ChangeDutyCycle(myduty)
+                LB1.ChangeDutyCycle(0)
+                RF1.ChangeDutyCycle(myduty)
+                RB1.ChangeDutyCycle(0)
             else:
+                if phase == 4.0 or phase == 5.0:
+                    controll_p = 30+direction*50/180
+                    if controll_p > 100:
+                        controll_p = 100
+                    elif controll_p < 0:
+                        controll_p = 0
+                    
+                    controll_m = 30-direction*50/180
+                    if controll_m > 100:
+                        controll_m = 100
+                    elif controll_m < 0:
+                        controll_m = 0
+                else:
+                    controll_p = 50+direction*50/10
+                    if controll_p > 100:
+                        controll_p = 100
+                    elif controll_p < 0:
+                        controll_p = 0
+                    
+                    controll_m = 50-direction*50/180
+                    if controll_m > 100:
+                        controll_m = 100
+                    elif controll_m < 0:
+                        controll_m = 0
+
                 if acc[2] >= 0:
-                    LF0.ChangeDutyCycle(50+direction*30/180) #direction=-180で最大100
+                    print("azi : {:7.2f}, dir : {:7.2f}, cont : {:7.2f}".format(azimuth, direction, 50+direction*40/180))
+                    LF0.ChangeDutyCycle(controll_m) #direction=-180で最大100
                     LB0.ChangeDutyCycle(0)
-                    RF0.ChangeDutyCycle(50+direction*30/180)
+                    RF0.ChangeDutyCycle(controll_p)
                     RB0.ChangeDutyCycle(0)
-                    LF1.ChangeDutyCycle(50-direction*30/180)
+                    LF1.ChangeDutyCycle(controll_m)
                     LB1.ChangeDutyCycle(0)
-                    RF1.ChangeDutyCycle(50-direction*30/180)
+                    RF1.ChangeDutyCycle(controll_p)
                     RB1.ChangeDutyCycle(0)
                     wiringpi.pwmWrite(SERVO1, direction2duty(direction)) #44-232
                 else:
+                    #print("azi : {:7.2f}, dir : {:7.2f}, cont : {:7.2f}".format(azimuth, direction, 50+direction*40/180))
                     LF0.ChangeDutyCycle(0) #direction=-180で最大100
-                    LB0.ChangeDutyCycle(50+direction*30/180)
+                    LB0.ChangeDutyCycle(controll_p)
                     RF0.ChangeDutyCycle(0)
-                    RB0.ChangeDutyCycle(50+direction*30/180)
+                    RB0.ChangeDutyCycle(controll_m)
                     LF1.ChangeDutyCycle(0)
-                    LB1.ChangeDutyCycle(50-direction*30/180)
+                    LB1.ChangeDutyCycle(controll_p)
                     RF1.ChangeDutyCycle(0)
-                    RB1.ChangeDutyCycle(50-direction*30/180)
+                    RB1.ChangeDutyCycle(controll_m)
                     wiringpi.pwmWrite(SERVO1, direction2duty(direction)) #44-232
+
+                glob_control_m = controll_m
+                glob_control_p = controll_p
+
             GPIO.output(LED1, 1)
             time.sleep(0.05)
             GPIO.output(LED1, 0)
@@ -367,21 +460,27 @@ def moveMotor_thread3():
         LB0.ChangeDutyCycle(0)
         RF0.ChangeDutyCycle(0)
         RB0.ChangeDutyCycle(0)
-        GPIO.cleanup()
         print('moveMotor()T3:   Closed')
-    
-    
+       #GPIO.cleanup()
+        print('moveMotor()T3:   Closed')
 
-
-def printData():
-    print("")
+def printData(): #表示するデータ　phase,高度,最高高度-現在高度,残りの時間,全モーターの出力値,lat,lng,azimuth,angle,direction,distance,
+    # print("")
     # print('printData():    Alti.=%7.2fm, Temp.= %7.2fC, Pres.= %7.2fhPa' % (alti, temp, pres))
     # print("Accl -> x:{}, y:{}, z: {}".format(acc[0], acc[1], acc[2]))
     # print("Gyro -> x:{}, y:{}, z: {}".format(gyro[0], gyro[1], gyro[2]))
-    # print("Mag -> x:{}, y:{}, z: {}".format(mag[0], mag[1], mag[2]))
+    #print("Mag -> x:{}, y:{}, z: {}".format(mag[0], mag[1], mag[2]))
     # hour = gps.timestamp[0] if gps.timestamp[0] < 24 else gps.timestamp[0] - 24
     # print('%02d:%02d:%04.1f' % (hour, gps.timestamp[1], gps.timestamp[2]))
-    # print('printData():    lat=%2.8f,lng=%2.8f,azi=%.1f,ang=%.1f,dir=%.1f,dist=%.1f' % (lat, lng, azimuth, angle, direction, distance))
+
+
+    #print('printData():    phase=%d,magx=%.1f,magy=%.1f,lat=%2.8f,lng=%2.8f,azi=%.1f,ang=%.1f,dir=%.1f,dist=%.1f' % (phase,mag[0],mag[1],lat, lng, azimuth, angle, direction, distance))
+    if phase == 0.0 or phase == 1.0:
+        print('flying data():    phase=%d,subAlti=%.1f,absAlti=%.1f,restTime=%.1f,lat=%2.8f,lng=%2.8f' % (phase,maxAlti-minAlti,abs(alti-minAlti),restTime,lat, lng))
+    elif phase == 2.0 or phase == 3.0 or phase == 4.0 or phase == 5.0 or phase == 6.0:
+        print('runnning data():    phase=%d,motorL=%d,motorR=%d,lat=%2.8f,lng=%2.8f,azi=%.1f,ang=%.1f,dir=%.1f,dist=%.1f' % (phase,glob_control_m,glob_control_p,lat, lng, azimuth, angle, direction, distance))
+    else:
+        print("FATAL ERROR check your phase")
 
 
 def currentMilliTime():
@@ -398,8 +497,9 @@ def flying(): #落下検知関数 :飛んでいるときはTrueを返し続け�
         minAlti = alti
     subAlti = maxAlti-minAlti
     absAlti = abs(alti-minAlti)
-    print('flying():       SubAlti=%.1fm, AbsAlti=%.1fm' % (subAlti,absAlti))
-    if subAlti>ALTITUDE_CONST1 and absAlti<ALTITUDE_CONST2:
+    # print('flying():       SubAlti=%.1fm, AbsAlti=%.1fm' % (subAlti,absAlti))
+    if subAlti>ALTITUDE_CONST1 and absAlti<ALTITUDE_CONST2 or restTime > 1*60:
+        print("escaved!")
         return False
     else:
         True
@@ -409,12 +509,13 @@ def release(): #パラシュート開放関数
     global direction
     #phase=1となっているので、ESPにはすでに開放命令が出ている
     print("release():      Releasing...")
-    direction = 360
-    time.sleep(2)
-    direction = 0
-    time.sleep(2)
-    direction = 360
-    time.sleep(2)
+    trial_num = 5
+    for i in range(5):
+        print(SERVO0, SERVO1)
+        direction = 360
+        time.sleep(2)
+        direction = 0
+        time.sleep(2)
     print("release():      Released")
 
 
@@ -497,16 +598,30 @@ def calcAzimuth(): #方位角計算用関数
     if mag[0] == 0.0:
         mag[0] = 0.0000001
     azimuth = -(180/math.pi)*math.atan(mag[1]/mag[0])
-    if mag[0]>0:
-        azimuth += 90
-    elif mag[0]<0:
-        azimuth -= 90
-    azimuth += MAG_CONST+180
-    if azimuth>180:
-        azimuth -=360
-    if azimuth<180:
-        azimuth +=360
+    if azimuth<0 and mag[0]<0:
+        azimuth += 180
+    elif azimuth>0 and mag[0]<0:
+        azimuth -= 180
+    
+	#azimuth += 180
 
+    if azimuth>180:
+        azimuth-=360
+    else:
+        pass
+
+
+    if acc[2] > 0:
+        pass
+    else:
+        azimuth *= -1
+        
+    # azimuth += MAG_CONST
+
+    # if azimuth>180:
+    #     azimuth -=360
+    # if azimuth<180:
+    #     azimuth +=360
 
 def setDirection(): #進行方向を変更する関数
     global direction #基本範囲は-180<dirction<180, direction>0で左に向かう
@@ -563,7 +678,7 @@ def resetPos(): #カメラモードへ移行する際に位置を調整する関
             print(detection)
             print('resetPos():     x= %f' % x)
         except Exception as e:
-            print(e)
+            # print(e)
             print('resetPos():     x= NO CORN')
             continue
         if abs(x)<100:
@@ -585,12 +700,14 @@ def detectCorn(): #カラーコーンを認識する関数
     global phase
     beforeDirection = direction
     detection = detect.find_far_cone(preview=False)
-    if detection == [0,0,True]:
+    # if detection == [0,0,True]:
+    
+    if detection[2]:
+        print('camera data():  posX=%d, posY=%d,' % (detection[0], detection[1]))
         colorCorn = True
     else:
-        colorCorn = False
-    print('detectCorn():   deTection=', end='')
-    print(detection)
+        print('No corn, camera is available')
+    
     try:
         x = detection[0]-160 #-160<x<160
         direction = x+TIRE_CALIB
@@ -598,18 +715,19 @@ def detectCorn(): #カラーコーンを認識する関数
             direction -= 360
         if direction<-180:
             direction += 360
-        print('detectCorn():   diRection= %f' % direction)
-        if abs(direction-beforeDirection)>50:
-            direction = beforeDirection
-            print('detectCorn():   __diRection= %f' % direction)
+        #print('detectCorn():   diRection= %f' % direction)
+        # if abs(direction-beforeDirection)>50:
+        #     direction = beforeDirection
+        #     print('detectCorn():   __diRection= %f' % direction)
+        return detection[2]
     except Exception as e:
-        print(e)
-        print('detectCorn():   NO CORN')
+        # print(e)
+        #print('detectCorn():   NO CORN')
         if direction>0: #直前のdirectionが正ならば
-            direction = 180 #左旋回
+            direction = 45 #左旋回
         else:
-            direction = -180 #右旋回
-    return detection[2]
+            direction = -45 #右旋回
+        return False
 
 
 if __name__ == "__main__":
