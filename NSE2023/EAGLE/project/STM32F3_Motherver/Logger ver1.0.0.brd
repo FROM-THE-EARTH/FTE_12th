@@ -2461,7 +2461,7 @@ design rules under a new name.</description>
 <via x="18.161" y="24.003" extent="1-16" drill="0.35"/>
 <wire x1="18.161" y1="24.003" x2="18.161" y2="25.058" width="0.1524" layer="16"/>
 <wire x1="14.986" y1="20.8694" x2="14.986" y2="20.447" width="0.1524" layer="1" curve="180"/>
-<wire x1="14.986" y1="20.447" x2="18.669" y2="20.447" width="0.1524" layer="1"/>
+<wire x1="18.669" y1="20.447" x2="14.986" y2="20.447" width="0.1524" layer="1"/>
 <wire x1="15.24" y1="17.043" x2="15.215" y2="17.018" width="0.1524" layer="1"/>
 <wire x1="17.8846875" y1="20.8694" x2="14.986" y2="20.8694" width="0.1524" layer="1"/>
 <wire x1="18.669" y1="20.447" x2="18.669" y2="20.066" width="0.1524" layer="1" curve="-180"/>
@@ -2510,8 +2510,8 @@ design rules under a new name.</description>
 <contactref element="R9" pad="1"/>
 <contactref element="R11" pad="2"/>
 <contactref element="CN1" pad="CLK"/>
-<wire x1="16.51" y1="24.8318" x2="19.05" y2="24.8318" width="0.1524" layer="1"/>
-<wire x1="16.51" y1="24.8318" x2="16.51" y2="24.13" width="0.1524" layer="1"/>
+<wire x1="19.05" y1="26.7368" x2="16.51" y2="26.7368" width="0.1524" layer="1"/>
+<wire x1="16.51" y1="26.7368" x2="16.51" y2="24.13" width="0.1524" layer="1"/>
 <via x="16.51" y="24.13" extent="1-16" drill="0.35"/>
 <wire x1="16.51" y1="24.13" x2="16.129" y2="24.511" width="0.1524" layer="16"/>
 <wire x1="16.129" y1="24.511" x2="16.129" y2="25.058" width="0.1524" layer="16"/>
@@ -2524,7 +2524,7 @@ design rules under a new name.</description>
 <wire x1="19.0698" y1="24.13" x2="19.1488" y2="24.051" width="0.1524" layer="16"/>
 <wire x1="19.1488" y1="24.051" x2="19.1488" y2="19.8955125" width="0.1524" layer="16"/>
 <wire x1="19.1488" y1="19.8955125" x2="17.272" y2="18.0187125" width="0.1524" layer="16"/>
-<wire x1="19.05" y1="24.8318" x2="19.05" y2="24.1498" width="0.1524" layer="1"/>
+<wire x1="19.05" y1="26.7368" x2="19.05" y2="24.1498" width="0.1524" layer="1"/>
 </signal>
 <signal name="FP_CHECKER">
 <contactref element="JP3" pad="15"/>
