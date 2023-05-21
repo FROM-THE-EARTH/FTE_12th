@@ -9590,11 +9590,6 @@ Source: AVX .. aphvc.pdf</description>
 <label x="76.2" y="15.24" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="JP3" gate="A" pin="15"/>
-<wire x1="106.68" y1="-22.86" x2="101.6" y2="-22.86" width="0.1524" layer="91"/>
-<label x="101.6" y="-22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
 <wire x1="114.3" y1="-10.16" x2="119.38" y2="-10.16" width="0.1524" layer="91"/>
 <label x="119.38" y="-10.16" size="1.778" layer="95" xref="yes"/>
 <pinref part="JP3" gate="A" pin="6"/>
@@ -9663,6 +9658,18 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="LED1" gate="G$1" pin="CT"/>
 <pinref part="R6" gate="G$1" pin="2"/>
 <wire x1="-20.32" y1="-5.08" x2="-20.32" y2="-7.62" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="FP_CHECKER" class="0">
+<segment>
+<pinref part="JP3" gate="A" pin="15"/>
+<wire x1="106.68" y1="-22.86" x2="101.6" y2="-22.86" width="0.1524" layer="91"/>
+<label x="101.6" y="-22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="PB4"/>
+<wire x1="60.96" y1="60.96" x2="76.2" y2="60.96" width="0.1524" layer="91"/>
+<label x="76.2" y="60.96" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>

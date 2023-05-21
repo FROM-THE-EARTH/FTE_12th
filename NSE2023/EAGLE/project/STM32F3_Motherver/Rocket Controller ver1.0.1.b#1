@@ -72,7 +72,7 @@
 <layer number="98" name="Guide" color="6" fill="1" visible="no" active="no"/>
 </layers>
 <board>
-<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIyMTExMTU3Nzc2MDI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:645LDsfARDetJAx0L6TmgA" pcbguid="" lastpulledtime="" lastsyncedchangeguid="" latestrevisionid="d8e2c99e-163e-4203-ba7c-591f0eb5f2d2" lastsyncedrevisionid="d8e2c99e-163e-4203-ba7c-591f0eb5f2d2" lastboardhashguid="496944e7-134c-5cba-f7c1-c7d61a63fa8a" lastpushedtime="2023-05-03T18:46:15Z" linktopcb3d="true"/>
+<fusionsync huburn="a.YnVzaW5lc3M6eWFob282NTE3Mw" projecturn="a.YnVzaW5lc3M6eWFob282NTE3MyMyMDIyMTExMTU3Nzc2MDI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:645LDsfARDetJAx0L6TmgA" pcbguid="97255dba-f795-4a4b-a096-e2fdbc2b8302" lastpulledtime="" lastsyncedchangeguid="" latestrevisionid="d8e2c99e-163e-4203-ba7c-591f0eb5f2d2" lastsyncedrevisionid="d8e2c99e-163e-4203-ba7c-591f0eb5f2d2" lastboardhashguid="496944e7-134c-5cba-f7c1-c7d61a63fa8a" lastpushedtime="2023-05-03T18:46:15Z" linktopcb3d="true"/>
 <plain>
 <wire x1="-3.81" y1="0" x2="31.73" y2="0" width="0" layer="20"/>
 <wire x1="31.73" y1="0" x2="31.73" y2="35.23" width="0" layer="20"/>
@@ -2384,12 +2384,14 @@ design rules under a new name.</description>
 </signal>
 <signal name="PWM">
 <contactref element="U$1" pad="PA8"/>
+<contactref element="JP3" pad="15"/>
 <contactref element="JP3" pad="6"/>
 <wire x1="6.096" y1="15.3924" x2="4.8768" y2="15.3924" width="0.1524" layer="1"/>
 <wire x1="6.096" y1="14.9352" x2="6.096" y2="15.3924" width="0.1524" layer="16"/>
 <wire x1="6.858" y1="14.1732" x2="6.096" y2="14.9352" width="0.1524" layer="16"/>
 <wire x1="6.858" y1="8.6868" x2="6.858" y2="14.1732" width="0.1524" layer="16"/>
 <wire x1="7.62" y1="7.9248" x2="6.858" y2="8.6868" width="0.1524" layer="16"/>
+<wire x1="7.62" y1="5.08" x2="7.62" y2="7.9248" width="0.1524" layer="16"/>
 <wire x1="4.8768" y1="15.3924" x2="4.85" y2="15.53" width="0.1524" layer="1"/>
 <wire x1="21.4884" y1="2.4384" x2="20.4216" y2="2.4384" width="0.1524" layer="16"/>
 <wire x1="22.4028" y1="1.524" x2="21.4884" y2="2.4384" width="0.1524" layer="16"/>
@@ -2463,11 +2465,6 @@ design rules under a new name.</description>
 <wire x1="0.762" y1="14.0208" x2="0.762" y2="15.3924" width="0.1524" layer="1"/>
 <wire x1="0.762" y1="15.3924" x2="0.75" y2="15.494" width="0.1524" layer="1"/>
 <wire x1="0.762" y1="14.0208" x2="0.85" y2="13.97" width="0.1524" layer="1"/>
-</signal>
-<signal name="FP_CHECKER">
-<contactref element="JP3" pad="15"/>
-<contactref element="U$1" pad="PB4"/>
-<wire x1="7.62" y1="5.08" x2="7.9" y2="9.28" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
