@@ -10718,7 +10718,7 @@ Source: AVX .. aphvc.pdf</description>
 <part name="POWER" library="XR Connector" library_urn="urn:adsk.eagle:library:38467597" deviceset="4PIN_SIDE" device="" package3d_urn="urn:adsk.eagle:package:38473897/3"/>
 <part name="+3V14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="GND17" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="STLINK1" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X5" device="/90" package3d_urn="urn:adsk.eagle:package:22467/2"/>
+<part name="STLINK" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X5" device="/90" package3d_urn="urn:adsk.eagle:package:22467/2"/>
 </parts>
 <sheets>
 <sheet>
@@ -10988,9 +10988,9 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="GND17" gate="1" x="203.2" y="53.34" smashed="yes">
 <attribute name="VALUE" x="200.66" y="50.8" size="1.778" layer="96"/>
 </instance>
-<instance part="STLINK1" gate="A" x="213.36" y="66.04" smashed="yes">
-<attribute name="NAME" x="207.01" y="74.295" size="1.778" layer="95"/>
-<attribute name="VALUE" x="207.01" y="55.88" size="1.778" layer="96"/>
+<instance part="STLINK" gate="A" x="220.98" y="66.04" smashed="yes">
+<attribute name="NAME" x="214.63" y="74.295" size="1.778" layer="95"/>
+<attribute name="VALUE" x="214.63" y="55.88" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -11228,10 +11228,6 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="BOOT" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<wire x1="142.24" y1="5.08" x2="142.24" y2="17.78" width="0.1524" layer="91"/>
-<pinref part="+3V13" gate="G$1" pin="+3V3"/>
-</segment>
-<segment>
 <pinref part="R9" gate="G$1" pin="2"/>
 <wire x1="137.16" y1="30.48" x2="142.24" y2="30.48" width="0.1524" layer="91"/>
 <wire x1="142.24" y1="30.48" x2="142.24" y2="22.86" width="0.1524" layer="91"/>
@@ -11242,10 +11238,10 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="+3V12" gate="G$1" pin="+3V3"/>
 </segment>
 <segment>
-<wire x1="210.82" y1="60.96" x2="193.04" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="60.96" x2="193.04" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="193.04" y1="60.96" x2="193.04" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="+3V14" gate="G$1" pin="+3V3"/>
-<pinref part="STLINK1" gate="A" pin="5"/>
+<pinref part="STLINK" gate="A" pin="5"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -11392,10 +11388,10 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="GND5" gate="1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="210.82" y1="63.5" x2="203.2" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="203.2" y1="63.5" x2="203.2" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="GND17" gate="1" pin="GND"/>
-<pinref part="STLINK1" gate="A" pin="4"/>
+<pinref part="STLINK" gate="A" pin="4"/>
+<wire x1="218.44" y1="63.5" x2="203.2" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$1" class="0">
@@ -11411,9 +11407,9 @@ Source: AVX .. aphvc.pdf</description>
 <label x="83.82" y="50.8" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<wire x1="210.82" y1="71.12" x2="205.74" y2="71.12" width="0.1524" layer="91"/>
 <label x="205.74" y="71.12" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="STLINK1" gate="A" pin="1"/>
+<pinref part="STLINK" gate="A" pin="1"/>
+<wire x1="218.44" y1="71.12" x2="205.74" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SWCLK" class="0">
@@ -11423,9 +11419,9 @@ Source: AVX .. aphvc.pdf</description>
 <label x="83.82" y="40.64" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<wire x1="210.82" y1="66.04" x2="205.74" y2="66.04" width="0.1524" layer="91"/>
 <label x="205.74" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="STLINK1" gate="A" pin="3"/>
+<pinref part="STLINK" gate="A" pin="3"/>
+<wire x1="218.44" y1="66.04" x2="205.74" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SWDIO" class="0">
@@ -11435,9 +11431,9 @@ Source: AVX .. aphvc.pdf</description>
 <label x="83.82" y="35.56" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<wire x1="210.82" y1="68.58" x2="205.74" y2="68.58" width="0.1524" layer="91"/>
 <label x="205.74" y="68.58" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="STLINK1" gate="A" pin="2"/>
+<pinref part="STLINK" gate="A" pin="2"/>
+<wire x1="218.44" y1="68.58" x2="205.74" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="LED0" class="0">
@@ -11781,6 +11777,8 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="137.16" y1="5.08" x2="142.24" y2="5.08" width="0.1524" layer="91"/>
 <wire x1="142.24" y1="12.7" x2="142.24" y2="17.78" width="0.1524" layer="91"/>
 <junction x="142.24" y="12.7"/>
+<wire x1="142.24" y1="5.08" x2="142.24" y2="17.78" width="0.1524" layer="91"/>
+<pinref part="+3V13" gate="G$1" pin="+3V3"/>
 </segment>
 </net>
 </nets>

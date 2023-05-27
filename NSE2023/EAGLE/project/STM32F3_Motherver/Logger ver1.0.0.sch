@@ -9731,11 +9731,6 @@ Source: AVX .. aphvc.pdf</description>
 </net>
 <net name="PWM" class="0">
 <segment>
-<pinref part="JP3" gate="A" pin="15"/>
-<wire x1="-22.86" y1="-43.18" x2="-27.94" y2="-43.18" width="0.1524" layer="91"/>
-<label x="-27.94" y="-43.18" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
 <wire x1="-15.24" y1="-30.48" x2="-10.16" y2="-30.48" width="0.1524" layer="91"/>
 <label x="-10.16" y="-30.48" size="1.778" layer="95" xref="yes"/>
 <pinref part="JP3" gate="A" pin="6"/>
@@ -9875,6 +9870,18 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="109.22" y1="-43.18" x2="91.44" y2="-43.18" width="0.1524" layer="91"/>
 <junction x="109.22" y="-43.18"/>
 <pinref part="CN1" gate="G$1" pin="CLK"/>
+</segment>
+</net>
+<net name="FP_CHECKER" class="0">
+<segment>
+<pinref part="JP3" gate="A" pin="15"/>
+<wire x1="-22.86" y1="-43.18" x2="-27.94" y2="-43.18" width="0.1524" layer="91"/>
+<label x="-27.94" y="-43.18" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="PB4"/>
+<wire x1="60.96" y1="60.96" x2="73.66" y2="60.96" width="0.1524" layer="91"/>
+<label x="73.66" y="60.96" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
