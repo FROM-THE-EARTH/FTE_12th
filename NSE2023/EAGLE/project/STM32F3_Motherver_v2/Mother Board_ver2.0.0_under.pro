@@ -2,8 +2,8 @@ EAGLE AutoRouter Statistics:
 
 Job           : C:/Users/shun0/Documents/MyGithub/FTE_12th/NSE2023/EAGLE/project/STM32F3_Motherver_v2/Mother Board_ver2.0.0_under.brd
 
-Start at      : 04:30:55 (2023/07/25)
-End at        : 04:30:57 (2023/07/25)
+Start at      : 03:01:27 (2023/07/27)
+End at        : 03:01:29 (2023/07/27)
 Elapsed time  : 00:00:01
 
 Signals       :    21   RoutingGrid: 6 mil  Layers: 2
