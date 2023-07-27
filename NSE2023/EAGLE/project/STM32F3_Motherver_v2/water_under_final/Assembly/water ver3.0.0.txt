@@ -1,0 +1,7 @@
+Partlist exported from C:/Users/shun0/Documents/MyGithub/FTE_12th/NSE2023/EAGLE/project/STM32F3logbordv2/water ver3.0.0.sch at 2023/07/27 9:13
+
+Qty Value        Device       Package      Parts            Description 
+3                2PIN         2PIN         CON1, CON2, CON9             
+2                4PIN_SIDE    4PIN_SIDE    SIGNAL, SIGNAL1              
+2   BMP180       BMP180       GY-68        BMP1, BMP2                   
+1   SRIDE_SWITCH SRIDE_SWITCH SRIDE_SWITCH SRIDE_SWTCH2                 

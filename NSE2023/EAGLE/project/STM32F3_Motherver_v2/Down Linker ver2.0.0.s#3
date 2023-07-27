@@ -9284,9 +9284,9 @@ Source: AVX .. aphvc.pdf</description>
 <part name="GND11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="GND12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10k"/>
 <part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:23555/3" value="10k"/>
-<part name="SRIDE_SWTCH1" library="Sride Switch" library_urn="urn:adsk.eagle:library:38466661" deviceset="SRIDE_SWITCH" device="" package3d_urn="urn:adsk.eagle:package:38466664/4"/>
+<part name="RESETSW" library="Sride Switch" library_urn="urn:adsk.eagle:library:38466661" deviceset="SRIDE_SWITCH" device="" package3d_urn="urn:adsk.eagle:package:38466664/4"/>
+<part name="MODESW" library="Sride Switch" library_urn="urn:adsk.eagle:library:38466661" deviceset="SRIDE_SWITCH" device="" package3d_urn="urn:adsk.eagle:package:38466664/4"/>
 </parts>
 <sheets>
 <sheet>
@@ -9450,8 +9450,8 @@ Source: AVX .. aphvc.pdf</description>
 <attribute name="VALUE" x="116.84" y="-2.54" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="U$3" gate="G$1" x="223.52" y="25.4" smashed="yes"/>
-<instance part="GND11" gate="1" x="213.36" y="-15.24" smashed="yes">
-<attribute name="VALUE" x="210.82" y="-17.78" size="1.778" layer="96"/>
+<instance part="GND11" gate="1" x="200.66" y="-15.24" smashed="yes">
+<attribute name="VALUE" x="198.12" y="-17.78" size="1.778" layer="96"/>
 </instance>
 <instance part="+3V6" gate="G$1" x="271.78" y="-2.54" smashed="yes">
 <attribute name="VALUE" x="269.24" y="-7.62" size="1.778" layer="96" rot="R90"/>
@@ -9459,16 +9459,15 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="GND12" gate="1" x="271.78" y="15.24" smashed="yes">
 <attribute name="VALUE" x="269.24" y="12.7" size="1.778" layer="96"/>
 </instance>
-<instance part="R7" gate="G$1" x="220.98" y="15.24" smashed="yes">
-<attribute name="NAME" x="217.17" y="16.7386" size="1.778" layer="95"/>
-<attribute name="VALUE" x="217.17" y="11.938" size="1.778" layer="96"/>
-</instance>
 <instance part="R8" gate="G$1" x="220.98" y="0" smashed="yes">
-<attribute name="NAME" x="217.17" y="1.4986" size="1.778" layer="95"/>
-<attribute name="VALUE" x="217.17" y="-3.302" size="1.778" layer="96"/>
+<attribute name="NAME" x="204.47" y="1.4986" size="1.778" layer="95"/>
+<attribute name="VALUE" x="204.47" y="-3.302" size="1.778" layer="96"/>
 </instance>
-<instance part="SRIDE_SWTCH1" gate="G$1" x="220.98" y="25.4" smashed="yes">
-<attribute name="NAME" x="218.44" y="27.94" size="1.27" layer="95"/>
+<instance part="RESETSW" gate="G$1" x="220.98" y="25.4" smashed="yes">
+<attribute name="NAME" x="213.36" y="30.48" size="1.27" layer="95"/>
+</instance>
+<instance part="MODESW" gate="G$1" x="210.82" y="25.4" smashed="yes">
+<attribute name="NAME" x="203.2" y="30.48" size="1.27" layer="95"/>
 </instance>
 </instances>
 <busses>
@@ -9652,22 +9651,22 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="GND12" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="R7" gate="G$1" pin="1"/>
 <pinref part="GND11" gate="1" pin="GND"/>
-<wire x1="215.9" y1="15.24" x2="213.36" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="213.36" y1="15.24" x2="213.36" y2="0" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="20.32" x2="200.66" y2="0" width="0.1524" layer="91"/>
 <pinref part="R8" gate="G$1" pin="1"/>
-<wire x1="213.36" y1="0" x2="213.36" y2="-12.7" width="0.1524" layer="91"/>
-<wire x1="215.9" y1="0" x2="213.36" y2="0" width="0.1524" layer="91"/>
-<junction x="213.36" y="0"/>
+<wire x1="200.66" y1="0" x2="200.66" y2="-12.7" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="0" x2="200.66" y2="0" width="0.1524" layer="91"/>
+<junction x="200.66" y="0"/>
 <pinref part="U$3" gate="G$1" pin="GND1"/>
 <wire x1="228.6" y1="20.32" x2="218.44" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="20.32" x2="213.36" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="213.36" y1="20.32" x2="213.36" y2="15.24" width="0.1524" layer="91"/>
-<junction x="213.36" y="15.24"/>
-<wire x1="218.44" y1="20.32" x2="218.44" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="20.32" x2="208.28" y2="20.32" width="0.1524" layer="91"/>
+<pinref part="RESETSW" gate="G$1" pin="LR"/>
+<wire x1="208.28" y1="20.32" x2="200.66" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="22.86" x2="218.44" y2="20.32" width="0.1524" layer="91"/>
 <junction x="218.44" y="20.32"/>
-<pinref part="SRIDE_SWTCH1" gate="G$1" pin="LR"/>
+<pinref part="MODESW" gate="G$1" pin="LR"/>
+<wire x1="208.28" y1="22.86" x2="208.28" y2="20.32" width="0.1524" layer="91"/>
+<junction x="208.28" y="20.32"/>
 </segment>
 </net>
 <net name="BOOT0" class="0">
@@ -9991,13 +9990,6 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="119.38" y1="-7.62" x2="119.38" y2="0" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$9" class="0">
-<segment>
-<pinref part="U$3" gate="G$1" pin="PC13"/>
-<wire x1="228.6" y1="15.24" x2="226.06" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="R7" gate="G$1" pin="2"/>
-</segment>
-</net>
 <net name="N$10" class="0">
 <segment>
 <pinref part="U$3" gate="G$1" pin="BOOT0"/>
@@ -10010,7 +10002,7 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="U$3" gate="G$1" pin="RESET_N"/>
 <wire x1="228.6" y1="17.78" x2="220.98" y2="17.78" width="0.1524" layer="91"/>
 <wire x1="220.98" y1="17.78" x2="220.98" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="SRIDE_SWTCH1" gate="G$1" pin="R"/>
+<pinref part="RESETSW" gate="G$1" pin="R"/>
 </segment>
 </net>
 <net name="FP_CHECKER" class="0">
@@ -10023,6 +10015,14 @@ Source: AVX .. aphvc.pdf</description>
 <pinref part="U$1" gate="G$1" pin="PB4"/>
 <wire x1="60.96" y1="60.96" x2="76.2" y2="60.96" width="0.1524" layer="91"/>
 <label x="76.2" y="60.96" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="MODESW" gate="G$1" pin="R"/>
+<wire x1="210.82" y1="22.86" x2="210.82" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="PC13"/>
+<wire x1="210.82" y1="15.24" x2="228.6" y2="15.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
