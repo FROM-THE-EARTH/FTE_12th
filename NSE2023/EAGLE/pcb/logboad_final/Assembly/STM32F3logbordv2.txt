@@ -1,0 +1,25 @@
+Partlist exported from C:/Users/shun0/Documents/MyGithub/FTE_12th/NSE2023/EAGLE/project/STM32F3logbordv2/STM32F3logbordv2.sch at 2023/07/27 9:06
+
+Qty Value        Device         Package        Parts                                   Description                POPULARITY SPICEPREFIX
+2                2PIN_SIDE      2PIN_SIDE      CON1, CON2                                                                               
+1                4PIN_SIDE      4PIN_SIDE      SIGNAL                                                                                   
+4                OSXX1608C1A    OSXX1608C1A    L4, LED0, LED1, PWR                                                                      
+4                PCH_SSM6J808R  SSM6J808R      CHOICEMOS1, CHOICEMOS2, MOS5, SWITCHMOS                                                  
+1                PINHD-1X5/90   1X05/90        STLINK                                  PIN HEADER                 9                     
+1                TVAF06-A020B-R TVAF06-A020B-R RST                                                                                      
+1   0.1uF        C-USC1608      C1608          C5                                      CAPACITOR, American symbol 0          C          
+5   100          R-US_R0603     R0603          R3, R4, R6, R15, R16                    RESISTOR, American symbol  77         R          
+2   100k         R-US_R0603     R0603          PULLDOWN, SWITCHRES                     RESISTOR, American symbol  77         R          
+2   100nF        C-USC1608      C1608          C1, C2                                  CAPACITOR, American symbol 0          C          
+8   10k          R-US_R0603     R0603          R2, R5, R7, R8, R9, R10, R14, R17       RESISTOR, American symbol  77         R          
+1   10k or DNF   R-US_R0603     R0603          R1                                      RESISTOR, American symbol  77         R          
+1   10nF         C-USC1608      C1608          C4                                      CAPACITOR, American symbol 0          C          
+1   10uF         C-USC0603      C0603          C8                                      CAPACITOR, American symbol 37         C          
+1   1k           R-US_R0603     R0603          R13                                     RESISTOR, American symbol  77         R          
+1   4.7uF        C-USC1608      C1608          C3                                      CAPACITOR, American symbol 0          C          
+1   AZ1117C      AZ1117C        AZ1117C        U$4                                                                                      
+1   BMX055       BMX055         BMX055         BMX2                                                                                     
+1   DM3AT        DM3AT          DM3AT          CN1                                                                                      
+1   F.T.E.LOGO   F.T.E.LOGO     LOGO           U$3                                                                                      
+1   SRIDE_SWITCH SRIDE_SWITCH   SRIDE_SWITCH   SW1                                                                                      
+1   STM32F303K8  STM32F303K8    STM32F303K8    U$1                                                                                      
