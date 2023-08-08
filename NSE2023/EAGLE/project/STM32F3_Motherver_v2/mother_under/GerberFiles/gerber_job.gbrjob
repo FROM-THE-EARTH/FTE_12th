@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2023-07-26T22:49:16Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.6.2"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.57,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "Mother Board_ver2.0.0_under"
+        },
+        "Owner": "  <kato.shunsuke.p7@dc.tohoku.ac.jp>",
+        "Size": {
+            "X": 41.5,
+            "Y": 35
+        }
+    }
+}

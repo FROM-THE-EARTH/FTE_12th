@@ -1,0 +1,5 @@
+Partlist exported from C:/Users/shun0/Documents/MyGithub/FTE_12th/NSE2023/EAGLE/project/STM32F3_Motherver_v2/Mother Board_ver2.0.0_under.sch at 2023/07/27 7:49
+
+Qty Value Device             Package            Parts                     Description 
+3         2.5_MINI-SPOX_4PIN 2.5_MINI-SPOX_4PIN CON7, POWER, SENSER-MOTOR             
+3         2X10               2X10               DL, GD, RC                            

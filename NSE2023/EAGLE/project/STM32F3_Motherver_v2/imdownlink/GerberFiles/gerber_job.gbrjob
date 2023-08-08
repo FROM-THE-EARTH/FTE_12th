@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2023-07-27T00:25:32Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.6.2"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.57,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "Down Linker IM"
+        },
+        "Owner": "  <kato.shunsuke.p7@dc.tohoku.ac.jp>",
+        "Size": {
+            "X": 35,
+            "Y": 45
+        }
+    }
+}

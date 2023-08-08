@@ -2,24 +2,24 @@ EAGLE AutoRouter Statistics:
 
 Job           : C:/Users/shun0/Documents/MyGithub/FTE_12th/NSE2023/EAGLE/project/STM32F3_Motherver_v2/Mother Board_ver2.0.0_under.brd
 
-Start at      : 04:30:55 (2023/07/25)
-End at        : 04:30:57 (2023/07/25)
-Elapsed time  : 00:00:01
+Start at      : 07:46:28 (2023/07/27)
+End at        : 07:46:38 (2023/07/27)
+Elapsed time  : 00:00:09
 
-Signals       :    21   RoutingGrid: 6 mil  Layers: 2
-Connections   :    45   predefined:  0 ( 0 Vias )
+Signals       :    15   RoutingGrid: 15.5 mil  Layers: 2
+Connections   :    22   predefined:  3 ( 0 Vias )
 
-Router memory :   493680
+Router memory :   77616
 
 Passname          : TopRouter     Route Optimize1 Optimize2 Optimize3 Optimize4
 
-Time per pass     :  00:00:01  00:00:00  00:00:00  00:00:00  00:00:00  00:00:00
+Time per pass     :  00:00:09  00:00:00  00:00:00  00:00:00  00:00:00  00:00:00
 Number of Ripups  :         0         0         0         0         0         0
 max. Level        :         0         0         0         0         0         0
 max. Total        :         0         0         0         0         0         0
 
-Routed            :        45        45        45        45        45        45
-Vias              :         0         0         0         0         0         0
-Resolution        :   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %
+Routed            :         0        19        19        19        19        19
+Vias              :         0         2         2         2         2         2
+Resolution        :    13.6 %   100.0 %   100.0 %   100.0 %   100.0 %   100.0 %
 
 Final             : 100.0% finished
