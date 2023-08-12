@@ -4650,18 +4650,6 @@ design rules under a new name.</description>
 <via x="24.3713" y="20.7518" extent="1-16" drill="0.35"/>
 <via x="19.5453" y="21.4757" extent="1-16" drill="0.35"/>
 <via x="20.9931" y="21.9583" extent="1-16" drill="0.35"/>
-<polygon width="0.3302" layer="16">
-<vertex x="-3" y="47"/>
-<vertex x="37" y="47"/>
-<vertex x="37" y="-2"/>
-<vertex x="-3" y="-2"/>
-</polygon>
-<polygon width="0.3302" layer="1">
-<vertex x="-5" y="48"/>
-<vertex x="38" y="48"/>
-<vertex x="38" y="-3"/>
-<vertex x="-5" y="-3"/>
-</polygon>
 </signal>
 <signal name="BOOT0">
 <contactref element="U$1" pad="BOOT"/>
