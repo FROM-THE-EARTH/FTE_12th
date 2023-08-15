@@ -1,0 +1,7 @@
+bmx.c:10:9:bmxRead8	40	static
+bmx.c:17:10:bmxRead16	40	static
+bmx.c:24:6:bmxWrite8	40	static
+bmx.c:30:9:bmxBegin	16	static
+bmx.c:66:6:read_bmx_accl	40	static
+bmx.c:89:6:read_bmx_gyro	40	static
+bmx.c:112:6:read_bmx_mag	40	static

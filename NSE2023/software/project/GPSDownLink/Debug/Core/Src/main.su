@@ -1,0 +1,12 @@
+core_cm4.h:2064:26:ITM_SendChar	16	static,ignoring_inline_asm
+main.c:84:6:HAL_UART_RxCpltCallback	16	static
+main.c:93:5:main	72	static
+main.c:184:6:SystemClock_Config	96	static
+main.c:226:13:MX_USART1_UART_Init	8	static
+main.c:259:13:MX_USART2_UART_Init	8	static
+main.c:292:13:MX_GPIO_Init	40	static
+main.c:312:5:_write	32	static
+main.c:320:7:extractFloat	16	static
+main.c:325:6:extractLatitudeLongitude	272	static
+main.c:375:6:getLatitudeLongitude	32	static
+main.c:401:6:Error_Handler	4	static,ignoring_inline_asm
