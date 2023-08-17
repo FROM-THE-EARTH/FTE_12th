@@ -46,7 +46,7 @@ const int engineBurnTime = 10 * 1000;
 const int topReachTime = 37.9 * 1000;
 
 //motor parameters
-const int closeAngle = 80;
+const int closeAngle = 85;
 const int openAngle = 60;
 
 int mode = 0;
@@ -174,8 +174,7 @@ int main(void) {
 
 		/* USER CODE BEGIN 3 */
 		//servoTest(85, 60, 10);
-		//servoWrite(85);
-		//HAL_Delay(100000);
+
 		//update altitude
 		if (initBMP180) {
 			altitude = getRawAltitude() - SEALEVEL_ALTITUDE;
@@ -235,6 +234,7 @@ int main(void) {
 			break;
 		case 2:
 			if (timeFromLaunch > 10 * 60) {
+				servoWrite(closeAngle);
 				//break;
 			}
 			break;
