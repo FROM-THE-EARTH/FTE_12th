@@ -1,0 +1,10 @@
+bmp085.c:39:9:bmpRead8	32	static
+bmp085.c:45:10:bmpRead16	32	static
+bmp085.c:53:6:bmpWrite8	32	static
+bmp085.c:59:9:bmpBegin	16	static
+bmp085.c:81:9:computeB5	24	static
+bmp085.c:86:10:readBMPRawTemperature	8	static
+bmp085.c:91:10:readBMPRawPressure	16	static
+bmp085.c:108:7:readBMPTemperature	24	static
+bmp085.c:117:9:readBMPPressure	56	static
+bmp085.c:146:8:calculateAltitude	40	static
