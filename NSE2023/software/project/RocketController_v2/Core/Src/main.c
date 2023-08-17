@@ -49,6 +49,8 @@ const int topReachTime = 37.9 * 1000;
 const int closeAngle = 85;
 const int openAngle = 60;
 
+//TODO : 横扉を占めるときはPWMの出力を0にする
+
 int mode = 0;
 
 //FlightPin
