@@ -142,7 +142,7 @@ int main(void) {
 	/* USER CODE BEGIN Init */
 	longtitude = -1.0;
 	latitude = -1.0;
-	altitude = -1.0;
+	gpsAltitude = -1.0;
 	times = -1.0;
 	Minutes = -1.0;
 	/* USER CODE END Init */
