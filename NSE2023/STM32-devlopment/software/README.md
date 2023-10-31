@@ -99,12 +99,11 @@ double calcMedian(void *array, int n, int type) {
 ```
 
 ## SDカードのソフトウェア
-STM32マイコンで、SPIを介してSDカードに書き込みを行う場合は [このサイト](https://zenn.dev/waarrk/articles/32a1916afa0cb6)を参考にしてください。　　
-このサイトではSTM32F4を用いているため
+STM32マイコンで、SPIを介してSDカードに書き込みを行う場合は [このサイト](https://zenn.dev/waarrk/articles/32a1916afa0cb6)を参考にしてください。このサイトではSTM32F4を用いているため
 ```cpp
 #include "stm32f4xx_hal.h"
 ```
-になっていますが、筆者が用いているのはSTM32F303K8であるため、この箇所は
+となっていますが、筆者が用いているのはSTM32F303K8であるため、この箇所は
 ```cpp
 #include "stm32f3xx_hal.h"
 ```
@@ -120,7 +119,7 @@ MISO,MOSIのピンのプルアップ設定を忘れないようにしましょ�
 以上の内容に準拠すれば問題なくSDカードへの書き込みを行えるはずです。設定項目が多く大変ですが、サイトで紹介されている手法を踏襲することが一番の近道です。
 
 ## RM92Aのソフトウェア
-RM92Aに関してはデータシートを読みことを推奨します。
+RM92Aに関してはデータシートを読むことを推奨します。
 * [開発ボードソフトウェア](http://www.rflink.co.jp/pdf/RM-92A-92C/SimpleMACstd92A-92C_instruction%20manual-rev2.10.02.pdf)
 * [開発ボードハードウェア](http://www.rflink.co.jp/pdf/RM-24X92X_EV/RM-24X-92X_EV_ver4-2_4-3_4-4_v1_2.pdf)
 * [コマンド一覧](http://www.rflink.co.jp/pdf/RM-92A-92C/LoRaWan_AT-command_Specification_v1.5.pdf)
