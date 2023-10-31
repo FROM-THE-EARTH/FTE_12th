@@ -107,7 +107,8 @@ STM32マイコンで、SPIを介してSDカードに書き込みを行う場合�
 ```cpp
 #include "stm32f3xx_hal.h"
 ```
-になります。　　
+になります。
+
 MISO,MOSIのピンのプルアップ設定を忘れないようにしましょう。以下の写真のように設定すれば問題ありません。　
 
 ![SPIconfig](/NSE2023/STM32-devlopment/software/SPIconfig.png)
