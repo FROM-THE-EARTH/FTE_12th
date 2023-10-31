@@ -1,5 +1,7 @@
 # STM32 development
 
+![RAY電装](/NSE2023/STM32-devlopment/RAY電装.png)
+
 ## 全体像
 12期代が2023年能代共同打上実験に向けて開発したRAYに搭載予定であった電装の開発者向け情報です。
 
