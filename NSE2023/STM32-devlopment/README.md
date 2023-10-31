@@ -16,8 +16,11 @@ RAYには[STM32F303K8](https://www.st.com/ja/microcontrollers-microprocessors/st
 
 No.1 ~ 3はノーズ部に、No.4,5は横扉下に設置されています。メインミッションの高高度到達を適切に評価するためにはフライトログの回収が必須であったため、信頼性を向上させることを目的として計3つのデータロガーを搭載しました。
 
-## software
-STM32マイコンの開発環境には[CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html)を採用しました。STM32マイコンの開発環境として、他にはオンラインエディタである[KeilStudio](https://studio.keil.arm.com/)が挙げられますが、今回はマイコンボードではなくマイコン単体からの開発であったため、豊富なデバッグツールが用意されているCubeIDEを用いています。
+回路系の詳細な情報は/circuitに載せてあります。
 
-## core-system
-RAY電装の詳細システムを示します。
+## software
+STM32マイコンの開発環境には[CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html)を採用しました。STM32マイコンの開発環境として、他にはオンラインエディタである[KeilStudio](https://studio.keil.arm.com/)が挙げられますが、今回はマイコンボードではなくマイコン単体からの開発であったため、豊富なデバッグツールが用意されているCubeIDEを用いています。  
+
+CubeIDEのプロジェクトフォルダを共有しているので、ダウンロードすることで自身の環境から使用することができます。
+
+ソフトウェア系の詳細な情報は/softwareに載せてあります。
