@@ -8,8 +8,8 @@ MD_RF0 = 9
 MD_RB0 = 10
 MD_LF1 = 8
 MD_LB1 = 11
-MD_RF1 = 5
-MD_RB1 = 6
+MD_RF1 = 6
+MD_RB1 = 5
 SERVO0 = 12
 
 GPIO.setmode(GPIO.BCM)
@@ -57,7 +57,7 @@ def main():
     while True:
         print("L0 back")
         LF0.ChangeDutyCycle(0)
-        LB0.ChangeDutyCycle(50)
+        LB0.ChangeDutyCycle(100)
 #        RF0.ChangeDutyCycle(0)
 #        RB0.ChangeDutyCycle(50)
 #        LF1.ChangeDutyCycle(0)
@@ -67,7 +67,7 @@ def main():
         wiringpi.pwmWrite(SERVO0,60) # 44-232
         time.sleep(5)
         print("L0 forward")
-        LF0.ChangeDutyCycle(50)
+        LF0.ChangeDutyCycle(100)
         LB0.ChangeDutyCycle(0)
 #        RF0.ChangeDutyCycle(50)
 #        RB0.ChangeDutyCycle(0)
@@ -91,7 +91,7 @@ def main():
 #        LF0.ChangeDutyCycle(0)
 #        LB0.ChangeDutyCycle(50)
         RF0.ChangeDutyCycle(0)
-        RB0.ChangeDutyCycle(50)
+        RB0.ChangeDutyCycle(100)
 #        LF1.ChangeDutyCycle(0)
 #        LB1.ChangeDutyCycle(50)
 #        RF1.ChangeDutyCycle(0)
@@ -101,7 +101,7 @@ def main():
         print("R0 forward")
 #        LF0.ChangeDutyCycle(50)
 #        LB0.ChangeDutyCycle(0)
-        RF0.ChangeDutyCycle(50)
+        RF0.ChangeDutyCycle(100)
         RB0.ChangeDutyCycle(0)
 #        LF1.ChangeDutyCycle(50)
 #        LB1.ChangeDutyCycle(0)
@@ -125,7 +125,7 @@ def main():
 #        RF0.ChangeDutyCycle(0)
 #        RB0.ChangeDutyCycle(50)
         LF1.ChangeDutyCycle(0)
-        LB1.ChangeDutyCycle(50)
+        LB1.ChangeDutyCycle(100)
 #        RF1.ChangeDutyCycle(0)
 #        RB1.ChangeDutyCycle(50)
         wiringpi.pwmWrite(SERVO0,60) # 44-232
@@ -135,7 +135,7 @@ def main():
 #        LB0.ChangeDutyCycle(0)
 #        RF0.ChangeDutyCycle(50)
 #        RB0.ChangeDutyCycle(0)
-        LF1.ChangeDutyCycle(50)
+        LF1.ChangeDutyCycle(100)
         LB1.ChangeDutyCycle(0)
 #        RF1.ChangeDutyCycle(50)
 #        RB1.ChangeDutyCycle(0)
@@ -159,7 +159,7 @@ def main():
 #        LF1.ChangeDutyCycle(0)
 #        LB1.ChangeDutyCycle(50)
         RF1.ChangeDutyCycle(0)
-        RB1.ChangeDutyCycle(50)
+        RB1.ChangeDutyCycle(100)
         wiringpi.pwmWrite(SERVO0,60) # 44-232
         time.sleep(5)
         print("R1 forward")
@@ -169,7 +169,7 @@ def main():
 #        RB0.ChangeDutyCycle(0)
 #        LF1.ChangeDutyCycle(50)
 #        LB1.ChangeDutyCycle(0)
-        RF1.ChangeDutyCycle(50)
+        RF1.ChangeDutyCycle(100)
         RB1.ChangeDutyCycle(0)
         wiringpi.pwmWrite(SERVO0,60) # 44-232
         time.sleep(5)

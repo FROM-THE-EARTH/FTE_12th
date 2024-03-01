@@ -27,8 +27,9 @@ class corn:
             self.camera.exposure_compensation = 0
             self.camera.exposure_mode = "nightpreview"
             self.camera.saturation = 50
+            self.camera.rotation = 180
             self.camera.hflip = True
-            self.camera.vflip = True
+            self.camera.vflip = False
 
             time.sleep(5)
         else:
