@@ -132,7 +132,7 @@ class corn:
             area = cv2.contourArea(cnt)
             if area < mask.shape[1]*mask.shape[0]/20000:
                 continue
-            elif area > mask.shape[1]*mask.shape[0]/5:
+            elif area > mask.shape[1]*mask.shape[0]/2:
                 return (0,0,True)
 
 

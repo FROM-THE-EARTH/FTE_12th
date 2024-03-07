@@ -674,16 +674,16 @@ def resetPos(): #カメラモードへ移行する際に位置を調整する関
     print("resetPos():     Resetting...")
     for i in range(10*20): #20秒間発見できなかったらphase3に戻る
         x = 51
-        try:
-            detection = detect.find_far_cone(preview=False)
-            x = detection[0]-160
-            print('resetPos():     detection=', end='')
-            print(detection)
-            print('resetPos():     x= %f' % x)
-        except Exception as e:
-            # print(e)
-            print('resetPos():     x= NO CORN')
-            continue
+        # try:
+        detection = detect.find_far_cone(preview=False)
+        x = detection[0]-160
+        print('resetPos():     detection=', end='')
+        print(detection)
+        print('resetPos():     x= %f' % x)
+        # except Exception as e:
+        #     print(e)
+        #     print('resetPos():     x= NO CORN')
+        #     continue
         if abs(x)<100:
             resFlag = True
             break

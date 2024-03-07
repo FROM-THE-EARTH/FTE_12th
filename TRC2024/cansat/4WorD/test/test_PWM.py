@@ -4,12 +4,12 @@ import wiringpi
 
 MD_LF0 = 16
 MD_LB0 = 7
-MD_RF0 = 9
-MD_RB0 = 10
-MD_LF1 = 8
-MD_LB1 = 11
-MD_RF1 = 6
-MD_RB1 = 5
+MD_RF0 = 10
+MD_RB0 = 9
+MD_LF1 = 11
+MD_LB1 = 8
+MD_RF1 = 5
+MD_RB1 = 6
 SERVO0 = 12
 
 GPIO.setmode(GPIO.BCM)

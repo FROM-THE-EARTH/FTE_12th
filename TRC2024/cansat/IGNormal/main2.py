@@ -13,11 +13,11 @@ from library import BMX055
 from library import corn
 
 DATA_SAMPLING_RATE = 0.00001 #s
-CALIBRATION_MILLITIME = 20*1000 #ms
+CALIBRATION_MILLITIME = 10*1000 #ms
 ALTITUDE_CONST1 = 40 #m :最大と最小の差
 ALTITUDE_CONST2 = 5 #m :最小と現在の差の絶対値
-TARGET_LAT = 30.374711297722943
-TARGET_LNG = 130.95988028041282
+TARGET_LAT = 38.26107667
+TARGET_LNG = 140.85462000
 MAG_CONST = 8.53 #地磁気補正用の偏角
 SERVO0_RESET = 60 #initial (from 44 to 232)
 SERVO0_SET = 180 #moving
@@ -27,8 +27,8 @@ LED1 = 19
 LED2 = 26
 MD_LF0 = 5
 MD_LB0 = 6
-MD_RF0 = 16
-MD_RB0 = 7
+MD_RF0 = 7
+MD_RB0 = 16
 SERVO0 = 12
 
 
@@ -88,7 +88,7 @@ def main():
     global maxAlti
     global minAlti
 
-    phase = 4.0
+    phase = 1.0
     setUp()
     start = time.time()
     print("setup finish")
@@ -107,7 +107,7 @@ def main():
         elif phase == 1.0:
             #phase1
             print("main():         Phase1 start. release")
-            release() #パラ分離&スタビライザー開放
+            # release() #パラ分離&スタビライザー開放
             GPIO.output(LED0, 0)
             phase = 2.0
 
@@ -322,13 +322,13 @@ def moveMotor_thread3():
         else:
             LF0.ChangeDutyCycle(50+direction*30/180) #direction=-180で最大100
             LB0.ChangeDutyCycle(0)
-            RF0.ChangeDutyCycle(50-direction*30/180)
+            RF0.ChangeDutyCycle(70-direction*30/180)
             RB0.ChangeDutyCycle(0)
             wiringpi.pwmWrite(SERVO0, SERVO0_RESET)
 
-        L = 50+direction*30/180
-        R = 50-direction*30/180
-        print("controllData()T3:   Left=%f, Right=%f, direction=%f" %(L, R, direction))
+        L = 70+direction*30/180
+        R = 70-direction*30/180
+        print("controllData()T3:   Left=%f, Right=%f, direction=%f, %f, %f" %(L, R, direction, azimuth, angle))
 
         # GPIO.output(LED1, 1)
         time.sleep(0.05)
@@ -469,7 +469,12 @@ def calcAngle(): #角度計算用関数 :北0度西90度南180・-180度東-90�
     else:
         forEastAngle=(180/math.pi)*math.atan2(dy,dx)
 
-    angle = forEastAngle-90
+    if dx>0:
+        forEastAngle += 90
+    elif dx<0:
+        forEastAngle -= 90
+        
+    angle = forEastAngle
     if angle<-180:
         angle+=360
     if angle>180:
@@ -517,7 +522,7 @@ def setDirection(): #進行方向を変更する関数
             theta = angle+360
         else:
             theta = angle
-        direction = theta-azimuth+TIRE_CALIB
+        direction = (-1)*(theta-azimuth+TIRE_CALIB)
         if direction>180:
             direction -= 360
         if direction<-180:
@@ -574,7 +579,7 @@ def detectCorn(): #カラーコーンを認識する関数
     # print(detection)
     if detection is None:
         colorCorn = True
-    elif detection == [0,0,True]:
+    elif detection[2]:
         colorCorn = True
     else:
         colorCorn = False

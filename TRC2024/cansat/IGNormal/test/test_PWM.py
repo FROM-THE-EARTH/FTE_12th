@@ -4,8 +4,8 @@ import wiringpi
 
 MD_LF0 = 5
 MD_LB0 = 6
-MD_RF0 = 16
-MD_RB0 = 7
+MD_RF0 = 7
+MD_RB0 = 16
 
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
@@ -36,40 +36,19 @@ def main():
 
     while True:
         print("L back")
-        LF0.ChangeDutyCycle(0)
-        LB0.ChangeDutyCycle(100)
-#        RF0.ChangeDutyCycle(0)
-#        RB0.ChangeDutyCycle(100)
-        time.sleep(5)
-        print("L forward")
-        LF0.ChangeDutyCycle(100)
+        LF0.ChangeDutyCycle(65)
         LB0.ChangeDutyCycle(0)
-#        RF0.ChangeDutyCycle(100)
-#        RB0.ChangeDutyCycle(0)
-        time.sleep(5)
-        
-        LF0.start(0)
-        LB0.start(0)
-        RF0.start(0)
-        RB0.start(0)
-        
-        print("R back")
-#        LF0.ChangeDutyCycle(0)
-#        LB0.ChangeDutyCycle(100)
-        RF0.ChangeDutyCycle(0)
-        RB0.ChangeDutyCycle(100)
-        time.sleep(5)
-        print("R forward")
-#        LF0.ChangeDutyCycle(100)
-#        LB0.ChangeDutyCycle(0)
         RF0.ChangeDutyCycle(100)
         RB0.ChangeDutyCycle(0)
         time.sleep(5)
         
-        LF0.start(0)
-        LB0.start(0)
-        RF0.start(0)
-        RB0.start(0)
+        LF0.ChangeDutyCycle(0)
+        LB0.ChangeDutyCycle(0)
+        RF0.ChangeDutyCycle(0)
+        RB0.ChangeDutyCycle(0)
+        
+        
+        time.sleep(5)
 
 if __name__ == "__main__":
     try:

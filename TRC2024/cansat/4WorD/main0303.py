@@ -16,8 +16,8 @@ DATA_SAMPLING_RATE = 0.00001 #s
 CALIBRATION_MILLITIME = 20*1000 #ms
 ALTITUDE_CONST1 = 10 #m :最大と最小の差
 ALTITUDE_CONST2 = 10 #m :最小と現在の差の絶対値
-TARGET_LAT = 38.26127333
-TARGET_LNG = 140.85454667
+TARGET_LAT = 38.26110000
+TARGET_LNG = 140.85452500
 MAG_CONST = 8.53 #地磁気補正用の偏角
 SERVO0_RESET = 75 #initial (from 44 to 232)
 SERVO0_SET = 230 #moving
@@ -28,12 +28,12 @@ LED1 = 19
 LED2 = 26
 MD_LF0 = 16
 MD_LB0 = 7
-MD_RF0 = 9
-MD_RB0 = 10
-MD_LF1 = 8
-MD_LB1 = 11
-MD_RF1 = 6
-MD_RB1 = 5
+MD_RF0 = 10
+MD_RB0 = 9
+MD_LF1 = 11
+MD_LB1 = 8
+MD_RF1 = 5
+MD_RB1 = 6
 SERVO0 = 12
 SERVO1 = 13
 
@@ -97,7 +97,7 @@ def main():
 
     print("program start")
 
-    phase = 4.0
+    phase = 1.0
 
     #GPIO.cleanup()
     setUp()
@@ -320,6 +320,9 @@ def moveMotor_thread3():
     controll_m = 0
     controll_p = 0
 
+    R = 0
+    L = 0
+
     GPIO.setmode(GPIO.BCM)
     wiringpi.wiringPiSetupGpio()
     GPIO.setup(MD_LF0, GPIO.OUT)
@@ -366,6 +369,8 @@ def moveMotor_thread3():
             if direction == 0.0: #phase0
                 controll_m = 0
                 controll_p = 0
+                L = 0
+                R = 0
                 LF0.ChangeDutyCycle(0)
                 LB0.ChangeDutyCycle(0)
                 RF0.ChangeDutyCycle(0)
@@ -379,6 +384,8 @@ def moveMotor_thread3():
             elif direction == 360.0: #phase1
                 controll_m = 0
                 controll_p = 0
+                L = 0
+                R = 0
                 LF0.ChangeDutyCycle(0)
                 LB0.ChangeDutyCycle(0)
                 RF0.ChangeDutyCycle(0)
@@ -392,6 +399,8 @@ def moveMotor_thread3():
             elif direction == -360.0: #停止コマンド
                 controll_m = 0
                 controll_p = 0
+                L = 0
+                R = 0
                 LF0.ChangeDutyCycle(0)
                 LB0.ChangeDutyCycle(0)
                 RF0.ChangeDutyCycle(0)
@@ -405,35 +414,50 @@ def moveMotor_thread3():
                 myduty = 100
                 controll_m = myduty
                 controll_p = myduty
-                LF0.ChangeDutyCycle(myduty) #direction=-180で最大100
-                LB0.ChangeDutyCycle(0)
-                RF0.ChangeDutyCycle(myduty)
-                RB0.ChangeDutyCycle(0)
-                LF1.ChangeDutyCycle(myduty)
-                LB1.ChangeDutyCycle(0)
-                RF1.ChangeDutyCycle(myduty)
-                RB1.ChangeDutyCycle(0)
+                if acc[0]>0:
+                    L = myduty
+                    R = myduty
+                    LF0.ChangeDutyCycle(myduty) #direction=-180で最大100
+                    LB0.ChangeDutyCycle(0)
+                    RF0.ChangeDutyCycle(myduty)
+                    RB0.ChangeDutyCycle(0)
+                    LF1.ChangeDutyCycle(myduty)
+                    LB1.ChangeDutyCycle(0)
+                    RF1.ChangeDutyCycle(myduty)
+                    RB1.ChangeDutyCycle(0)
+                else:
+                    L = myduty
+                    R = myduty
+                    LF0.ChangeDutyCycle(0) #direction=-180で最大100
+                    LB0.ChangeDutyCycle(myduty)
+                    RF0.ChangeDutyCycle(0)
+                    RB0.ChangeDutyCycle(myduty)
+                    LF1.ChangeDutyCycle(0)
+                    LB1.ChangeDutyCycle(myduty)
+                    RF1.ChangeDutyCycle(0)
+                    RB1.ChangeDutyCycle(myduty)
+
             else:
                 if phase == 4.0 or phase == 5.0:
-                    controll_p = 100+direction*100/180
+                    controll_p = 100+direction*100/100
                     if controll_p > 100:
                         controll_p = 100
                     elif controll_p < 0:
                         controll_p = 0
                     
-                    controll_m = 100-direction*100/180
+                    controll_m = 100-direction*100/100
                     if controll_m > 100:
                         controll_m = 100
                     elif controll_m < 0:
                         controll_m = 0
                 else:
-                    controll_p = 100+direction*50/180
+                    controll_p = 100+direction*100/100
                     if controll_p > 100:
                         controll_p = 100
                     elif controll_p < 0:
                         controll_p = 0
                     
-                    controll_m = 100-direction*50/180
+                    controll_m = 100-direction*100/100
                     if controll_m > 100:
                         controll_m = 100
                     elif controll_m < 0:
@@ -441,17 +465,21 @@ def moveMotor_thread3():
                         
                 if acc[0] >= 0:
                     # print("azi : {:7.2f}, dir : {:7.2f}, cont : {:7.2f}".format(azimuth, direction, 50+direction*40/180))
-                    LF0.ChangeDutyCycle(controll_m) #direction=-180で最大100
+                    L = controll_p
+                    R = controll_m
+                    LF0.ChangeDutyCycle(controll_p) #direction=-180で最大100
                     LB0.ChangeDutyCycle(0)
-                    RF0.ChangeDutyCycle(controll_p)
+                    RF0.ChangeDutyCycle(controll_m)
                     RB0.ChangeDutyCycle(0)
-                    LF1.ChangeDutyCycle(controll_m)
+                    LF1.ChangeDutyCycle(controll_p)
                     LB1.ChangeDutyCycle(0)
-                    RF1.ChangeDutyCycle(controll_p)
+                    RF1.ChangeDutyCycle(controll_m)
                     RB1.ChangeDutyCycle(0)
                     wiringpi.pwmWrite(SERVO1, direction2duty(direction)) #44-232
                 else:
                     # print("azi : {:7.2f}, dir : {:7.2f}, cont : {:7.2f}".format(azimuth, direction, 50+direction*40/180))
+                    L = controll_p
+                    R = controll_m
                     LF0.ChangeDutyCycle(0) #direction=-180で最大100
                     LB0.ChangeDutyCycle(controll_p)
                     RF0.ChangeDutyCycle(0)
@@ -465,9 +493,10 @@ def moveMotor_thread3():
                 glob_control_m = controll_m
                 glob_control_p = controll_p
             
-            # print("moveMotor()T3:   Left=%f, Right=%f, acc=%f, mainpf=%d" %(glob_control_p, glob_control_m, acc[0], mainProgramFlag))
-            GPIO.output(LED1, 1)
-            GPIO.output(LED1, 0)
+            print("moveMotor()T3:   phase=%f, Left=%f, Right=%f, acc=%f, angle=%f\nmoveMotor()T3:   azimuth=%f, direction=%f, mx=%f, my=%f, mz=%f, dostance=%f, lat=%f, lon=%f\n" %(phase, L, R, acc[0], angle, azimuth,direction, mag[0], mag[1], mag[2], distance, lat, lng))
+            # GPIO.output(LED1, 1)
+            # GPIO.output(LED1, 0)
+            time.sleep(0.1)
             i = i+1
             if mainProgramFlag==False:
                 break
@@ -567,7 +596,7 @@ def calibration(): #地磁気補正用関数
             elif min[1] > mag[2]:
                  min[1] = mag[2]
             after = currentMilliTime()
-            print(min[0], mag[0], max[0], a, min[1], mag[2], max[1], b)
+            # print(min[0], mag[0], max[0], a, min[1], mag[2], max[1], b)
 
 
         if (max[0]-min[0])>20 and (max[1]-min[1])>20:
@@ -609,7 +638,7 @@ def calcAngle(): #角度計算用関数 :北0度西90度南180・-180度東-90�
     else:
         forEastAngle=(180/math.pi)*math.atan2(dy,dx)
 
-    angle = forEastAngle-90
+    angle = forEastAngle+180
     if angle<-180:
         angle+=360
     if angle>180:
@@ -622,15 +651,14 @@ def calcAzimuth(): #方位角計算用関数
     global azimuth
     if mag[2] == 0.0:
         mag[2] = 0.0000001
-    azimuth = -(180/math.pi)*math.atan(mag[0]/mag[2])
-    azimuth += 90   # phase fitting
-    azimuth += 14   # offset angle
-    if azimuth<0 and mag[2]<0:
-        azimuth += 180
-    elif azimuth>0 and mag[2]<0:
+    azimuth = (180/math.pi)*math.atan(mag[0]/mag[2])
+    azimuth += 180   # phase fitting
+    if mag[0]>0 and mag[2]<0:
         azimuth -= 180
-    #print(mag[1], mag[2], azimuth)
-    #azimuth -= 90
+    elif mag[0]<0 and mag[2]<0:
+        azimuth += 180
+    # print(mag[1], mag[2], azimuth)
+    # azimuth += 90
 
     if azimuth>180:
         azimuth-=360
@@ -642,15 +670,16 @@ def calcAzimuth(): #方位角計算用関数
         #print("pluss")
         pass
     else:
+        azimuth += 180
         azimuth *= -1
         #print("minus")
         
     # azimuth += MAG_CONST
 
-    # if azimuth>180:
-    #     azimuth -=360
-    # if azimuth<180:
-    #     azimuth +=360
+    if azimuth>180:
+        azimuth -=360
+    if azimuth<-180:
+        azimuth +=360
 
 def setDirection(): #進行方向を変更する関数
     global direction #基本範囲は-180<dirction<180, direction>0で左に向かう
@@ -661,7 +690,7 @@ def setDirection(): #進行方向を変更する関数
         time.sleep(0.01) #パラ解放の時のdirection=360はrelease()が設定する(交互に数回行うため)
 
     elif phase == 2:
-        direction = 180 #地磁気補正中は左回転
+        direction = 90 #地磁気補正中は左回転
         if direction>180:
             direction -= 360
         if direction<-180:
@@ -669,20 +698,25 @@ def setDirection(): #進行方向を変更する関数
 
     elif phase == 3:
         #angleの値とazimuthの値との差の絶対値を180以下にする
-        if (angle-azimuth)>180:
+        if ((angle-azimuth)>180):
             theta = angle-360
-        elif (azimuth-angle)>180:
+        elif ((azimuth-angle)<-180):
             theta = angle+360
         else:
             theta = angle
-        direction = theta-azimuth+TIRE_CALIB
+        
+        if acc[0]>0:
+            direction = (-1)*(theta-azimuth+TIRE_CALIB)
+        else:
+            direction = theta-azimuth+TIRE_CALIB
+            
         if direction>180:
             direction -= 360
         if direction<-180:
             direction += 360
 
     elif phase == 4:
-        direction = 180 #カメラモードへの準備の回転
+        direction = 75 #カメラモードへの準備の回転
 
     elif phase == 5: 
         time.sleep(0.01) #カメラモードではdirectionはdetectCorn()が決定する(バグ防止のため)
@@ -701,19 +735,19 @@ def resetPos(): #カメラモードへ移行する際に位置を調整する関
     for i in range(10*20): #20秒間発見できなかったらphase3に戻る
         x = 51
         print(resFlag)
-        try:
-            detection = detect.find_far_cone(preview=False)
-            if detection is None:
-                print("resetPos():     x=NO CORN")
-            else:
-                x = detection[0]-160
-                print('resetPos():     detection=', end='')
-                print(detection)
-                print('resetPos():     x= %f' % x)
-        except Exception as e:
-            print(e)
-            print('resetPos():     x= NO CORN')
-            continue
+        # try:
+        detection = detect.find_far_cone(preview=False)
+        if detection is None:
+            print("resetPos():     x=NO CORN")
+        else:
+            x = detection[0]-160
+            print('resetPos():     detection=', end='')
+            print(detection)
+            print('resetPos():     x= %f' % x)
+        # except Exception as e:
+        #     print(e)
+        #     print('resetPos():     x= NO CORN')
+        #     continue
         if abs(x)<100:
             resFlag = True
             break
@@ -734,8 +768,8 @@ def detectCorn(): #カラーコーンを認識する関数
     global phase
     beforeDirection = direction
     print("ditfirst")
-    detection = detect.find_far_cone(preview=False)
-    print("ditfind")
+    detection = detect.find_far_cone(preview=True)
+    print("ditfind", detection)
     if detection is None:
         colorCorn = False
     elif detection[2]:
